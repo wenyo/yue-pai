@@ -12,4 +12,3 @@ export const CONTEST_TYPE = {
     ch: "循環賽",
   },
 };
-console.log(CONTEST_TYPE);
