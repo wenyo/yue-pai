@@ -21,7 +21,7 @@
       <router-link to="/" custom v-slot="{ navigate }">
         <button @click="navigate">上一步</button>
       </router-link>
-      <router-link to="/step_one" custom v-slot="{ navigate }">
+      <router-link to="/step_two" custom v-slot="{ navigate }">
         <button @click="navigate">下一步</button>
       </router-link>
     </div>
@@ -45,10 +45,3 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
-.step {
-  position: fixed;
-  bottom: 100px;
-  right: 0;
-}
-</style>
