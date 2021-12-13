@@ -5,17 +5,31 @@
         <img src="../assets/img/logo-bg.svg" alt="" />
         <img src="../assets/img/logo-yue_pai.svg" alt="" />
       </div>
+      <ul>
+        <li v-for="(info, type) in CONTEST_TYPE" :key="type">{{ info.ch }}</li>
+      </ul>
+      <div>
+        <button>讀取舊檔</button>
+        <router-link to="/step_one" custom v-slot="{ navigate }">
+          <button @click="navigate">開新賽程</button>
+        </router-link>
+      </div>
     </div>
+    <footer>
+      <img src="../assets/img/logo-dream_way.svg" alt="" />
+    </footer>
   </div>
-  <footer>
-    <img src="../assets/img/logo-dream_way.svg" alt="" />
-  </footer>
 </template>
 
 <script>
+import { CONTEST_TYPE } from "../utils/Enum";
 export default {
   name: "Home",
-  components: {},
+  data() {
+    return {
+      CONTEST_TYPE,
+    };
+  },
 };
 </script>
 
@@ -30,14 +44,14 @@ export default {
 
 .contain {
   width: 60%;
-  background-color: bisque;
+  height: 88vh;
 }
 
 .logo {
   width: 50%;
   position: relative;
   img {
-    position: absolute;
+    // position: absolute;
   }
 }
 
@@ -50,6 +64,7 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: $primary-color-master;
 
   img {
     height: 35%;

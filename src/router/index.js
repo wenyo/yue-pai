@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
+import StepOne from "../views/StepOne.vue";
 
 const routes = [
   {
@@ -10,6 +11,7 @@ const routes = [
   {
     path: "/step_one",
     name: "StepOne",
+    component: StepOne,
   },
 ];
 
