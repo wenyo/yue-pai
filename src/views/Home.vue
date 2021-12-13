@@ -50,9 +50,9 @@ export default {
 .logo {
   width: 50%;
   position: relative;
-  img {
-    // position: absolute;
-  }
+  // img {
+  //   position: absolute;
+  // }
 }
 
 footer {
