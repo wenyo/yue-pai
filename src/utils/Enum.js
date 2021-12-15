@@ -12,3 +12,8 @@ export const CONTEST_TYPE = {
     ch: "循環賽",
   },
 };
+
+export const GAME_TYPE = {
+  WIN: "WIN",
+  LOSE: "LOSE",
+};

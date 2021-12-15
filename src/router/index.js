@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import StepOne from "../views/StepOne.vue";
 import StepTwo from "../views/StepTwo.vue";
+import StepThree from "../views/StepThree.vue";
 
 const routes = [
   {
@@ -18,6 +19,11 @@ const routes = [
     path: "/step_two",
     name: "StepTwo",
     component: StepTwo,
+  },
+  {
+    path: "/step_three",
+    name: "StepThree",
+    component: StepThree,
   },
 ];
 

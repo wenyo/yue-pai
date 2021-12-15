@@ -1,18 +1,31 @@
 import { createStore } from "vuex";
-import { CONTEST_TYPE } from "../utils/Enum";
+import { CONTEST_TYPE, GAME_TYPE } from "../utils/Enum";
 
 const CONTEST_VALUE = Object.keys(CONTEST_TYPE);
 const TEAM_FORM = {
+  id: "",
   name: "",
-  order: -1,
   is_seed: false,
 };
+
+const GAME_FORM = {
+  type: GAME_TYPE.WIN,
+  player1: "",
+  player1_score: -1,
+  player2: "",
+  player2_score: -1,
+  place: "",
+  time: "",
+};
+console.log(GAME_FORM);
 
 export default createStore({
   state: {
     type: "",
-    teamCount: 4,
-    teamInfo: Array.from({ length: 4 }, () => Object.assign({}, TEAM_FORM)),
+    teamCount: 5,
+    teamInfo: Array.from({ length: 5 }, (v, i) =>
+      Object.assign({}, { ...TEAM_FORM, id: i.toString() })
+    ),
   },
   mutations: {
     changeType(state, payload) {
@@ -23,8 +36,8 @@ export default createStore({
     changeTeamCount(state, payload) {
       const newTeamCount = parseInt(payload.target.value);
       state.teamCount = newTeamCount;
-      state.teamInfo = Array.from({ length: newTeamCount }, () =>
-        Object.assign({}, TEAM_FORM)
+      state.teamInfo = Array.from({ length: newTeamCount }, (v, i) =>
+        Object.assign({}, { ...TEAM_FORM, id: i.toString() })
       );
     },
     changeTeamName(state, { name, idx }) {
