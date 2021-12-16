@@ -3,7 +3,7 @@
     <div class="article">
       <h3>1/選擇賽制與隊伍數</h3>
       <label for="contest">選擇賽制</label>
-      <select id="contest" :value="type" @change="changeType">
+      <select id="contest" :value="type" @change="typeChange">
         <option value="">請選擇</option>
         <option v-for="(info, type) in CONTEST_TYPE" :key="type" :value="type">
           {{ info.ch }}
@@ -14,7 +14,7 @@
         type="number"
         id="team-count"
         :value="teamCount"
-        @change="changeTeamCount"
+        @change="teamCountChange"
       />
     </div>
     <div class="step">
@@ -41,7 +41,7 @@ export default {
     ...mapState(["type", "teamCount"]),
   },
   methods: {
-    ...mapMutations(["changeType", "changeTeamCount"]),
+    ...mapMutations(["typeChange", "teamCountChange"]),
   },
 };
 </script>

@@ -12,14 +12,14 @@
             type="text"
             name=""
             id=""
-            @change="changeTeamName({ name: $event.target.value, idx })"
+            @change="teamNameChange({ name: $event.target.value, idx })"
           />
           <input
             type="checkbox"
             name=""
             id=""
             :value="info.is_seed"
-            @change="changeSeed({ is_seed: $event.target.checked, idx })"
+            @change="seedChange({ is_seed: $event.target.checked, idx })"
           />
         </li>
       </ul>
@@ -52,7 +52,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["changeTeamName", "changeSeed"]),
+    ...mapMutations(["teamNameChange", "seedChange"]),
   },
 };
 </script>

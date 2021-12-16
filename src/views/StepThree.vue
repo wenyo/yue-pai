@@ -2,10 +2,14 @@
   <div class="contain">
     <div class="article">
       <h3>3/填寫日期與場地與調整隊伍</h3>
+      <div>
+        <Single
+          v-for="(roundInfo, round) in gameInfo"
+          :key="round"
+          :round="round"
+        />
+      </div>
     </div>
-    <ul>
-      <Match />
-    </ul>
     <div class="step">
       <router-link to="/step_one" custom v-slot="{ navigate }">
         <button @click="navigate">上一步</button>
@@ -18,30 +22,31 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
-import Match from "../components/Match";
-const maxColumn = 4;
+import { mapState, mapActions } from "vuex";
+import Single from "../components/Single";
 
 export default {
   data() {
     return {};
   },
-  components: { Match },
+  created() {
+    this.gameInfoSizeChange(this.teamCount);
+  },
+  components: { Single },
   computed: {
-    ...mapState(["teamInfo"]),
-    column() {
-      return this.teamInfo.length > maxColumn
-        ? maxColumn
-        : this.teamInfo.length;
-    },
+    ...mapState(["teamCount", "gameInfo"]),
   },
   methods: {
-    ...mapMutations(["changeTeamName", "changeSeed"]),
+    ...mapActions(["gameInfoSizeChange"]),
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.article > div {
+  display: flex;
+  flex-direction: row;
+}
 ul {
   width: 100%;
   display: flex;

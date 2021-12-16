@@ -17,3 +17,5 @@ export const GAME_TYPE = {
   WIN: "WIN",
   LOSE: "LOSE",
 };
+
+export const MAX_EXPONENT = 6;
