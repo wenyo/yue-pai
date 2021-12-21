@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="step">
-      <router-link to="/step_one" custom v-slot="{ navigate }">
+      <router-link to="/step_two" custom v-slot="{ navigate }">
         <button @click="navigate">上一步</button>
       </router-link>
       <router-link to="/step_three" custom v-slot="{ navigate }">

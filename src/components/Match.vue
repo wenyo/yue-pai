@@ -7,6 +7,7 @@
         name=""
         id=""
         :placeholder="placeHolderHomeTeam"
+        :value="game.player1.id"
       />
       <input class="w-30" type="number" name="" id="" placeholder="比分" />
     </div>
@@ -16,6 +17,7 @@
         type="text"
         name=""
         id=""
+        :value="game.player2.id"
         :placeholder="placeHolderHomeTeam"
       />
       <input class="w-30" type="number" name="" id="" placeholder="比分" />
@@ -30,10 +32,6 @@
 <script>
 export default {
   props: ["game", "idx", "round"],
-  created() {
-    console.log(this.round, this.idx);
-    console.log(this.game);
-  },
   computed: {
     valueHomeTeam() {
       switch (this.round) {
