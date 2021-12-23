@@ -95,10 +95,11 @@ export default createStore({
     seedChange(state, { is_seed, idx }) {
       state.teamInfo[idx].is_seed = is_seed;
     },
-    roundOneInfo(state, { arrayLen }) {
+    roundOneInfo(state, { gameLen }) {
       let newGameInfo = Object.assign([], state.gameInfo);
+      console.log(state.gameInfo);
       newGameInfo.unshift(
-        Array.from({ length: arrayLen }, () =>
+        Array.from({ length: gameLen }, () =>
           JSON.parse(JSON.stringify(GAME_FORM))
         )
       );
@@ -117,7 +118,7 @@ export default createStore({
       let notSeedIdx = 0;
 
       // bye
-      const byeCount = arrayLen * 2 - state.teamCount;
+      const byeCount = gameLen * 2 - state.teamCount;
       if (byeCount > 0) {
         const count = Math.floor(byeCount / 2);
         for (const idx in newGameInfo[0]) {
@@ -126,15 +127,18 @@ export default createStore({
             idx >= newGameInfo[0].length - count
           ) {
             newGameInfo[0][idx].bye = true;
-          }
-          // 沒考慮到輪空
-          if (
-            idx < SeedCount + (SeedCount % 2) ||
-            idx > newGameInfo[0].length - SeedCount - 1
-          ) {
-            console.log(SeedIdx, idx);
-            newGameInfo[0][idx].player1.id = seedPlayer[SeedIdx];
-            SeedIdx++;
+            // play
+            if (
+              idx < SeedCount + (SeedCount % 2) ||
+              idx > newGameInfo[0].length - SeedCount - 1
+            ) {
+              console.log(SeedIdx, idx);
+              newGameInfo[0][idx].player1.id = seedPlayer[SeedIdx];
+              SeedIdx++;
+            } else {
+              newGameInfo[0][idx].player1.id = notSeedPlayer[notSeedIdx];
+              notSeedIdx++;
+            }
           } else {
             newGameInfo[0][idx].player1.id = notSeedPlayer[notSeedIdx];
             newGameInfo[0][idx].player2.id = notSeedPlayer[++notSeedIdx];
@@ -144,21 +148,25 @@ export default createStore({
       }
 
       state.gameInfo = newGameInfo;
-      console.log(newGameInfo[0]);
+      console.log(newGameInfo);
+    },
+    roundOther(state, { gameLen }) {
+      console.log(gameLen);
     },
   },
   actions: {
     singleInfoSizeChange({ state, commit }, { base, exponent }) {
       for (let i = 0; i <= exponent; i++) {
-        const arrayLen = Math.pow(base, i);
+        const gameLen = Math.pow(base, i);
+        console.log(gameLen);
         let newGameInfo = Object.assign([], state.gameInfo);
         switch (i) {
           case exponent:
-            commit("roundOneInfo", { arrayLen });
+            commit("roundOneInfo", { gameLen });
             break;
           default:
             newGameInfo.unshift(
-              Array.from({ length: arrayLen }, () =>
+              Array.from({ length: gameLen }, () =>
                 Object.assign({}, GAME_FORM)
               )
             );
@@ -170,7 +178,6 @@ export default createStore({
     gameInfoSizeChange({ state, dispatch }) {
       const { base, exponent } = GameSizeGet(state.teamCount);
       const CONTEST_TYPE_KEY = Object.keys(CONTEST_TYPE);
-      console.log(state.type);
       switch (state.type) {
         case CONTEST_TYPE_KEY[0]:
           dispatch("singleInfoSizeChange", { base, exponent });
