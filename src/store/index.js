@@ -101,7 +101,7 @@ export default createStore({
     teamInfo: Array.from({ length: 6 }, (v, i) =>
       Object.assign(
         {},
-        { ...TEAM_FORM, id: i.toString(), is_seed: i % 4 === 0 }
+        { ...TEAM_FORM, id: i.toString(), is_seed: i % 3 === 0 }
       )
     ),
     gameInfo: [],
@@ -158,8 +158,10 @@ export default createStore({
           order % playerCountInGame === 0 ? "player1" : "player2";
         let gameInfo = roundOne[gameIdx];
 
+        if (gameInfo.bye) continue;
+
         // add bye
-        if (!gameInfo.bye && byeCount > 0) {
+        if (byeCount > 0) {
           gameInfo.bye = true;
           byeCount--;
         }
@@ -168,7 +170,7 @@ export default createStore({
         if (seedCount > 0) {
           gameInfo[playerKey].id = seedPlayer[seedPlayer.length - seedCount];
           seedCount--;
-        } else if (!gameInfo.bye) {
+        } else {
           gameInfo[playerKey].id =
             notSeedPlayer[notSeedPlayer.length - notSeedCount];
           notSeedCount--;
