@@ -15,18 +15,18 @@ const GAME_FORM = {
     //round 1
     id: "",
     //round others
-    type: "",
+    game_type: "",
     sort: [],
-    win: true,
+    winner_chose: true,
   },
   player2: {
     score: -1,
     //round 1
     id: "",
     //round others
-    type: "",
+    game_type: "",
     sort: [],
-    win: true,
+    winner_chose: true,
   },
   place: "",
   time: "",
@@ -93,7 +93,6 @@ function GameSortGet(gameLen) {
 
   return result;
 }
-console.log(GameSortGet(64));
 
 export default createStore({
   state: {
@@ -130,6 +129,7 @@ export default createStore({
       state.teamInfo[idx].is_seed = is_seed;
     },
     roundOneInfo(state, { gameLen }) {
+      const playerCountInGame = 2;
       const roundOne = Array.from({ length: gameLen }, () =>
         JSON.parse(JSON.stringify(GAME_FORM))
       );
@@ -138,51 +138,47 @@ export default createStore({
       const seedPlayer = state.teamInfo
         .filter((team) => team.is_seed)
         .map((v) => v.id);
+      let seedCount = seedPlayer.length;
 
       // not seed
       const notSeedPlayer = state.teamInfo
         .filter((team) => !team.is_seed)
         .map((v) => v.id);
-      let notSeedIdx = 0;
-
-      //seed
-      const SeedCount = Math.floor(seedPlayer.length / 2);
-      let SeedIdx = 0;
-      const frontSeedCount = SeedCount + (SeedCount % 2);
-      const behindSeedCount = roundOne.length - SeedCount - 1;
+      let notSeedCount = notSeedPlayer.length;
 
       // bye
-      const byeCount = gameLen * 2 - state.teamCount;
-      const frontByeGameCount = Math.floor(byeCount / 2) + (byeCount % 2);
-      const behindByeGameCount = roundOne.length - Math.floor(byeCount / 2);
+      let byeCount = gameLen * 2 - state.teamCount;
 
-      for (const gameIdx in roundOne) {
-        // bye
-        if (byeCount > 0) {
-          if (gameIdx < frontByeGameCount || gameIdx >= behindByeGameCount) {
-            roundOne[gameIdx].bye = true;
-          }
+      // sort order
+      const sortOrder = GameSortGet(gameLen * playerCountInGame);
+
+      for (const order of sortOrder) {
+        console.log("order", order);
+        const gameIdx = Math.floor(order / playerCountInGame);
+        const playerKey =
+          order % playerCountInGame === 0 ? "player1" : "player2";
+        let gameInfo = roundOne[gameIdx];
+
+        if (!gameInfo.bye && byeCount > 0) {
+          gameInfo.bye = true;
+          byeCount--;
         }
 
-        // play: seed wrong
-        if (gameIdx < frontSeedCount || gameIdx > behindSeedCount) {
-          roundOne[gameIdx].player1.id = seedPlayer[SeedIdx];
-          SeedIdx++;
-        } else {
-          roundOne[gameIdx].player1.id = notSeedPlayer[notSeedIdx];
-          notSeedIdx++;
+        if (seedCount > 0) {
+          gameInfo[playerKey].id = seedPlayer[seedPlayer.length - seedCount];
+          seedCount--;
+        } else if (!gameInfo.bye) {
+          gameInfo[playerKey].id =
+            notSeedPlayer[notSeedPlayer.length - notSeedCount];
+          notSeedCount--;
         }
 
-        //
-        // if(){
-        //   roundOne[gameIdx].player1.id = notSeedPlayer[notSeedIdx];
-        //   roundOne[gameIdx].player2.id = notSeedPlayer[++notSeedIdx];
-        //   notSeedIdx++;
-        // }
+        roundOne[gameIdx] = gameInfo;
       }
 
       let newGameInfo = Object.assign([], state.gameInfo);
       newGameInfo.unshift(roundOne);
+      console.log(newGameInfo);
       state.gameInfo = newGameInfo;
     },
     roundOther(state, { round, gameLen }) {
@@ -199,7 +195,7 @@ export default createStore({
         )
       );
       state.gameInfo = newGameInfo;
-      console.log(newGameInfo);
+      // console.log(newGameInfo);
     },
   },
   actions: {
