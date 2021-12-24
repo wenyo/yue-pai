@@ -153,17 +153,18 @@ export default createStore({
       const sortOrder = GameSortGet(gameLen * playerCountInGame);
 
       for (const order of sortOrder) {
-        console.log("order", order);
         const gameIdx = Math.floor(order / playerCountInGame);
         const playerKey =
           order % playerCountInGame === 0 ? "player1" : "player2";
         let gameInfo = roundOne[gameIdx];
 
+        // add bye
         if (!gameInfo.bye && byeCount > 0) {
           gameInfo.bye = true;
           byeCount--;
         }
 
+        // add player
         if (seedCount > 0) {
           gameInfo[playerKey].id = seedPlayer[seedPlayer.length - seedCount];
           seedCount--;
@@ -178,7 +179,6 @@ export default createStore({
 
       let newGameInfo = Object.assign([], state.gameInfo);
       newGameInfo.unshift(roundOne);
-      console.log(newGameInfo);
       state.gameInfo = newGameInfo;
     },
     roundOther(state, { round, gameLen }) {
