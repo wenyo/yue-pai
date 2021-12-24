@@ -33,7 +33,7 @@ const GAME_FORM = {
   bye: false,
 };
 
-function GameSizeGet(team_count) {
+function gameSizeGet(team_count) {
   const base = 2;
   let result = {
     isLegal: false,
@@ -61,7 +61,7 @@ function GameSizeGet(team_count) {
   });
 }
 
-function GameSortGet(gameLen) {
+function roundOneGameSortGet(gameLen) {
   const halfCount = 2;
   const teamCount = 4;
   let result = [];
@@ -150,7 +150,7 @@ export default createStore({
       let byeCount = gameLen * 2 - state.teamCount;
 
       // sort order
-      const sortOrder = GameSortGet(gameLen * playerCountInGame);
+      const sortOrder = roundOneGameSortGet(gameLen * playerCountInGame);
 
       for (const order of sortOrder) {
         const gameIdx = Math.floor(order / playerCountInGame);
@@ -213,7 +213,7 @@ export default createStore({
       }
     },
     gameInfoSizeChange({ state, dispatch }) {
-      const { base, exponent } = GameSizeGet(state.teamCount);
+      const { base, exponent } = gameSizeGet(state.teamCount);
       const CONTEST_TYPE_KEY = Object.keys(CONTEST_TYPE);
       switch (state.type) {
         case CONTEST_TYPE_KEY[0]:
