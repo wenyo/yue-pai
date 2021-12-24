@@ -61,12 +61,39 @@ function GameSizeGet(team_count) {
   });
 }
 
-// need fix
 function GameSortGet(gameLen) {
-  const multiple = 2;
-  console.log(gameLen, multiple);
+  const halfCount = 2;
+  const teamCount = 4;
+  let result = [];
+  let gameIdxAry = [Array.from({ length: gameLen }, (v, i) => i)];
+
+  while (gameIdxAry[0].length > teamCount) {
+    let newGameIdx = [[], []];
+    for (let gameTemp of gameIdxAry) {
+      const middleNumber = gameTemp.length / halfCount;
+      newGameIdx[0].push(gameTemp.slice(0, middleNumber));
+      newGameIdx[1].push(
+        gameTemp.slice(middleNumber, gameTemp.length).reverse()
+      );
+    }
+    gameIdxAry = newGameIdx[0].concat(newGameIdx[1]);
+  }
+
+  let resultTemp = [];
+  for (const value of gameIdxAry) {
+    for (const idx in value) {
+      if (!resultTemp[idx]) resultTemp[idx] = [];
+      resultTemp[idx].push(value[idx]);
+    }
+  }
+
+  for (const sortAry of resultTemp) {
+    result = result.concat(sortAry);
+  }
+
+  return result;
 }
-console.log(GameSortGet(32));
+console.log(GameSortGet(64));
 
 export default createStore({
   state: {
@@ -111,7 +138,6 @@ export default createStore({
       const seedPlayer = state.teamInfo
         .filter((team) => team.is_seed)
         .map((v) => v.id);
-      console.log(seedPlayer);
 
       // not seed
       const notSeedPlayer = state.teamInfo
@@ -124,13 +150,11 @@ export default createStore({
       let SeedIdx = 0;
       const frontSeedCount = SeedCount + (SeedCount % 2);
       const behindSeedCount = roundOne.length - SeedCount - 1;
-      console.log(frontSeedCount, behindSeedCount);
 
       // bye
       const byeCount = gameLen * 2 - state.teamCount;
       const frontByeGameCount = Math.floor(byeCount / 2) + (byeCount % 2);
       const behindByeGameCount = roundOne.length - Math.floor(byeCount / 2);
-      console.log(frontByeGameCount, behindByeGameCount);
 
       for (const gameIdx in roundOne) {
         // bye
