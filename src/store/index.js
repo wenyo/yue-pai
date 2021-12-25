@@ -63,7 +63,7 @@ function gameSizeGet(team_count) {
 
 function roundOneGameSortGet(gameLen) {
   const halfCount = 2;
-  const teamCount = 4;
+  const teamCount = 2;
   let result = [];
   let gameIdxAry = [Array.from({ length: gameLen }, (v, i) => i)];
 
@@ -97,12 +97,9 @@ function roundOneGameSortGet(gameLen) {
 export default createStore({
   state: {
     type: Object.keys(CONTEST_TYPE)[0],
-    teamCount: 6,
-    teamInfo: Array.from({ length: 6 }, (v, i) =>
-      Object.assign(
-        {},
-        { ...TEAM_FORM, id: i.toString(), is_seed: i % 3 === 0 }
-      )
+    teamCount: 9,
+    teamInfo: Array.from({ length: 9 }, (v, i) =>
+      Object.assign({}, { ...TEAM_FORM, id: i.toString() })
     ),
     gameInfo: [],
   },
@@ -184,24 +181,29 @@ export default createStore({
       state.gameInfo = newGameInfo;
     },
     roundOther(state, { round, gameLen }) {
-      // console.log("gameLen", gameLen);
+      console.log("gameLen", gameLen);
       console.log("round", round);
       let newGameInfo = Object.assign([], state.gameInfo);
 
       newGameInfo.unshift(
-        Array.from({ length: gameLen }, () =>
-          Object.assign(
+        Array.from({ length: gameLen }, (v, i) => {
+          console.log(i);
+          return Object.assign(
             {},
-            { ...GAME_FORM, player1: { ...GAME_FORM.player1, sort: [] } }
-          )
-        )
+            {
+              ...GAME_FORM,
+              player1: { ...GAME_FORM.player1, sort: [round - 1, i * 2] },
+              player2: { ...GAME_FORM.player2, sort: [round - 1, i * 2 + 1] },
+            }
+          );
+        })
       );
       state.gameInfo = newGameInfo;
       // console.log(newGameInfo);
     },
   },
   actions: {
-    singleInfoSizeChange({ commit }, { base, exponent }) {
+    singleInfoSizeChange({ state, commit }, { base, exponent }) {
       for (let i = 0; i <= exponent; i++) {
         const gameLen = Math.pow(base, i);
         switch (i) {
@@ -213,6 +215,7 @@ export default createStore({
             break;
         }
       }
+      console.log(state.gameInfo);
     },
     gameInfoSizeChange({ state, dispatch }) {
       const { base, exponent } = gameSizeGet(state.teamCount);
