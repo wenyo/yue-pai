@@ -53,11 +53,14 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+// import { noScore } from "../utils/Enum";
 const ROUND_ONE = 1;
 
 export default {
   props: ["game", "idx", "round"],
   computed: {
+    ...mapState(["gameInfo"]),
     valueHomeTeam() {
       return this.valueGet("player1");
     },
@@ -72,6 +75,11 @@ export default {
     },
   },
   methods: {
+    placeholderGetFromPrevGame(playerKey) {
+      const winnerChose = this.game[playerKey].winner_chose ? "勝者" : "敗者";
+      const sort = this.game[playerKey].sort;
+      return `${sort.round}-${sort.game_idx} ${winnerChose}`;
+    },
     placeholderGet(playerKey) {
       switch (this.round) {
         case ROUND_ONE:
@@ -79,15 +87,19 @@ export default {
             ? "輪空"
             : "隊伍名稱";
         default:
-          return "隊伍名稱";
+          return this.placeholderGetFromPrevGame(playerKey);
       }
+    },
+    valueGetFromPrevGame(game) {
+      console.log(game);
+      return "";
     },
     valueGet(playerKey) {
       switch (this.round) {
         case ROUND_ONE:
           return this.game[playerKey].id;
         default:
-          return "";
+          return this.valueGetFromPrevGame(this.game[playerKey]);
       }
     },
   },

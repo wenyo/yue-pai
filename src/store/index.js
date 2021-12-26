@@ -16,7 +16,7 @@ const GAME_FORM = {
     id: "",
     //round others
     game_type: "",
-    sort: [],
+    sort: { round: -1, game_idx: -1 },
     winner_chose: true,
   },
   player2: {
@@ -25,7 +25,7 @@ const GAME_FORM = {
     id: "",
     //round others
     game_type: "",
-    sort: [],
+    sort: { round: -1, game_idx: -1 },
     winner_chose: true,
   },
   place: "",
@@ -192,8 +192,14 @@ export default createStore({
             {},
             {
               ...GAME_FORM,
-              player1: { ...GAME_FORM.player1, sort: [round - 1, i * 2] },
-              player2: { ...GAME_FORM.player2, sort: [round - 1, i * 2 + 1] },
+              player1: {
+                ...GAME_FORM.player1,
+                sort: { round, game_idx: i * 2 },
+              },
+              player2: {
+                ...GAME_FORM.player2,
+                sort: { round, game_idx: i * 2 + 1 },
+              },
             }
           );
         })
@@ -211,7 +217,7 @@ export default createStore({
             commit("roundOneInfo", { gameLen });
             break;
           default:
-            commit("roundOther", { round: exponent - i + 1, gameLen });
+            commit("roundOther", { round: exponent - i, gameLen });
             break;
         }
       }

@@ -19,3 +19,5 @@ export const GAME_TYPE = {
 };
 
 export const MAX_EXPONENT = 6;
+
+export const noScore = -1;
