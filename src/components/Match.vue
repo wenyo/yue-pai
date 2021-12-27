@@ -60,7 +60,7 @@ const ROUND_ONE = 1;
 export default {
   props: ["game", "idx", "round"],
   computed: {
-    ...mapState(["gameInfo"]),
+    ...mapState(["teamInfo", "gameInfo"]),
     valueHomeTeam() {
       return this.valueGet("player1");
     },
@@ -91,16 +91,16 @@ export default {
       }
     },
     valueGetFromPrevGame(game) {
-      console.log(game);
+      const sort = game.sort;
+      const preGame = this.gameInfo[sort.round - 1][sort.game_idx];
+      if (preGame.bye) {
+        const id = preGame.player1.id || preGame.player2.id;
+        return id;
+      }
       return "";
     },
     valueGet(playerKey) {
-      switch (this.round) {
-        case ROUND_ONE:
-          return this.game[playerKey].id;
-        default:
-          return this.valueGetFromPrevGame(this.game[playerKey]);
-      }
+      return this.game[playerKey].id;
     },
   },
 };

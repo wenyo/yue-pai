@@ -127,9 +127,14 @@ export default createStore({
     },
     roundOneInfo(state, { gameLen }) {
       const playerCountInGame = 2;
-      const roundOne = Array.from({ length: gameLen }, () =>
-        JSON.parse(JSON.stringify(GAME_FORM))
+      let newGameInfo = Object.assign([], state.gameInfo);
+      newGameInfo.unshift(
+        Array.from({ length: gameLen }, () =>
+          JSON.parse(JSON.stringify(GAME_FORM))
+        )
       );
+      const roundOne = newGameInfo[0];
+      const roundTwo = newGameInfo[1];
 
       // seed
       const seedPlayer = state.teamInfo
@@ -157,12 +162,6 @@ export default createStore({
 
         if (gameInfo.bye) continue;
 
-        // add bye
-        if (byeCount > 0) {
-          gameInfo.bye = true;
-          byeCount--;
-        }
-
         // add player
         if (seedCount > 0) {
           gameInfo[playerKey].id = seedPlayer[seedPlayer.length - seedCount];
@@ -173,21 +172,29 @@ export default createStore({
           notSeedCount--;
         }
 
+        // add bye
+        if (byeCount > 0) {
+          gameInfo.bye = true;
+          byeCount--;
+
+          // add next round player id
+          const gameIdxInRoundTwo = Math.floor(gameIdx / playerCountInGame);
+          const playerKeyInRoundTwo =
+            gameIdx % playerCountInGame === 0 ? "player1" : "player2";
+          roundTwo[gameIdxInRoundTwo][playerKeyInRoundTwo].id =
+            gameInfo[playerKey].id;
+        }
+
         roundOne[gameIdx] = gameInfo;
       }
 
-      let newGameInfo = Object.assign([], state.gameInfo);
-      newGameInfo.unshift(roundOne);
       state.gameInfo = newGameInfo;
     },
     roundOther(state, { round, gameLen }) {
-      console.log("gameLen", gameLen);
-      console.log("round", round);
       let newGameInfo = Object.assign([], state.gameInfo);
 
       newGameInfo.unshift(
         Array.from({ length: gameLen }, (v, i) => {
-          console.log(i);
           return Object.assign(
             {},
             {
@@ -205,7 +212,6 @@ export default createStore({
         })
       );
       state.gameInfo = newGameInfo;
-      // console.log(newGameInfo);
     },
   },
   actions: {
