@@ -125,13 +125,11 @@ export default createStore({
     teamNameChange(state, { idx, name }) {
       state.teamInfo[idx].name = name;
     },
-    gameDateChangeByType(state, { type, round, idx, date }) {
-      state.contestInfo[type][round - 1][idx].time = date;
+    gameDateChangeByType(state, { type, roundIdx, idx, date }) {
+      state.contestInfo[type][roundIdx][idx].time = date;
     },
-    gamePlaceChangeByType(state, { type, round, idx, place }) {
-      state.contestInfo[type][round - 1][idx].place = place;
-      console.log(type, round, idx, place);
-      console.log(state.contestInfo);
+    gamePlaceChangeByType(state, { type, roundIdx, idx, place }) {
+      state.contestInfo[type][roundIdx][idx].place = place;
     },
     seedChange(state, { is_seed, idx }) {
       state.teamInfo[idx].is_seed = is_seed;

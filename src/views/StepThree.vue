@@ -2,13 +2,7 @@
   <div class="contain">
     <div class="article">
       <h3>3/填寫日期與場地與調整隊伍</h3>
-      <div>
-        <Single
-          v-for="(roundInfo, round) in contestInfo.WIN"
-          :key="round"
-          :round="round"
-        />
-      </div>
+      <Single />
     </div>
     <div class="step">
       <router-link to="/step_two" custom v-slot="{ navigate }">
@@ -34,7 +28,7 @@ export default {
   },
   components: { Single },
   computed: {
-    ...mapState(["teamCount", "contestInfo"]),
+    ...mapState(["teamCount"]),
   },
   methods: {
     ...mapActions(["contestInfoSizeChange"]),

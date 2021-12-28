@@ -52,7 +52,9 @@
         name=""
         id=""
         :disabled="game.bye"
-        @change="gameDateChange({ round, idx: idx, date: $event.target.value })"
+        @change="
+          gameDateChange({ roundIdx, idx: idx, date: $event.target.value })
+        "
       />
       <input
         class="w-50"
@@ -62,7 +64,7 @@
         :placeholder="game.bye ? '-' : '場地'"
         :disabled="game.bye"
         @change="
-          gamePlaceChange({ round, idx: idx, place: $event.target.value })
+          gamePlaceChange({ roundIdx, idx: idx, place: $event.target.value })
         "
       />
     </div>
@@ -77,7 +79,7 @@ export default {
   props: [
     "game",
     "idx",
-    "round",
+    "roundIdx",
     "teamNameChange",
     "gameDateChange",
     "gamePlaceChange",
@@ -89,6 +91,9 @@ export default {
   },
   computed: {
     ...mapState(["teamInfo"]),
+    round() {
+      return this.roundIdx + 1;
+    },
     valueHomeTeam() {
       return this.valueGet("player1");
     },
