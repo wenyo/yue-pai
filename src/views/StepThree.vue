@@ -4,7 +4,7 @@
       <h3>3/填寫日期與場地與調整隊伍</h3>
       <div>
         <Single
-          v-for="(roundInfo, round) in contestInfo.win"
+          v-for="(roundInfo, round) in contestInfo.WIN"
           :key="round"
           :round="round"
         />

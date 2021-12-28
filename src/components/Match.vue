@@ -18,6 +18,7 @@
         type="number"
         name=""
         id=""
+        @change="gameDateChangeByType()"
         :placeholder="game.bye ? '-' : '比分'"
         :disabled="game.bye"
       />
@@ -45,7 +46,14 @@
       />
     </div>
     <div>
-      <input class="w-50" type="date" name="" id="" :disabled="game.bye" />
+      <input
+        class="w-50"
+        type="date"
+        name=""
+        id=""
+        :disabled="game.bye"
+        @change="gameDateChange({ round, idx: idx, date: $event.target.value })"
+      />
       <input
         class="w-50"
         type="text"
@@ -53,17 +61,27 @@
         id=""
         :placeholder="game.bye ? '-' : '場地'"
         :disabled="game.bye"
+        @change="
+          gamePlaceChange({ round, idx: idx, place: $event.target.value })
+        "
       />
     </div>
   </li>
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState } from "vuex";
 import { ROUND_ONE } from "../utils/Enum";
 
 export default {
-  props: ["game", "idx", "round"],
+  props: [
+    "game",
+    "idx",
+    "round",
+    "teamNameChange",
+    "gameDateChange",
+    "gamePlaceChange",
+  ],
   data() {
     return {
       ROUND_ONE,
@@ -85,7 +103,6 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["teamNameChange"]),
     placeholderGetFromPrevGame(playerKey) {
       const winnerChose = this.game[playerKey].winner_chose ? "勝者" : "敗者";
       const sort = this.game[playerKey].sort;

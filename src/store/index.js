@@ -104,7 +104,7 @@ export default createStore({
         { ...TEAM_FORM, id: i.toString(), name: i.toString() + "!" }
       )
     ),
-    contestInfo: { win: [], lose: [] },
+    contestInfo: { WIN: [], LOSE: [] },
   },
   mutations: {
     typeChange(state, payload) {
@@ -122,15 +122,23 @@ export default createStore({
         )
       );
     },
-    teamNameChange(state, { name, idx }) {
+    teamNameChange(state, { idx, name }) {
       state.teamInfo[idx].name = name;
+    },
+    gameDateChangeByType(state, { type, round, idx, date }) {
+      state.contestInfo[type][round - 1][idx].time = date;
+    },
+    gamePlaceChangeByType(state, { type, round, idx, place }) {
+      state.contestInfo[type][round - 1][idx].place = place;
+      console.log(type, round, idx, place);
+      console.log(state.contestInfo);
     },
     seedChange(state, { is_seed, idx }) {
       state.teamInfo[idx].is_seed = is_seed;
     },
     roundOneWin(state, { gameLen }) {
       const playerCountInGame = 2;
-      let newGameInfo = Object.assign([], state.contestInfo.win);
+      let newGameInfo = Object.assign([], state.contestInfo.WIN);
       newGameInfo.unshift(
         Array.from({ length: gameLen }, () =>
           JSON.parse(JSON.stringify(GAME_FORM))
@@ -191,10 +199,10 @@ export default createStore({
         roundOne[gameIdx] = gameInfo;
       }
 
-      state.contestInfo.win = newGameInfo;
+      state.contestInfo.WIN = newGameInfo;
     },
     roundOtherWin(state, { round, gameLen }) {
-      let newGameInfo = Object.assign([], state.contestInfo.win);
+      let newGameInfo = Object.assign([], state.contestInfo.WIN);
 
       newGameInfo.unshift(
         Array.from({ length: gameLen }, (v, i) => {
@@ -214,7 +222,7 @@ export default createStore({
           );
         })
       );
-      state.contestInfo.win = newGameInfo;
+      state.contestInfo.WIN = newGameInfo;
     },
   },
   actions: {
