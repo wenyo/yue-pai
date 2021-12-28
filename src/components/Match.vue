@@ -6,6 +6,9 @@
         type="text"
         name=""
         id=""
+        @change="
+          teamNameChange({ idx: game.player1.id, name: $event.target.value })
+        "
         :placeholder="placeholderHomeTeam"
         :value="valueHomeTeam"
         :disabled="round !== ROUND_ONE || (game.bye && game.player1.id === '')"
@@ -25,6 +28,9 @@
         type="text"
         name=""
         id=""
+        @change="
+          teamNameChange({ idx: game.player2.id, name: $event.target.value })
+        "
         :value="valueAwayTeam"
         :placeholder="placeholderAwayTeam"
         :disabled="round !== ROUND_ONE || (game.bye && game.player2.id === '')"
@@ -53,7 +59,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import { ROUND_ONE } from "../utils/Enum";
 
 export default {
@@ -79,6 +85,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(["teamNameChange"]),
     placeholderGetFromPrevGame(playerKey) {
       const winnerChose = this.game[playerKey].winner_chose ? "勝者" : "敗者";
       const sort = this.game[playerKey].sort;
