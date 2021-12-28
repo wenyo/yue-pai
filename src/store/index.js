@@ -138,6 +138,17 @@ export default createStore({
     gamePlaceChangeByType(state, { type, roundIdx, idx, place }) {
       state.contestInfo[type][roundIdx][idx].place = place;
     },
+    gameScoreChangeByType(state, { type, roundIdx, idx, playerKey, score }) {
+      console.log(score);
+      state.contestInfo[type][roundIdx][idx][playerKey].score = score;
+
+      if (state.type === CONTEST_TYPE.ROUND.id) return;
+
+      // WIN
+      for (const gameInfo of state.contestInfo[GAME_TYPE.WIN][roundIdx + 1]) {
+        console.log(gameInfo);
+      }
+    },
     seedChange(state, { is_seed, idx }) {
       state.teamInfo[idx].is_seed = is_seed;
     },
