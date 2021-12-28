@@ -1,7 +1,9 @@
 import { createStore } from "vuex";
 import { CONTEST_TYPE, GAME_TYPE, MAX_EXPONENT } from "../utils/Enum";
 
-const CONTEST_VALUE = Object.keys(CONTEST_TYPE);
+const CONTEST_VALUE = Object.keys(CONTEST_TYPE).map(
+  (key) => CONTEST_TYPE[key].id
+);
 const TEAM_FORM = {
   id: "",
   name: "",
@@ -96,7 +98,7 @@ function roundOneGameSortGet(gameLen) {
 
 export default createStore({
   state: {
-    type: Object.keys(CONTEST_TYPE)[0],
+    type: CONTEST_TYPE.SINGLE.id,
     teamCount: 9,
     teamInfo: Array.from({ length: 9 }, (v, i) =>
       Object.assign(

@@ -5,7 +5,11 @@
       <label for="contest">選擇賽制</label>
       <select id="contest" :value="type" @change="typeChange">
         <option value="">請選擇</option>
-        <option v-for="(info, type) in CONTEST_TYPE" :key="type" :value="type">
+        <option
+          v-for="(info, type) in CONTEST_TYPE"
+          :key="type"
+          :value="info.id"
+        >
           {{ info.ch }}
         </option>
       </select>
