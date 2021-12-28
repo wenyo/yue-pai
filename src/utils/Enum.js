@@ -26,3 +26,8 @@ export const MAX_EXPONENT = 6;
 export const noScore = -1;
 
 export const ROUND_ONE = 1;
+
+export const PLAYER_KEY = {
+  PLAYER1: "player1",
+  PLAYER2: "player2",
+};

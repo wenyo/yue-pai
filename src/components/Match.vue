@@ -7,18 +7,31 @@
         name=""
         id=""
         @change="
-          teamNameChange({ idx: game.player1.id, name: $event.target.value })
+          teamNameChange({
+            idx: game[PLAYER_KEY.PLAYER1].id,
+            name: $event.target.value,
+          })
         "
         :placeholder="placeholderHomeTeam"
         :value="valueHomeTeam"
-        :disabled="round !== ROUND_ONE || (game.bye && game.player1.id === '')"
+        :disabled="
+          round !== ROUND_ONE ||
+          (game.bye && game[PLAYER_KEY.PLAYER1].id === '')
+        "
       />
       <input
         class="w-30"
         type="number"
         name=""
         id=""
-        @change="gameDateChangeByType()"
+        @change="
+          gameScoreChange({
+            roundIdx,
+            idx: idx,
+            playerKey: PLAYER_KEY.PLAYER1,
+            score: $event.target.value,
+          })
+        "
         :placeholder="game.bye ? '-' : '比分'"
         :disabled="game.bye"
       />
@@ -30,17 +43,31 @@
         name=""
         id=""
         @change="
-          teamNameChange({ idx: game.player2.id, name: $event.target.value })
+          teamNameChange({
+            idx: game[PLAYER_KEY.PLAYER2].id,
+            name: $event.target.value,
+          })
         "
         :value="valueAwayTeam"
         :placeholder="placeholderAwayTeam"
-        :disabled="round !== ROUND_ONE || (game.bye && game.player2.id === '')"
+        :disabled="
+          round !== ROUND_ONE ||
+          (game.bye && game[PLAYER_KEY.PLAYER2].id === '')
+        "
       />
       <input
         class="w-30"
         type="number"
         name=""
         id=""
+        @change="
+          gameScoreChange({
+            roundIdx,
+            idx: idx,
+            playerKey: PLAYER_KEY.PLAYER2,
+            score: $event.target.value,
+          })
+        "
         :placeholder="game.bye ? '-' : '比分'"
         :disabled="game.bye"
       />
@@ -73,7 +100,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { ROUND_ONE } from "../utils/Enum";
+import { ROUND_ONE, PLAYER_KEY } from "../utils/Enum";
 
 export default {
   props: [
@@ -83,11 +110,16 @@ export default {
     "teamNameChange",
     "gameDateChange",
     "gamePlaceChange",
+    "gameScoreChange",
   ],
   data() {
     return {
       ROUND_ONE,
+      PLAYER_KEY,
     };
+  },
+  created() {
+    console.log(11);
   },
   computed: {
     ...mapState(["teamInfo"]),
@@ -95,16 +127,16 @@ export default {
       return this.roundIdx + 1;
     },
     valueHomeTeam() {
-      return this.valueGet("player1");
+      return this.valueGet(this.PLAYER_KEY.PLAYER1);
     },
     valueAwayTeam() {
-      return this.valueGet("player2");
+      return this.valueGet(this.PLAYER_KEY.PLAYER2);
     },
     placeholderHomeTeam() {
-      return this.placeholderGet("player1");
+      return this.placeholderGet(this.PLAYER_KEY.PLAYER1);
     },
     placeholderAwayTeam() {
-      return this.placeholderGet("player2");
+      return this.placeholderGet(this.PLAYER_KEY.PLAYER2);
     },
   },
   methods: {

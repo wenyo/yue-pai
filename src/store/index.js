@@ -1,5 +1,10 @@
 import { createStore } from "vuex";
-import { CONTEST_TYPE, GAME_TYPE, MAX_EXPONENT } from "../utils/Enum";
+import {
+  CONTEST_TYPE,
+  GAME_TYPE,
+  MAX_EXPONENT,
+  PLAYER_KEY,
+} from "../utils/Enum";
 
 const CONTEST_VALUE = Object.keys(CONTEST_TYPE).map(
   (key) => CONTEST_TYPE[key].id
@@ -168,7 +173,9 @@ export default createStore({
       for (const order of sortOrder) {
         const gameIdx = Math.floor(order / playerCountInGame);
         const playerKey =
-          order % playerCountInGame === 0 ? "player1" : "player2";
+          order % playerCountInGame === 0
+            ? PLAYER_KEY.PLAYER1
+            : PLAYER_KEY.PLAYER2;
         let gameInfo = roundOne[gameIdx];
 
         if (gameInfo.bye) continue;
@@ -191,7 +198,9 @@ export default createStore({
           // add next round player id
           const gameIdxInRoundTwo = Math.floor(gameIdx / playerCountInGame);
           const playerKeyInRoundTwo =
-            gameIdx % playerCountInGame === 0 ? "player1" : "player2";
+            gameIdx % playerCountInGame === 0
+              ? PLAYER_KEY.PLAYER1
+              : PLAYER_KEY.PLAYER2;
           roundTwo[gameIdxInRoundTwo][playerKeyInRoundTwo].id =
             gameInfo[playerKey].id;
         }

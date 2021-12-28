@@ -10,6 +10,7 @@
         :team-name-change="teamNameChange"
         :game-date-change="gameDateChange"
         :game-place-change="gamePlaceChange"
+        :game-score-change="gameScoreChange"
       />
     </ul>
   </div>
@@ -29,21 +30,31 @@ export default {
       "teamNameChange",
       "gameDateChangeByType",
       "gamePlaceChangeByType",
+      "gameScoreChangeByType",
     ]),
-    gameDateChange({ round, idx, date }) {
+    gameDateChange({ roundIdx, idx, date }) {
       this.gameDateChangeByType({
         type: GAME_TYPE.WIN,
-        round,
+        roundIdx,
         idx,
         date,
       });
     },
-    gamePlaceChange({ round, idx, place }) {
+    gamePlaceChange({ roundIdx, idx, place }) {
       this.gamePlaceChangeByType({
         type: GAME_TYPE.WIN,
-        round,
+        roundIdx,
         idx,
         place,
+      });
+    },
+    gameScoreChange({ roundIdx, idx, playerKey, score }) {
+      this.gameScoreChangeByType({
+        type: GAME_TYPE.WIN,
+        roundIdx,
+        idx,
+        playerKey,
+        score,
       });
     },
   },
