@@ -4,7 +4,7 @@
       <h3>3/填寫日期與場地與調整隊伍</h3>
       <div>
         <Single
-          v-for="(roundInfo, round) in gameInfo"
+          v-for="(roundInfo, round) in contestInfo.win"
           :key="round"
           :round="round"
         />
@@ -30,14 +30,14 @@ export default {
     return {};
   },
   created() {
-    this.gameInfoSizeChange(this.teamCount);
+    this.contestInfoSizeChange(this.teamCount);
   },
   components: { Single },
   computed: {
-    ...mapState(["teamCount", "gameInfo"]),
+    ...mapState(["teamCount", "contestInfo"]),
   },
   methods: {
-    ...mapActions(["gameInfoSizeChange"]),
+    ...mapActions(["contestInfoSizeChange"]),
   },
 };
 </script>

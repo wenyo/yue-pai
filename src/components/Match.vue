@@ -8,7 +8,7 @@
         id=""
         :placeholder="placeholderHomeTeam"
         :value="valueHomeTeam"
-        :disabled="game.bye && game.player1.id === ''"
+        :disabled="round !== ROUND_ONE || (game.bye && game.player1.id === '')"
       />
       <input
         class="w-30"
@@ -27,7 +27,7 @@
         id=""
         :value="valueAwayTeam"
         :placeholder="placeholderAwayTeam"
-        :disabled="game.bye && game.player2.id === ''"
+        :disabled="round !== ROUND_ONE || (game.bye && game.player2.id === '')"
       />
       <input
         class="w-30"
@@ -54,13 +54,17 @@
 
 <script>
 import { mapState } from "vuex";
-// import { noScore } from "../utils/Enum";
-const ROUND_ONE = 1;
+import { ROUND_ONE } from "../utils/Enum";
 
 export default {
   props: ["game", "idx", "round"],
+  data() {
+    return {
+      ROUND_ONE,
+    };
+  },
   computed: {
-    ...mapState(["teamInfo", "gameInfo"]),
+    ...mapState(["teamInfo"]),
     valueHomeTeam() {
       return this.valueGet("player1");
     },
@@ -82,7 +86,7 @@ export default {
     },
     placeholderGet(playerKey) {
       switch (this.round) {
-        case ROUND_ONE:
+        case this.ROUND_ONE:
           return this.game.bye && this.game[playerKey].id === ""
             ? "輪空"
             : "隊伍名稱";
@@ -90,17 +94,9 @@ export default {
           return this.placeholderGetFromPrevGame(playerKey);
       }
     },
-    valueGetFromPrevGame(game) {
-      const sort = game.sort;
-      const preGame = this.gameInfo[sort.round - 1][sort.game_idx];
-      if (preGame.bye) {
-        const id = preGame.player1.id || preGame.player2.id;
-        return id;
-      }
-      return "";
-    },
     valueGet(playerKey) {
-      return this.game[playerKey].id;
+      const id = this.game[playerKey].id;
+      return id ? this.teamInfo[id].name : "";
     },
   },
 };

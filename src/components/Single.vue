@@ -1,7 +1,7 @@
 <template>
   <ul>
     <Match
-      v-for="(game, idx) in gameInfo[round]"
+      v-for="(game, idx) in contestInfo.win[round]"
       :key="idx"
       :game="game"
       :idx="idx + 1"
@@ -17,7 +17,7 @@ export default {
   props: ["round"],
   components: { Match },
   computed: {
-    ...mapState(["gameInfo"]),
+    ...mapState(["contestInfo"]),
   },
 };
 </script>

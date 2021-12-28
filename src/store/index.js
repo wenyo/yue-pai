@@ -99,9 +99,12 @@ export default createStore({
     type: Object.keys(CONTEST_TYPE)[0],
     teamCount: 9,
     teamInfo: Array.from({ length: 9 }, (v, i) =>
-      Object.assign({}, { ...TEAM_FORM, id: i.toString() })
+      Object.assign(
+        {},
+        { ...TEAM_FORM, id: i.toString(), name: i.toString() + "!" }
+      )
     ),
-    gameInfo: [],
+    contestInfo: { win: [], lose: [] },
   },
   mutations: {
     typeChange(state, payload) {
@@ -125,9 +128,9 @@ export default createStore({
     seedChange(state, { is_seed, idx }) {
       state.teamInfo[idx].is_seed = is_seed;
     },
-    roundOneInfo(state, { gameLen }) {
+    roundOneWin(state, { gameLen }) {
       const playerCountInGame = 2;
-      let newGameInfo = Object.assign([], state.gameInfo);
+      let newGameInfo = Object.assign([], state.contestInfo.win);
       newGameInfo.unshift(
         Array.from({ length: gameLen }, () =>
           JSON.parse(JSON.stringify(GAME_FORM))
@@ -188,10 +191,10 @@ export default createStore({
         roundOne[gameIdx] = gameInfo;
       }
 
-      state.gameInfo = newGameInfo;
+      state.contestInfo.win = newGameInfo;
     },
-    roundOther(state, { round, gameLen }) {
-      let newGameInfo = Object.assign([], state.gameInfo);
+    roundOtherWin(state, { round, gameLen }) {
+      let newGameInfo = Object.assign([], state.contestInfo.win);
 
       newGameInfo.unshift(
         Array.from({ length: gameLen }, (v, i) => {
@@ -211,7 +214,7 @@ export default createStore({
           );
         })
       );
-      state.gameInfo = newGameInfo;
+      state.contestInfo.win = newGameInfo;
     },
   },
   actions: {
@@ -220,16 +223,16 @@ export default createStore({
         const gameLen = Math.pow(base, i);
         switch (i) {
           case exponent:
-            commit("roundOneInfo", { gameLen });
+            commit("roundOneWin", { gameLen });
             break;
           default:
-            commit("roundOther", { round: exponent - i, gameLen });
+            commit("roundOtherWin", { round: exponent - i, gameLen });
             break;
         }
       }
-      console.log(state.gameInfo);
+      console.log(state.contestInfo);
     },
-    gameInfoSizeChange({ state, dispatch }) {
+    contestInfoSizeChange({ state, dispatch }) {
       const { base, exponent } = gameSizeGet(state.teamCount);
       const CONTEST_TYPE_KEY = Object.keys(CONTEST_TYPE);
       switch (state.type) {
