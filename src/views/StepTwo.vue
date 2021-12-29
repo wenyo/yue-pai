@@ -12,13 +12,14 @@
             type="text"
             name=""
             id=""
+            :value="info.name"
             @change="teamNameChange({ name: $event.target.value, idx })"
           />
           <input
             type="checkbox"
             name=""
             id=""
-            :value="info.is_seed"
+            :checked="info.is_seed"
             @change="seedChange({ is_seed: $event.target.checked, idx })"
           />
         </li>
