@@ -2,105 +2,18 @@ import { createStore } from "vuex";
 import {
   CONTEST_TYPE,
   GAME_TYPE,
-  MAX_EXPONENT,
   PLAYER_KEY,
   NO_SCORE,
+  CONTEST_VALUE,
+  TEAM_FORM,
+  GAME_FORM,
 } from "../utils/Enum";
-
-const CONTEST_VALUE = Object.keys(CONTEST_TYPE).map(
-  (key) => CONTEST_TYPE[key].id
-);
-const TEAM_FORM = {
-  id: "",
-  name: "",
-  is_seed: false,
-};
-
-const GAME_FORM = {
-  type: GAME_TYPE.WIN,
-  player1: {
-    score: -1,
-    //round 1
-    id: "",
-    //round others
-    game_type: "",
-    sort: { round: -1, game_idx: -1 },
-    winner_chose: true,
-  },
-  player2: {
-    score: -1,
-    //round 1
-    id: "",
-    //round others
-    game_type: "",
-    sort: { round: -1, game_idx: -1 },
-    winner_chose: true,
-  },
-  place: "",
-  time: "",
-  bye: false,
-};
-
-function gameSizeGet(team_count) {
-  const base = 2;
-  let result = {
-    isLegal: false,
-    base,
-    exponent: 0,
-    msg: "",
-  };
-
-  for (let i = 0; i < MAX_EXPONENT; i++) {
-    const minSquare = Math.pow(base, i);
-    const maxSquare = Math.pow(base, i + 1);
-
-    if (minSquare < team_count && maxSquare >= team_count) {
-      return (result = {
-        ...result,
-        isLegal: true,
-        exponent: i,
-      });
-    }
-  }
-
-  return (result = {
-    ...result,
-    msg: "隊伍數量應為 2 ~ 64 之間",
-  });
-}
-
-function roundOneGameSortGet(gameLen) {
-  const halfCount = 2;
-  const teamCount = 2;
-  let result = [];
-  let gameIdxAry = [Array.from({ length: gameLen }, (v, i) => i)];
-
-  while (gameIdxAry[0].length > teamCount) {
-    let newGameIdx = [[], []];
-    for (let gameTemp of gameIdxAry) {
-      const middleNumber = gameTemp.length / halfCount;
-      newGameIdx[0].push(gameTemp.slice(0, middleNumber));
-      newGameIdx[1].push(
-        gameTemp.slice(middleNumber, gameTemp.length).reverse()
-      );
-    }
-    gameIdxAry = newGameIdx[0].concat(newGameIdx[1]);
-  }
-
-  let resultTemp = [];
-  for (const value of gameIdxAry) {
-    for (const idx in value) {
-      if (!resultTemp[idx]) resultTemp[idx] = [];
-      resultTemp[idx].push(value[idx]);
-    }
-  }
-
-  for (const sortAry of resultTemp) {
-    result = result.concat(sortAry);
-  }
-
-  return result;
-}
+import {
+  gameSizeGet,
+  roundOneGameSortGet,
+  roundOneInfoBuild,
+  checkPlayerIDInWinContest,
+} from "../utils/ContestFunc";
 
 export default createStore({
   state: {
@@ -183,38 +96,16 @@ export default createStore({
         }
       }
 
-      // WIN
-      for (
-        let roundIdxTemp = roundIdx + 1;
-        roundIdxTemp < state.contestInfo[GAME_TYPE.WIN].length;
-        roundIdxTemp++
-      ) {
-        const roundInfoTemp = state.contestInfo[GAME_TYPE.WIN][roundIdxTemp];
-        for (const gameInfoTemp of roundInfoTemp) {
-          for (const playerIdx of Object.keys(PLAYER_KEY)) {
-            const playerKey = [PLAYER_KEY[playerIdx]];
-            const playerSort = gameInfoTemp[playerKey].sort;
-
-            // clear all origin winner id
-            if (
-              gameInfoTemp[playerKey].id === player1Info.id ||
-              gameInfoTemp[playerKey].id === player2Info.id
-            ) {
-              gameInfoTemp[playerKey].id = "";
-              gameInfoTemp[playerKey].score = NO_SCORE;
-            }
-
-            // add new winner id
-            if (
-              roundIdxTemp === roundIdx + 1 &&
-              playerSort.roundIdx === roundIdx &&
-              playerSort.game_idx === idx
-            ) {
-              gameInfoTemp[playerKey].id = scoreResult.winner;
-            }
-          }
-        }
-      }
+      // WIN contest
+      const contestWinInfo = state.contestInfo[GAME_TYPE.WIN];
+      state.contestInfo[GAME_TYPE.WIN] = checkPlayerIDInWinContest({
+        roundIdx,
+        idx,
+        contestWinInfo,
+        player1Info,
+        player2Info,
+        scoreResult,
+      });
     },
     seedChange(state, { is_seed, idx }) {
       state.teamInfo[idx].is_seed = is_seed;
@@ -227,65 +118,31 @@ export default createStore({
           JSON.parse(JSON.stringify(GAME_FORM))
         )
       );
-      const roundOne = newGameInfo[0];
-      const roundTwo = newGameInfo[1];
 
-      // seed
+      // seed player
       const seedPlayer = state.teamInfo
         .filter((team) => team.is_seed)
         .map((v) => v.id);
 
-      // not seed
+      // not seed player
       const notSeedPlayer = state.teamInfo
         .filter((team) => !team.is_seed)
         .map((v) => v.id);
-      let notSeedCount = notSeedPlayer.length;
 
-      // bye
+      // bye counter
       let byeCount = gameLen * 2 - state.teamCount;
 
-      // sort order
+      // sort order array
       const sortOrder = roundOneGameSortGet(gameLen * playerCountInGame);
 
-      for (const order of sortOrder) {
-        const gameIdx = Math.floor(order / playerCountInGame);
-        const playerKey =
-          order % playerCountInGame === 0
-            ? PLAYER_KEY.PLAYER1
-            : PLAYER_KEY.PLAYER2;
-        let gameInfo = roundOne[gameIdx];
-
-        if (gameInfo.bye) continue;
-
-        // add player
-        if (seedCount > 0) {
-          gameInfo[playerKey].id = seedPlayer[seedPlayer.length - seedCount];
-          seedCount--;
-        } else {
-          gameInfo[playerKey].id =
-            notSeedPlayer[notSeedPlayer.length - notSeedCount];
-          notSeedCount--;
-        }
-
-        // add bye
-        if (byeCount > 0) {
-          gameInfo.bye = true;
-          byeCount--;
-
-          // add next round player id
-          const gameIdxInRoundTwo = Math.floor(gameIdx / playerCountInGame);
-          const playerKeyInRoundTwo =
-            gameIdx % playerCountInGame === 0
-              ? PLAYER_KEY.PLAYER1
-              : PLAYER_KEY.PLAYER2;
-          roundTwo[gameIdxInRoundTwo][playerKeyInRoundTwo].id =
-            gameInfo[playerKey].id;
-        }
-
-        roundOne[gameIdx] = gameInfo;
-      }
-
-      state.contestInfo.WIN = newGameInfo;
+      state.contestInfo.WIN = roundOneInfoBuild({
+        sortOrder,
+        newGameInfo,
+        playerCountInGame,
+        seedPlayer,
+        notSeedPlayer,
+        byeCount,
+      });
     },
     roundOtherWin(state, { roundIdx, gameLen }) {
       let newGameInfo = Object.assign([], state.contestInfo.WIN);

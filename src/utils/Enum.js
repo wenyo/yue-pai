@@ -16,6 +16,10 @@ export const CONTEST_TYPE = {
   },
 };
 
+export const CONTEST_VALUE = Object.keys(CONTEST_TYPE).map(
+  (key) => CONTEST_TYPE[key].id
+);
+
 export const GAME_TYPE = {
   WIN: "WIN",
   LOSE: "LOSE",
@@ -30,4 +34,35 @@ export const ROUND_ONE = 1;
 export const PLAYER_KEY = {
   PLAYER1: "player1",
   PLAYER2: "player2",
+};
+
+export const TEAM_FORM = {
+  id: "",
+  name: "",
+  is_seed: false,
+};
+
+export const GAME_FORM = {
+  type: GAME_TYPE.WIN,
+  player1: {
+    score: -1,
+    //round 1
+    id: "",
+    //round others
+    game_type: "",
+    sort: { round: -1, game_idx: -1 },
+    winner_chose: true,
+  },
+  player2: {
+    score: -1,
+    //round 1
+    id: "",
+    //round others
+    game_type: "",
+    sort: { round: -1, game_idx: -1 },
+    winner_chose: true,
+  },
+  place: "",
+  time: "",
+  bye: false,
 };
