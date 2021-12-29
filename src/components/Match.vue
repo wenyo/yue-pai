@@ -1,6 +1,7 @@
 <template>
   <li>
-    <div>
+    <!-- team name & score -->
+    <div v-for="playerKey in Object.keys(PLAYER_KEY)" :key="playerKey">
       <input
         class="w-70"
         type="text"
@@ -8,15 +9,15 @@
         id=""
         @change="
           teamNameChange({
-            idx: game[PLAYER_KEY.PLAYER1].id,
+            idx: game[PLAYER_KEY[playerKey]].id,
             name: $event.target.value,
           })
         "
-        :placeholder="placeholderHomeTeam"
-        :value="valueHomeTeam"
+        :placeholder="placeholderGet(PLAYER_KEY[playerKey])"
+        :value="valueGet(PLAYER_KEY[playerKey])"
         :disabled="
           round !== ROUND_ONE ||
-          (game.bye && game[PLAYER_KEY.PLAYER1].id === '')
+          (game.bye && game[PLAYER_KEY[playerKey]].id === '')
         "
       />
       <input
@@ -28,60 +29,20 @@
           gameScoreChange({
             roundIdx,
             idx: idx,
-            playerKey: PLAYER_KEY.PLAYER1,
+            playerKey: PLAYER_KEY[playerKey],
             score: $event.target.value,
           })
         "
         :placeholder="game.bye ? '-' : '比分'"
         :value="
-          game[PLAYER_KEY.PLAYER1].score === NO_SCORE
+          game[PLAYER_KEY[playerKey]].score === NO_SCORE
             ? ''
-            : game[PLAYER_KEY.PLAYER1].score
+            : game[PLAYER_KEY[playerKey]].score
         "
         :disabled="game.bye"
       />
     </div>
-    <div>
-      <input
-        class="w-70"
-        type="text"
-        name=""
-        id=""
-        @change="
-          teamNameChange({
-            idx: game[PLAYER_KEY.PLAYER2].id,
-            name: $event.target.value,
-          })
-        "
-        :value="valueAwayTeam"
-        :placeholder="placeholderAwayTeam"
-        :disabled="
-          round !== ROUND_ONE ||
-          (game.bye && game[PLAYER_KEY.PLAYER2].id === '')
-        "
-      />
-      <input
-        class="w-30"
-        type="number"
-        name=""
-        id=""
-        @change="
-          gameScoreChange({
-            roundIdx,
-            idx: idx,
-            playerKey: PLAYER_KEY.PLAYER2,
-            score: $event.target.value,
-          })
-        "
-        :value="
-          game[PLAYER_KEY.PLAYER2].score === NO_SCORE
-            ? ''
-            : game[PLAYER_KEY.PLAYER2].score
-        "
-        :placeholder="game.bye ? '-' : '比分'"
-        :disabled="game.bye"
-      />
-    </div>
+    <!-- date -->
     <div>
       <input
         class="w-50"
@@ -94,6 +55,7 @@
           gameDateChange({ roundIdx, idx: idx, date: $event.target.value })
         "
       />
+      <!-- place -->
       <input
         class="w-50"
         type="text"
@@ -135,18 +97,6 @@ export default {
     ...mapState(["teamInfo"]),
     round() {
       return this.roundIdx + 1;
-    },
-    valueHomeTeam() {
-      return this.valueGet(this.PLAYER_KEY.PLAYER1);
-    },
-    valueAwayTeam() {
-      return this.valueGet(this.PLAYER_KEY.PLAYER2);
-    },
-    placeholderHomeTeam() {
-      return this.placeholderGet(this.PLAYER_KEY.PLAYER1);
-    },
-    placeholderAwayTeam() {
-      return this.placeholderGet(this.PLAYER_KEY.PLAYER2);
     },
   },
   methods: {
