@@ -31,6 +31,8 @@ export const NO_SCORE = -1;
 
 export const ROUND_ONE = 1;
 
+export const CONTEST_INFO_DEFAULT = { WIN: [], LOSE: [] };
+
 export const PLAYER_KEY = {
   PLAYER1: "player1",
   PLAYER2: "player2",

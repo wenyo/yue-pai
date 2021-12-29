@@ -7,6 +7,7 @@ import {
   CONTEST_VALUE,
   TEAM_FORM,
   GAME_FORM,
+  CONTEST_INFO_DEFAULT,
 } from "../utils/Enum";
 import {
   gameSizeGet,
@@ -18,14 +19,9 @@ import {
 export default createStore({
   state: {
     type: CONTEST_TYPE.SINGLE.id,
-    teamCount: 9,
-    teamInfo: Array.from({ length: 9 }, (v, i) =>
-      Object.assign(
-        {},
-        { ...TEAM_FORM, id: i.toString(), name: i.toString() + "!" }
-      )
-    ),
-    contestInfo: { WIN: [], LOSE: [] },
+    teamCount: 0,
+    teamInfo: [],
+    contestInfo: JSON.parse(JSON.stringify(CONTEST_INFO_DEFAULT)),
   },
   mutations: {
     typeChange(state, payload) {
@@ -33,13 +29,21 @@ export default createStore({
       if (!CONTEST_VALUE.includes(newType)) return;
       state.type = newType;
     },
+    contestInfoReset(state) {
+      state.contestInfo = JSON.parse(JSON.stringify(CONTEST_INFO_DEFAULT));
+    },
     teamCountChange(state, payload) {
       const newTeamCount = parseInt(payload.target.value);
       state.teamCount = newTeamCount;
       state.teamInfo = Array.from({ length: newTeamCount }, (v, i) =>
         Object.assign(
           {},
-          { ...TEAM_FORM, id: i.toString(), name: i.toString() }
+          {
+            ...TEAM_FORM,
+            id: i.toString(),
+            name: i.toString() + "!!",
+            is_seed: i % 4 === 0,
+          }
         )
       );
     },
@@ -183,9 +187,10 @@ export default createStore({
       }
       console.log(state.contestInfo);
     },
-    contestInfoSizeChange({ state, dispatch }) {
+    contestInfoSizeChange({ state, dispatch, commit }) {
       const { base, exponent } = gameSizeGet(state.teamCount);
       const CONTEST_TYPE_KEY = Object.keys(CONTEST_TYPE);
+      commit("contestInfoReset");
       switch (state.type) {
         case CONTEST_TYPE_KEY[0]:
           dispatch("singleInfoSizeChange", { base, exponent });
