@@ -23,7 +23,7 @@ export const GAME_TYPE = {
 
 export const MAX_EXPONENT = 6;
 
-export const noScore = -1;
+export const NO_SCORE = -1;
 
 export const ROUND_ONE = 1;
 

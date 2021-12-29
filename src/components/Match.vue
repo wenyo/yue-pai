@@ -118,9 +118,6 @@ export default {
       PLAYER_KEY,
     };
   },
-  created() {
-    console.log(11);
-  },
   computed: {
     ...mapState(["teamInfo"]),
     round() {
@@ -143,7 +140,8 @@ export default {
     placeholderGetFromPrevGame(playerKey) {
       const winnerChose = this.game[playerKey].winner_chose ? "勝者" : "敗者";
       const sort = this.game[playerKey].sort;
-      return `${sort.round}-${sort.game_idx} ${winnerChose}`;
+      const prevRound = sort.roundIdx + 1;
+      return `${prevRound}-${sort.game_idx} ${winnerChose}`;
     },
     placeholderGet(playerKey) {
       switch (this.round) {

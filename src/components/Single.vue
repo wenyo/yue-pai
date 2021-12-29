@@ -5,7 +5,7 @@
         v-for="(game, idx) in roundInfo"
         :key="idx"
         :game="game"
-        :idx="idx + 1"
+        :idx="idx"
         :roundIdx="roundIdx"
         :team-name-change="teamNameChange"
         :game-date-change="gameDateChange"

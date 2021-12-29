@@ -4,6 +4,7 @@ import {
   GAME_TYPE,
   MAX_EXPONENT,
   PLAYER_KEY,
+  NO_SCORE,
 } from "../utils/Enum";
 
 const CONTEST_VALUE = Object.keys(CONTEST_TYPE).map(
@@ -139,14 +140,61 @@ export default createStore({
       state.contestInfo[type][roundIdx][idx].place = place;
     },
     gameScoreChangeByType(state, { type, roundIdx, idx, playerKey, score }) {
-      console.log(score);
-      state.contestInfo[type][roundIdx][idx][playerKey].score = score;
+      // add score
+      state.contestInfo[type][roundIdx][idx][playerKey].score =
+        score === "" ? NO_SCORE : score;
 
-      if (state.type === CONTEST_TYPE.ROUND.id) return;
+      const thisGame = state.contestInfo[type][roundIdx][idx];
+      let nextWinGame = state.contestInfo[GAME_TYPE.WIN][roundIdx + 1];
+      // const nextLoseGame = state.contestInfo[GAME_TYPE.LOSE][roundIdx];
+
+      if (state.type === CONTEST_TYPE.ROUND.id && !nextWinGame) return;
+
+      const player1Id = thisGame[PLAYER_KEY.PLAYER1];
+      const player2Id = thisGame[PLAYER_KEY.PLAYER2];
+      const has_result =
+        player1Id.score !== NO_SCORE &&
+        player2Id.score !== NO_SCORE &&
+        player1Id.score !== player2Id.score;
+      let scoreResult = {
+        has_result,
+        winner: "",
+        loser: "",
+      };
+
+      if (has_result) {
+        switch (player1Id.score > player2Id.score) {
+          case true:
+            scoreResult = {
+              ...scoreResult,
+              winner: thisGame[PLAYER_KEY.PLAYER1].id,
+              loser: thisGame[PLAYER_KEY.PLAYER2].id,
+            };
+            break;
+          case false:
+            scoreResult = {
+              ...scoreResult,
+              winner: thisGame[PLAYER_KEY.PLAYER2].id,
+              loser: thisGame[PLAYER_KEY.PLAYER1].id,
+            };
+            break;
+          default:
+            break;
+        }
+      }
 
       // WIN
-      for (const gameInfo of state.contestInfo[GAME_TYPE.WIN][roundIdx + 1]) {
-        console.log(gameInfo);
+      WIN: for (const gameInfoIdx in nextWinGame) {
+        const gameInfo = nextWinGame[gameInfoIdx];
+
+        for (const playerIdx of Object.keys(PLAYER_KEY)) {
+          const playerKey = PLAYER_KEY[playerIdx];
+          const playerSort = gameInfo[playerKey].sort;
+          if (playerSort.roundIdx === roundIdx && playerSort.game_idx === idx) {
+            nextWinGame[gameInfoIdx][playerKey].id = scoreResult.winner;
+            break WIN;
+          }
+        }
       }
     },
     seedChange(state, { is_seed, idx }) {
@@ -221,7 +269,7 @@ export default createStore({
 
       state.contestInfo.WIN = newGameInfo;
     },
-    roundOtherWin(state, { round, gameLen }) {
+    roundOtherWin(state, { roundIdx, gameLen }) {
       let newGameInfo = Object.assign([], state.contestInfo.WIN);
 
       newGameInfo.unshift(
@@ -232,11 +280,11 @@ export default createStore({
               ...GAME_FORM,
               player1: {
                 ...GAME_FORM.player1,
-                sort: { round, game_idx: i * 2 },
+                sort: { roundIdx, game_idx: i * 2 },
               },
               player2: {
                 ...GAME_FORM.player2,
-                sort: { round, game_idx: i * 2 + 1 },
+                sort: { roundIdx, game_idx: i * 2 + 1 },
               },
             }
           );
@@ -254,7 +302,7 @@ export default createStore({
             commit("roundOneWin", { gameLen });
             break;
           default:
-            commit("roundOtherWin", { round: exponent - i, gameLen });
+            commit("roundOtherWin", { roundIdx: exponent - i - 1, gameLen });
             break;
         }
       }
