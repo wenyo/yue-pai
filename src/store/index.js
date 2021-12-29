@@ -145,25 +145,25 @@ export default createStore({
         score === "" ? NO_SCORE : score;
 
       const thisGame = state.contestInfo[type][roundIdx][idx];
-      let nextWinGame = state.contestInfo[GAME_TYPE.WIN][roundIdx + 1];
+      let nextWinRound = state.contestInfo[GAME_TYPE.WIN][roundIdx + 1];
       // const nextLoseGame = state.contestInfo[GAME_TYPE.LOSE][roundIdx];
 
-      if (state.type === CONTEST_TYPE.ROUND.id && !nextWinGame) return;
+      if (state.type === CONTEST_TYPE.ROUND.id && !nextWinRound) return;
 
-      const player1Id = thisGame[PLAYER_KEY.PLAYER1];
-      const player2Id = thisGame[PLAYER_KEY.PLAYER2];
+      const player1Info = thisGame[PLAYER_KEY.PLAYER1];
+      const player2Info = thisGame[PLAYER_KEY.PLAYER2];
       const has_result =
-        player1Id.score !== NO_SCORE &&
-        player2Id.score !== NO_SCORE &&
-        player1Id.score !== player2Id.score;
+        player1Info.score !== NO_SCORE &&
+        player2Info.score !== NO_SCORE &&
+        player1Info.score !== player2Info.score;
       let scoreResult = {
         has_result,
         winner: "",
         loser: "",
       };
 
-      if (has_result) {
-        switch (player1Id.score > player2Id.score) {
+      if (scoreResult.has_result) {
+        switch (player1Info.score > player2Info.score) {
           case true:
             scoreResult = {
               ...scoreResult,
@@ -184,15 +184,34 @@ export default createStore({
       }
 
       // WIN
-      WIN: for (const gameInfoIdx in nextWinGame) {
-        const gameInfo = nextWinGame[gameInfoIdx];
+      for (
+        let roundIdxTemp = roundIdx + 1;
+        roundIdxTemp < state.contestInfo[GAME_TYPE.WIN].length;
+        roundIdxTemp++
+      ) {
+        const roundInfoTemp = state.contestInfo[GAME_TYPE.WIN][roundIdxTemp];
+        for (const gameInfoTemp of roundInfoTemp) {
+          for (const playerIdx of Object.keys(PLAYER_KEY)) {
+            const playerKey = [PLAYER_KEY[playerIdx]];
+            const playerSort = gameInfoTemp[playerKey].sort;
 
-        for (const playerIdx of Object.keys(PLAYER_KEY)) {
-          const playerKey = PLAYER_KEY[playerIdx];
-          const playerSort = gameInfo[playerKey].sort;
-          if (playerSort.roundIdx === roundIdx && playerSort.game_idx === idx) {
-            nextWinGame[gameInfoIdx][playerKey].id = scoreResult.winner;
-            break WIN;
+            // clear all origin winner id
+            if (
+              gameInfoTemp[playerKey].id === player1Info.id ||
+              gameInfoTemp[playerKey].id === player2Info.id
+            ) {
+              gameInfoTemp[playerKey].id = "";
+              gameInfoTemp[playerKey].score = NO_SCORE;
+            }
+
+            // add new winner id
+            if (
+              roundIdxTemp === roundIdx + 1 &&
+              playerSort.roundIdx === roundIdx &&
+              playerSort.game_idx === idx
+            ) {
+              gameInfoTemp[playerKey].id = scoreResult.winner;
+            }
           }
         }
       }
@@ -215,7 +234,6 @@ export default createStore({
       const seedPlayer = state.teamInfo
         .filter((team) => team.is_seed)
         .map((v) => v.id);
-      let seedCount = seedPlayer.length;
 
       // not seed
       const notSeedPlayer = state.teamInfo

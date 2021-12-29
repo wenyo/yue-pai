@@ -33,6 +33,11 @@
           })
         "
         :placeholder="game.bye ? '-' : '比分'"
+        :value="
+          game[PLAYER_KEY.PLAYER1].score === NO_SCORE
+            ? ''
+            : game[PLAYER_KEY.PLAYER1].score
+        "
         :disabled="game.bye"
       />
     </div>
@@ -68,6 +73,11 @@
             score: $event.target.value,
           })
         "
+        :value="
+          game[PLAYER_KEY.PLAYER2].score === NO_SCORE
+            ? ''
+            : game[PLAYER_KEY.PLAYER2].score
+        "
         :placeholder="game.bye ? '-' : '比分'"
         :disabled="game.bye"
       />
@@ -79,6 +89,7 @@
         name=""
         id=""
         :disabled="game.bye"
+        :value="game.time"
         @change="
           gameDateChange({ roundIdx, idx: idx, date: $event.target.value })
         "
@@ -88,6 +99,7 @@
         type="text"
         name=""
         id=""
+        :value="game.place"
         :placeholder="game.bye ? '-' : '場地'"
         :disabled="game.bye"
         @change="
@@ -100,7 +112,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { ROUND_ONE, PLAYER_KEY } from "../utils/Enum";
+import { ROUND_ONE, PLAYER_KEY, NO_SCORE } from "../utils/Enum";
 
 export default {
   props: [
@@ -116,6 +128,7 @@ export default {
     return {
       ROUND_ONE,
       PLAYER_KEY,
+      NO_SCORE,
     };
   },
   computed: {
