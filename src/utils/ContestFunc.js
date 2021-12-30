@@ -1,4 +1,4 @@
-import { MAX_EXPONENT, PLAYER_KEY, NO_SCORE } from "../utils/Enum";
+import { MAX_EXPONENT, PLAYER_KEY, NO_SCORE, GAME_TYPE } from "../utils/Enum";
 
 export function gameSizeGet(team_count) {
   const base = 2;
@@ -131,6 +131,8 @@ export function checkPlayerIDInWinContest({
       for (const playerIdx of Object.keys(PLAYER_KEY)) {
         const playerKey = [PLAYER_KEY[playerIdx]];
         const playerSort = gameInfoTemp[playerKey].sort;
+
+        gameInfoTemp[playerKey].game_type === GAME_TYPE.WIN;
 
         // clear all origin winner id
         if (

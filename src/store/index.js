@@ -159,10 +159,12 @@ export default createStore({
               ...GAME_FORM,
               player1: {
                 ...GAME_FORM.player1,
+                game_type: GAME_TYPE.WIN,
                 sort: { roundIdx, game_idx: i * 2 },
               },
               player2: {
                 ...GAME_FORM.player2,
+                game_type: GAME_TYPE.WIN,
                 sort: { roundIdx, game_idx: i * 2 + 1 },
               },
             }
@@ -171,6 +173,7 @@ export default createStore({
       );
       state.contestInfo.WIN = newGameInfo;
     },
+    roundOneLose() {},
   },
   actions: {
     singleInfoSizeChange({ state, commit }, { base, exponent }) {
