@@ -223,6 +223,7 @@ export default createStore({
       console.log(state.contestInfo);
     },
     doubleInfoSizeChange({ state, commit }, { base, exponent }) {
+      const gameLenInLose = Math.pow(base, exponent) / 2;
       for (let i = 0; i <= exponent; i++) {
         const gameLen = Math.pow(base, i);
         switch (i) {
@@ -235,6 +236,7 @@ export default createStore({
         }
       }
       console.log(state.contestInfo);
+      console.log(gameLenInLose);
     },
     contestInfoSizeChange({ state, dispatch, commit }) {
       const { base, exponent } = gameSizeGet(state.teamCount);
