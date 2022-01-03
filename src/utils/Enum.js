@@ -52,7 +52,7 @@ export const GAME_FORM = {
     id: "",
     //round others
     game_type: "",
-    sort: { round: -1, game_idx: -1 },
+    sort: { roundIdx: -1, game_idx: -1 },
     winner_chose: true,
   },
   player2: {
@@ -61,7 +61,7 @@ export const GAME_FORM = {
     id: "",
     //round others
     game_type: "",
-    sort: { round: -1, game_idx: -1 },
+    sort: { roundIdx: -1, game_idx: -1 },
     winner_chose: true,
   },
   place: "",

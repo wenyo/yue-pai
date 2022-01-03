@@ -173,6 +173,35 @@ export default createStore({
       );
       state.contestInfo.WIN = newGameInfo;
     },
+    thirdPlaceAdd(state) {
+      const lastRoundIdx = state.contestInfo.WIN.length - 1;
+      const lastTwoRoundIdx = lastRoundIdx - 1;
+      const thirdPlaceInfo = Object.assign(
+        {},
+        {
+          ...GAME_FORM,
+          player1: {
+            ...GAME_FORM.player1,
+            game_type: GAME_TYPE.WIN,
+            winner_chose: false,
+            sort: {
+              roundIdx: lastTwoRoundIdx,
+              game_idx: 0,
+            },
+          },
+          player2: {
+            ...GAME_FORM.player2,
+            game_type: GAME_TYPE.WIN,
+            winner_chose: false,
+            sort: {
+              roundIdx: lastTwoRoundIdx,
+              game_idx: 1,
+            },
+          },
+        }
+      );
+      state.contestInfo.WIN[lastRoundIdx].push(thirdPlaceInfo);
+    },
     roundOneLose() {},
   },
   actions: {
@@ -188,6 +217,7 @@ export default createStore({
             break;
         }
       }
+      commit("thirdPlaceAdd");
       console.log(state.contestInfo);
     },
     doubleInfoSizeChange({ state, commit }, { base, exponent }) {
