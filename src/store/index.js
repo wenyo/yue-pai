@@ -190,6 +190,20 @@ export default createStore({
       }
       console.log(state.contestInfo);
     },
+    doubleInfoSizeChange({ state, commit }, { base, exponent }) {
+      for (let i = 0; i <= exponent; i++) {
+        const gameLen = Math.pow(base, i);
+        switch (i) {
+          case exponent:
+            commit("roundOneWin", { gameLen });
+            break;
+          default:
+            commit("roundOtherWin", { roundIdx: exponent - i - 1, gameLen });
+            break;
+        }
+      }
+      console.log(state.contestInfo);
+    },
     contestInfoSizeChange({ state, dispatch, commit }) {
       const { base, exponent } = gameSizeGet(state.teamCount);
       const CONTEST_TYPE_KEY = Object.keys(CONTEST_TYPE);
@@ -197,6 +211,9 @@ export default createStore({
       switch (state.type) {
         case CONTEST_TYPE_KEY[0]:
           dispatch("singleInfoSizeChange", { base, exponent });
+          break;
+        case CONTEST_TYPE_KEY[1]:
+          dispatch("doubleInfoSizeChange", { base, exponent });
           break;
         default:
           break;
