@@ -33,7 +33,9 @@ export default createStore({
       state.contestInfo = JSON.parse(JSON.stringify(CONTEST_INFO_DEFAULT));
     },
     teamCountChange(state, payload) {
-      const newTeamCount = parseInt(payload.target.value);
+      // temp for test
+      // const newTeamCount = parseInt(payload.target.value);
+      const newTeamCount = payload;
       state.teamCount = newTeamCount;
       state.teamInfo = Array.from({ length: newTeamCount }, (v, i) =>
         Object.assign(
