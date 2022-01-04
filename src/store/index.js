@@ -208,7 +208,7 @@ export default createStore({
     roundOneLose(state, { gameLenInLose }) {
       const winGameLen = state.contestInfo.WIN[0].length;
       let newGameInfo = Object.assign([], state.contestInfo.LOSE);
-      newGameInfo.unshift(
+      newGameInfo.push(
         Array.from({ length: gameLenInLose }, (v, i) => {
           return Object.assign(
             {},
@@ -224,6 +224,34 @@ export default createStore({
                 ...GAME_FORM.player2,
                 game_type: GAME_TYPE.WIN,
                 sort: { roundIdx: ROUND_IDX.ONE, game_idx: i + winGameLen / 2 },
+                winner_chose: false,
+              },
+            }
+          );
+        })
+      );
+      state.contestInfo.LOSE = newGameInfo;
+    },
+    roundOtherLose(state, { loseGameIdx, gameLenInLose }) {
+      const prevRoundLose = loseGameIdx - 1;
+      const prevRoundWin = loseGameIdx;
+      let newGameInfo = Object.assign([], state.contestInfo.LOSE);
+      newGameInfo.push(
+        Array.from({ length: gameLenInLose }, (v, i) => {
+          return Object.assign(
+            {},
+            {
+              ...GAME_FORM,
+              player1: {
+                ...GAME_FORM.player1,
+                game_type: GAME_TYPE.LOSE,
+                sort: { roundIdx: prevRoundLose, game_idx: i },
+                winner_chose: true,
+              },
+              player2: {
+                ...GAME_FORM.player2,
+                game_type: GAME_TYPE.WIN,
+                sort: { roundIdx: prevRoundWin, game_idx: i },
                 winner_chose: false,
               },
             }
@@ -267,15 +295,22 @@ export default createStore({
             break;
         }
       }
+
+      console.log(roundLenInLose);
       // LOSE
-      for (let loseGameIdx = 0; loseGameIdx < roundLenInLose; loseGameIdx++) {
+      for (let loseGameIdx = 0; loseGameIdx <= roundLenInLose; loseGameIdx++) {
+        console.log(loseGameIdx);
+
         switch (loseGameIdx) {
           case ROUND_IDX.ONE:
             commit("roundOneLose", { gameLenInLose });
-
             break;
-
+          case roundLenInLose - 1:
+            break;
+          case roundLenInLose:
+            break;
           default:
+            commit("roundOtherLose", { loseGameIdx, gameLenInLose });
             break;
         }
       }

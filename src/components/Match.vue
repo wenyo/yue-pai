@@ -102,11 +102,13 @@ export default {
   },
   methods: {
     placeholderGetFromPrevGame(playerKey) {
+      const gameTypeText =
+        this.game[playerKey].game_type === GAME_TYPE.WIN ? "勝部" : "敗部";
       const winnerChose = this.game[playerKey].winner_chose ? "勝者" : "敗者";
       const sort = this.game[playerKey].sort;
       const prevRound = sort.roundIdx + 1;
       const prevGameSort = sort.game_idx + 1;
-      return `${prevRound}-${prevGameSort} ${winnerChose}`;
+      return `${gameTypeText}-${prevRound}-${prevGameSort} ${winnerChose}`;
     },
     placeholderGet(playerKey) {
       if (this.contestType === GAME_TYPE.WIN && this.round === this.ROUND.ONE) {
