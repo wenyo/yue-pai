@@ -8,6 +8,7 @@ import {
   TEAM_FORM,
   GAME_FORM,
   CONTEST_INFO_DEFAULT,
+  ROUND_IDX,
 } from "../utils/Enum";
 import {
   gameSizeGet,
@@ -18,7 +19,7 @@ import {
 
 export default createStore({
   state: {
-    type: CONTEST_TYPE.SINGLE.id,
+    type: CONTEST_TYPE.DOUBLE.id,
     teamCount: 0,
     teamInfo: [],
     contestInfo: JSON.parse(JSON.stringify(CONTEST_INFO_DEFAULT)),
@@ -204,7 +205,33 @@ export default createStore({
       );
       state.contestInfo.WIN[lastRoundIdx].push(thirdPlaceInfo);
     },
-    roundOneLose() {},
+    roundOneLose(state, { gameLenInLose }) {
+      const winGameLen = state.contestInfo.WIN[0].length;
+      let newGameInfo = Object.assign([], state.contestInfo.LOSE);
+      newGameInfo.unshift(
+        Array.from({ length: gameLenInLose }, (v, i) => {
+          return Object.assign(
+            {},
+            {
+              ...GAME_FORM,
+              player1: {
+                ...GAME_FORM.player1,
+                game_type: GAME_TYPE.WIN,
+                sort: { roundIdx: ROUND_IDX.ONE, game_idx: i },
+                winner_chose: false,
+              },
+              player2: {
+                ...GAME_FORM.player2,
+                game_type: GAME_TYPE.WIN,
+                sort: { roundIdx: ROUND_IDX.ONE, game_idx: i + winGameLen / 2 },
+                winner_chose: false,
+              },
+            }
+          );
+        })
+      );
+      state.contestInfo.LOSE = newGameInfo;
+    },
   },
   actions: {
     singleInfoSizeChange({ state, commit }, { base, exponent }) {
@@ -223,20 +250,37 @@ export default createStore({
       console.log(state.contestInfo);
     },
     doubleInfoSizeChange({ state, commit }, { base, exponent }) {
+      const roundLenInLose = exponent + 1;
       const gameLenInLose = Math.pow(base, exponent) / 2;
-      for (let i = 0; i <= exponent; i++) {
-        const gameLen = Math.pow(base, i);
-        switch (i) {
+      // WIN
+      for (let winGameIdx = 0; winGameIdx <= exponent; winGameIdx++) {
+        const gameLen = Math.pow(base, winGameIdx);
+        switch (winGameIdx) {
           case exponent:
             commit("roundOneWin", { gameLen });
             break;
           default:
-            commit("roundOtherWin", { roundIdx: exponent - i - 1, gameLen });
+            commit("roundOtherWin", {
+              roundIdx: exponent - winGameIdx - 1,
+              gameLen,
+            });
+            break;
+        }
+      }
+      // LOSE
+      for (let loseGameIdx = 0; loseGameIdx < roundLenInLose; loseGameIdx++) {
+        switch (loseGameIdx) {
+          case ROUND_IDX.ONE:
+            commit("roundOneLose", { gameLenInLose });
+
+            break;
+
+          default:
             break;
         }
       }
       console.log(state.contestInfo);
-      console.log(gameLenInLose);
+      console.log(gameLenInLose, roundLenInLose);
     },
     contestInfoSizeChange({ state, dispatch, commit }) {
       const { base, exponent } = gameSizeGet(state.teamCount);
