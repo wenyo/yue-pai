@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="contest">
     <ul v-for="(roundInfo, roundIdx) in contestInfo.WIN" :key="roundIdx">
       <Match
         v-for="(game, idx) in roundInfo"
@@ -7,12 +7,15 @@
         :game="game"
         :idx="idx"
         :roundIdx="roundIdx"
+        :contestType="GAME_TYPE.WIN"
         :team-name-change="teamNameChange"
         :game-date-change="gameDateChangeByWin"
         :game-place-change="gamePlaceChangeByWin"
         :game-score-change="gameScoreChangeByWin"
       />
     </ul>
+  </div>
+  <div class="contest">
     <ul v-for="(roundInfo, roundIdx) in contestInfo.LOSE" :key="roundIdx">
       <Match
         v-for="(game, idx) in roundInfo"
@@ -20,6 +23,7 @@
         :game="game"
         :idx="idx"
         :roundIdx="roundIdx"
+        :contestType="GAME_TYPE.LOSE"
         :team-name-change="teamNameChange"
         :game-date-change="gameDateChangeByLose"
         :game-place-change="gamePlaceChangeByLose"
@@ -34,6 +38,11 @@ import { mapState, mapMutations } from "vuex";
 import Match from "./Match";
 import { GAME_TYPE } from "../utils/Enum";
 export default {
+  data() {
+    return {
+      GAME_TYPE,
+    };
+  },
   components: { Match },
   computed: {
     ...mapState(["contestInfo"]),
@@ -100,8 +109,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.contest {
+  display: flex;
+  margin-bottom: 50px;
+}
 ul {
-  height: 100%;
   li {
     margin-bottom: 20px;
   }

@@ -16,7 +16,7 @@
         :placeholder="placeholderGet(PLAYER_KEY[playerKey])"
         :value="valueGet(PLAYER_KEY[playerKey])"
         :disabled="
-          round !== ROUND_ONE ||
+          round !== ROUND.ONE ||
           (game.bye && game[PLAYER_KEY[playerKey]].id === '')
         "
       />
@@ -74,10 +74,11 @@
 
 <script>
 import { mapState } from "vuex";
-import { ROUND_ONE, PLAYER_KEY, NO_SCORE } from "../utils/Enum";
+import { ROUND, PLAYER_KEY, NO_SCORE, GAME_TYPE } from "../utils/Enum";
 
 export default {
   props: [
+    "contestType",
     "game",
     "idx",
     "roundIdx",
@@ -88,7 +89,7 @@ export default {
   ],
   data() {
     return {
-      ROUND_ONE,
+      ROUND,
       PLAYER_KEY,
       NO_SCORE,
     };
@@ -104,16 +105,16 @@ export default {
       const winnerChose = this.game[playerKey].winner_chose ? "勝者" : "敗者";
       const sort = this.game[playerKey].sort;
       const prevRound = sort.roundIdx + 1;
-      return `${prevRound}-${sort.game_idx} ${winnerChose}`;
+      const prevGameSort = sort.game_idx + 1;
+      return `${prevRound}-${prevGameSort} ${winnerChose}`;
     },
     placeholderGet(playerKey) {
-      switch (this.round) {
-        case this.ROUND_ONE:
-          return this.game.bye && this.game[playerKey].id === ""
-            ? "輪空"
-            : "隊伍名稱";
-        default:
-          return this.placeholderGetFromPrevGame(playerKey);
+      if (this.contestType === GAME_TYPE.WIN && this.round === this.ROUND.ONE) {
+        return this.game.bye && this.game[playerKey].id === ""
+          ? "輪空"
+          : "隊伍名稱";
+      } else {
+        return this.placeholderGetFromPrevGame(playerKey);
       }
     },
     valueGet(playerKey) {

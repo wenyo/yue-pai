@@ -29,7 +29,8 @@ export const MAX_EXPONENT = 6;
 
 export const NO_SCORE = -1;
 
-export const ROUND_ONE = 1;
+export const ROUND = { ONE: 1 };
+export const ROUND_IDX = { ONE: 0 };
 
 export const CONTEST_INFO_DEFAULT = { WIN: [], LOSE: [] };
 
