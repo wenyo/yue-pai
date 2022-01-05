@@ -14,12 +14,7 @@
         </option>
       </select>
       <label for="team-count">輸入隊伍數</label>
-      <input
-        type="number"
-        id="team-count"
-        :value="teamCount"
-        @change="teamCountChange"
-      />
+      <input type="number" id="team-count" v-model="teamCountNum" />
     </div>
     <div class="step">
       <router-link to="/" custom v-slot="{ navigate }">
@@ -43,6 +38,14 @@ export default {
   },
   computed: {
     ...mapState(["type", "teamCount"]),
+    teamCountNum: {
+      get() {
+        return this.teamCount;
+      },
+      set(value) {
+        this.teamCountChange(value);
+      },
+    },
   },
   methods: {
     ...mapMutations(["typeChange", "teamCountChange"]),
