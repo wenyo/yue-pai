@@ -237,8 +237,8 @@ export default createStore({
       state.contestInfo.LOSE = newGameInfo;
     },
     roundLoseFromLoseWin(state, { winRoundIdx, gameLenInLose }) {
-      const prevRoundLose = winRoundIdx;
-      const prevRoundWin = winRoundIdx + 1;
+      const prevRoundIdxLose = state.contestInfo.LOSE.length - 1;
+      const prevRoundIdxWin = winRoundIdx + 1;
       let newGameInfo = Object.assign([], state.contestInfo.LOSE);
       newGameInfo.push(
         Array.from({ length: gameLenInLose }, (v, i) => {
@@ -250,13 +250,13 @@ export default createStore({
               player1: {
                 ...GAME_FORM.player1,
                 game_type: GAME_TYPE.LOSE,
-                sort: { roundIdx: prevRoundLose, game_idx: i },
+                sort: { roundIdx: prevRoundIdxLose, game_idx: i },
                 winner_chose: true,
               },
               player2: {
                 ...GAME_FORM.player2,
                 game_type: GAME_TYPE.WIN,
-                sort: { roundIdx: prevRoundWin, game_idx: player2GameIdx },
+                sort: { roundIdx: prevRoundIdxWin, game_idx: player2GameIdx },
                 winner_chose: false,
               },
             }
