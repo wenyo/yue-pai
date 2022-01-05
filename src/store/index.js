@@ -205,6 +205,7 @@ export default createStore({
       );
       state.contestInfo.WIN[lastRoundIdx].push(thirdPlaceInfo);
     },
+    // fix: 勝部輪空則無敗者，亦有兩隊接輪空
     roundLoseFromLose(state, { winRoundIdx, gameLenInLose }) {
       const winGameLen = state.contestInfo.WIN[winRoundIdx].length;
       const gameType =
