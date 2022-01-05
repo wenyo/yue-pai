@@ -205,8 +205,12 @@ export default createStore({
       );
       state.contestInfo.WIN[lastRoundIdx].push(thirdPlaceInfo);
     },
-    roundOneLose(state, { gameLenInLose }) {
-      const winGameLen = state.contestInfo.WIN[0].length;
+    roundLoseFromLose(state, { winRoundIdx, gameLenInLose }) {
+      const winGameLen = state.contestInfo.WIN[winRoundIdx].length;
+      const gameType =
+        winRoundIdx === ROUND_IDX.ONE ? GAME_TYPE.WIN : GAME_TYPE.LOSE;
+      const winnerChose = winRoundIdx === ROUND_IDX.ONE ? false : true;
+
       let newGameInfo = Object.assign([], state.contestInfo.LOSE);
       newGameInfo.push(
         Array.from({ length: gameLenInLose }, (v, i) => {
@@ -216,15 +220,15 @@ export default createStore({
               ...GAME_FORM,
               player1: {
                 ...GAME_FORM.player1,
-                game_type: GAME_TYPE.WIN,
-                sort: { roundIdx: ROUND_IDX.ONE, game_idx: i },
-                winner_chose: false,
+                game_type: gameType,
+                sort: { roundIdx: winRoundIdx, game_idx: i },
+                winner_chose: winnerChose,
               },
               player2: {
                 ...GAME_FORM.player2,
-                game_type: GAME_TYPE.WIN,
-                sort: { roundIdx: ROUND_IDX.ONE, game_idx: i + winGameLen / 2 },
-                winner_chose: false,
+                game_type: gameType,
+                sort: { roundIdx: winRoundIdx, game_idx: i + winGameLen / 2 },
+                winner_chose: winnerChose,
               },
             }
           );
@@ -232,12 +236,13 @@ export default createStore({
       );
       state.contestInfo.LOSE = newGameInfo;
     },
-    roundOtherLose(state, { loseGameIdx, gameLenInLose }) {
-      const prevRoundLose = loseGameIdx - 1;
-      const prevRoundWin = loseGameIdx;
+    roundLoseFromLoseWin(state, { winRoundIdx, gameLenInLose }) {
+      const prevRoundLose = winRoundIdx;
+      const prevRoundWin = winRoundIdx + 1;
       let newGameInfo = Object.assign([], state.contestInfo.LOSE);
       newGameInfo.push(
         Array.from({ length: gameLenInLose }, (v, i) => {
+          const player2GameIdx = gameLenInLose - i - 1;
           return Object.assign(
             {},
             {
@@ -251,7 +256,7 @@ export default createStore({
               player2: {
                 ...GAME_FORM.player2,
                 game_type: GAME_TYPE.WIN,
-                sort: { roundIdx: prevRoundWin, game_idx: i },
+                sort: { roundIdx: prevRoundWin, game_idx: player2GameIdx },
                 winner_chose: false,
               },
             }
@@ -262,25 +267,7 @@ export default createStore({
     },
   },
   actions: {
-    singleInfoSizeChange({ state, commit }, { base, exponent }) {
-      for (let i = 0; i <= exponent; i++) {
-        const gameLen = Math.pow(base, i);
-        switch (i) {
-          case exponent:
-            commit("roundOneWin", { gameLen });
-            break;
-          default:
-            commit("roundOtherWin", { roundIdx: exponent - i - 1, gameLen });
-            break;
-        }
-      }
-      commit("thirdPlaceAdd");
-      console.log(state.contestInfo);
-    },
-    doubleInfoSizeChange({ state, commit }, { base, exponent }) {
-      const roundLenInLose = exponent + 1;
-      const gameLenInLose = Math.pow(base, exponent) / 2;
-      // WIN
+    singleInfoSizeChange({ commit }, { base, exponent }) {
       for (let winGameIdx = 0; winGameIdx <= exponent; winGameIdx++) {
         const gameLen = Math.pow(base, winGameIdx);
         switch (winGameIdx) {
@@ -295,27 +282,31 @@ export default createStore({
             break;
         }
       }
-
-      console.log(roundLenInLose);
-      // LOSE
-      for (let loseGameIdx = 0; loseGameIdx <= roundLenInLose; loseGameIdx++) {
-        console.log(loseGameIdx);
-
-        switch (loseGameIdx) {
-          case ROUND_IDX.ONE:
-            commit("roundOneLose", { gameLenInLose });
-            break;
-          case roundLenInLose - 1:
-            break;
-          case roundLenInLose:
+      commit("thirdPlaceAdd");
+    },
+    doubleInfoSizeChange({ commit }, { base, exponent }) {
+      // WIN
+      for (let winGameIdx = 0; winGameIdx <= exponent; winGameIdx++) {
+        const gameLenWin = Math.pow(base, winGameIdx);
+        switch (winGameIdx) {
+          case exponent:
+            commit("roundOneWin", { gameLen: gameLenWin });
             break;
           default:
-            commit("roundOtherLose", { loseGameIdx, gameLenInLose });
+            commit("roundOtherWin", {
+              roundIdx: exponent - winGameIdx - 1,
+              gameLen: gameLenWin,
+            });
             break;
         }
       }
-      console.log(state.contestInfo);
-      console.log(gameLenInLose, roundLenInLose);
+
+      // LOSE
+      for (let winRoundIdx = 0; winRoundIdx < exponent; winRoundIdx++) {
+        const gameLenInLose = Math.pow(base, exponent - winRoundIdx - 1);
+        commit("roundLoseFromLose", { winRoundIdx, gameLenInLose });
+        commit("roundLoseFromLoseWin", { winRoundIdx, gameLenInLose });
+      }
     },
     contestInfoSizeChange({ state, dispatch, commit }) {
       const { base, exponent } = gameSizeGet(state.teamCount);
@@ -331,6 +322,7 @@ export default createStore({
         default:
           break;
       }
+      console.log(state.contestInfo);
     },
   },
   modules: {},
