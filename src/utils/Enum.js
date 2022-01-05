@@ -68,4 +68,5 @@ export const GAME_FORM = {
   place: "",
   time: "",
   bye: false,
+  show: true,
 };

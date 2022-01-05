@@ -215,6 +215,15 @@ export default createStore({
       let newGameInfo = Object.assign([], state.contestInfo.LOSE);
       newGameInfo.push(
         Array.from({ length: gameLenInLose }, (v, i) => {
+          const player1GameIdx = i;
+          const player2GameIdx = i + winGameLen / 2;
+          const player1Exist =
+            !!state.contestInfo[gameType][winRoundIdx][player1GameIdx].bye &&
+            !winnerChose;
+          const player2Exist =
+            !!state.contestInfo[gameType][winRoundIdx][player2GameIdx].bye &&
+            !winnerChose;
+          console.log(player1Exist, player2Exist);
           return Object.assign(
             {},
             {
@@ -222,13 +231,13 @@ export default createStore({
               player1: {
                 ...GAME_FORM.player1,
                 game_type: gameType,
-                sort: { roundIdx: winRoundIdx, game_idx: i },
+                sort: { roundIdx: winRoundIdx, game_idx: player1GameIdx },
                 winner_chose: winnerChose,
               },
               player2: {
                 ...GAME_FORM.player2,
                 game_type: gameType,
-                sort: { roundIdx: winRoundIdx, game_idx: i + winGameLen / 2 },
+                sort: { roundIdx: winRoundIdx, game_idx: player2GameIdx },
                 winner_chose: winnerChose,
               },
             }
