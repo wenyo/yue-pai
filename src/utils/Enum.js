@@ -28,6 +28,7 @@ export const GAME_TYPE = {
 export const MAX_EXPONENT = 6;
 
 export const NO_SCORE = -1;
+export const NO_ID = "-1";
 
 export const ROUND = { ONE: 1 };
 export const ROUND_IDX = { ONE: 0 };
@@ -45,21 +46,22 @@ export const TEAM_FORM = {
   is_seed: false,
 };
 
+// 需加上判斷：player 是否為當前輪空隊伍
 export const GAME_FORM = {
   type: GAME_TYPE.WIN,
   player1: {
-    score: -1,
+    score: NO_SCORE,
     //round 1
-    id: "",
+    id: NO_ID,
     //round others
     game_type: "",
     sort: { roundIdx: -1, game_idx: -1 },
     winner_chose: true,
   },
   player2: {
-    score: -1,
+    score: NO_SCORE,
     //round 1
-    id: "",
+    id: NO_ID,
     //round others
     game_type: "",
     sort: { roundIdx: -1, game_idx: -1 },

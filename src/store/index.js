@@ -207,7 +207,8 @@ export default createStore({
     },
     // fix: 勝部輪空則無敗者，亦有兩隊接輪空
     roundLoseFromLose(state, { winRoundIdx, gameLenInLose }) {
-      const winGameLen = state.contestInfo.WIN[winRoundIdx].length;
+      const winContest = state.contestInfo.WIN[winRoundIdx];
+      const winRoundLen = winContest.length;
       const gameType =
         winRoundIdx === ROUND_IDX.ONE ? GAME_TYPE.WIN : GAME_TYPE.LOSE;
       const winnerChose = winRoundIdx === ROUND_IDX.ONE ? false : true;
@@ -216,28 +217,44 @@ export default createStore({
       newGameInfo.push(
         Array.from({ length: gameLenInLose }, (v, i) => {
           const player1GameIdx = i;
-          const player2GameIdx = i + winGameLen / 2;
-          const player1Exist =
-            !!state.contestInfo[gameType][winRoundIdx][player1GameIdx].bye &&
-            !winnerChose;
-          const player2Exist =
-            !!state.contestInfo[gameType][winRoundIdx][player2GameIdx].bye &&
-            !winnerChose;
-          console.log(player1Exist, player2Exist);
+          const player2GameIdx = i + winRoundLen / 2;
+          const player1Exist = !winContest[player1GameIdx].bye || winnerChose;
+          const player2Exist = !winContest[player2GameIdx].bye || winnerChose;
+          let player1Sort = {
+            roundIdx: winRoundIdx,
+            game_idx: player1GameIdx,
+          };
+          let player2Sort = {
+            roundIdx: winRoundIdx,
+            game_idx: player2GameIdx,
+          };
+          // console.log(player1Exist, player2Exist);
+
+          if (winRoundIdx !== ROUND_IDX.ONE && winContest[player1GameIdx].bye) {
+            console.log(winContest[player1GameIdx]);
+            // player1Sort = Object.assign({}, winContest[player1GameIdx].sort);
+          }
+          if (winRoundIdx !== ROUND_IDX.ONE && winContest[player2GameIdx].bye) {
+            console.log(winContest[player2GameIdx]);
+            // player2Sort = Object.assign({}, winContest[player2GameIdx].sort);
+          }
+
           return Object.assign(
             {},
             {
               ...GAME_FORM,
+              show: player1Exist || player2Exist,
+              bye: !player1Exist || !player2Exist,
               player1: {
                 ...GAME_FORM.player1,
                 game_type: gameType,
-                sort: { roundIdx: winRoundIdx, game_idx: player1GameIdx },
+                sort: player1Sort,
                 winner_chose: winnerChose,
               },
               player2: {
                 ...GAME_FORM.player2,
                 game_type: gameType,
-                sort: { roundIdx: winRoundIdx, game_idx: player2GameIdx },
+                sort: player2Sort,
                 winner_chose: winnerChose,
               },
             }
@@ -253,22 +270,32 @@ export default createStore({
       newGameInfo.push(
         Array.from({ length: gameLenInLose }, (v, i) => {
           const player2GameIdx = gameLenInLose - i - 1;
+          let player1 = {
+            ...GAME_FORM.player1,
+            game_type: GAME_TYPE.LOSE,
+            sort: { roundIdx: prevRoundIdxLose, game_idx: i },
+            winner_chose: true,
+          };
+          let player2 = {
+            ...GAME_FORM.player2,
+            game_type: GAME_TYPE.WIN,
+            sort: {
+              roundIdx: prevRoundIdxWin,
+              game_idx: player2GameIdx,
+            },
+          };
+          const player1Pre = state.contestInfo.LOSE[prevRoundIdxLose][i];
+          if (player1Pre.bye && player1Pre.show) {
+            console.log(i, player1Pre);
+          }
+
           return Object.assign(
             {},
             {
               ...GAME_FORM,
-              player1: {
-                ...GAME_FORM.player1,
-                game_type: GAME_TYPE.LOSE,
-                sort: { roundIdx: prevRoundIdxLose, game_idx: i },
-                winner_chose: true,
-              },
-              player2: {
-                ...GAME_FORM.player2,
-                game_type: GAME_TYPE.WIN,
-                sort: { roundIdx: prevRoundIdxWin, game_idx: player2GameIdx },
-                winner_chose: false,
-              },
+              player1,
+              player2,
+              winner_chose: false,
             }
           );
         })

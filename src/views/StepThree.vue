@@ -29,7 +29,7 @@ export default {
     };
   },
   created() {
-    this.teamCountChange(8);
+    this.teamCountChange(9);
     // temp for test
     this.contestInfoSizeChange(this.teamCount);
   },
