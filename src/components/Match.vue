@@ -1,5 +1,5 @@
 <template>
-  <li>
+  <li v-if="game.show">
     <!-- team name & score -->
     <div v-for="playerKey in Object.keys(PLAYER_KEY)" :key="playerKey">
       <input
@@ -116,23 +116,10 @@ export default {
       return `${gameTypeText}-${prevRound}-${prevGameSort} ${winnerChoseText}`;
     },
     placeholderGet(playerKey) {
-      if (this.contestType === GAME_TYPE.WIN && this.round === this.ROUND.ONE) {
-        return this.game.bye && this.game[playerKey].id === this.NO_ID
-          ? "輪空"
-          : "隊伍名稱";
-      }
+      if (this.game.bye_player.includes(playerKey)) return "輪空";
 
-      const gameType = this.game[playerKey].game_type;
-      const winnerChose = this.game[playerKey].winner_chose;
-      const sort = this.game[playerKey].sort;
-      const prevGameIsBye =
-        this.contestInfo[gameType][sort.roundIdx][sort.game_idx].bye;
-      const prevGameIsShow =
-        this.contestInfo[gameType][sort.roundIdx][sort.game_idx].show;
-      if (!prevGameIsShow || (prevGameIsBye && !winnerChose)) {
-        return "輪空";
-      }
-
+      if (this.round === this.ROUND.ONE && this.contestType === GAME_TYPE.WIN)
+        return "隊伍名稱";
       return this.placeholderGetFromPrevGame(playerKey);
     },
     valueGet(playerKey) {

@@ -70,5 +70,6 @@ export const GAME_FORM = {
   place: "",
   time: "",
   bye: false,
+  bye_player: [],
   show: true,
 };

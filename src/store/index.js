@@ -15,6 +15,7 @@ import {
   roundOneGameSortGet,
   roundOneInfoBuild,
   checkPlayerIDInWinContest,
+  gameInfoCheck,
 } from "../utils/ContestFunc";
 
 export default createStore({
@@ -205,7 +206,6 @@ export default createStore({
       );
       state.contestInfo.WIN[lastRoundIdx].push(thirdPlaceInfo);
     },
-    // fix: 勝部輪空則無敗者，亦有兩隊接輪空
     roundLoseFromLose(state, { winRoundIdx, gameLenInLose }) {
       const winContest = state.contestInfo.WIN[winRoundIdx];
       const winRoundLen = winContest.length;
@@ -228,16 +228,10 @@ export default createStore({
             roundIdx: winRoundIdx,
             game_idx: player2GameIdx,
           };
-          // console.log(player1Exist, player2Exist);
 
-          if (winRoundIdx !== ROUND_IDX.ONE && winContest[player1GameIdx].bye) {
-            console.log(winContest[player1GameIdx]);
-            // player1Sort = Object.assign({}, winContest[player1GameIdx].sort);
-          }
-          if (winRoundIdx !== ROUND_IDX.ONE && winContest[player2GameIdx].bye) {
-            console.log(winContest[player2GameIdx]);
-            // player2Sort = Object.assign({}, winContest[player2GameIdx].sort);
-          }
+          let bye_player = [];
+          if (!player1Exist) bye_player.push(PLAYER_KEY.PLAYER1);
+          if (!player2Exist) bye_player.push(PLAYER_KEY.PLAYER2);
 
           return Object.assign(
             {},
@@ -245,6 +239,7 @@ export default createStore({
               ...GAME_FORM,
               show: player1Exist || player2Exist,
               bye: !player1Exist || !player2Exist,
+              bye_player,
               player1: {
                 ...GAME_FORM.player1,
                 game_type: gameType,
@@ -270,34 +265,39 @@ export default createStore({
       newGameInfo.push(
         Array.from({ length: gameLenInLose }, (v, i) => {
           const player2GameIdx = gameLenInLose - i - 1;
-          let player1 = {
-            ...GAME_FORM.player1,
-            game_type: GAME_TYPE.LOSE,
-            sort: { roundIdx: prevRoundIdxLose, game_idx: i },
-            winner_chose: true,
-          };
-          let player2 = {
-            ...GAME_FORM.player2,
-            game_type: GAME_TYPE.WIN,
-            sort: {
-              roundIdx: prevRoundIdxWin,
-              game_idx: player2GameIdx,
-            },
-          };
-          const player1Pre = state.contestInfo.LOSE[prevRoundIdxLose][i];
-          if (player1Pre.bye && player1Pre.show) {
-            console.log(i, player1Pre);
-          }
+          const NEW_GAME_INFO = JSON.parse(JSON.stringify(GAME_FORM));
 
-          return Object.assign(
+          let gameInfo = Object.assign(
             {},
             {
-              ...GAME_FORM,
-              player1,
-              player2,
-              winner_chose: false,
+              ...NEW_GAME_INFO,
+              player1: {
+                ...NEW_GAME_INFO.player1,
+                game_type: GAME_TYPE.LOSE,
+                sort: { roundIdx: prevRoundIdxLose, game_idx: i },
+                winner_chose: true,
+              },
+              player2: {
+                ...NEW_GAME_INFO.player2,
+                game_type: GAME_TYPE.WIN,
+                sort: {
+                  roundIdx: prevRoundIdxWin,
+                  game_idx: player2GameIdx,
+                },
+                winner_chose: false,
+              },
             }
           );
+
+          const { game_info, contest_all } = gameInfoCheck({
+            game_info: gameInfo,
+            contest_all: state.contestInfo,
+          });
+
+          gameInfo = game_info;
+          state.contestInfo = contest_all;
+
+          return game_info;
         })
       );
       state.contestInfo.LOSE = newGameInfo;
