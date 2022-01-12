@@ -1,4 +1,11 @@
-import { MAX_EXPONENT, PLAYER_KEY, NO_SCORE, GAME_TYPE } from "../utils/Enum";
+import {
+  MAX_EXPONENT,
+  PLAYER_KEY,
+  NO_SCORE,
+  GAME_TYPE,
+  GAME_FORM,
+  NO_ID,
+} from "../utils/Enum";
 
 export function gameSizeGet(team_count) {
   const base = 2;
@@ -212,4 +219,32 @@ export function playerSortCheck({ player_info, player_pre }) {
   player_info.game_type = player_pre[playerOtherKey].game_type;
 
   return { player_info, player_pre };
+}
+
+export function roundRobinBuild({ player1_Id, player2_Id, bye }) {
+  const bye_player = bye ? [PLAYER_KEY.PLAYER2] : [];
+  const NEW_GAME_INFO = JSON.parse(JSON.stringify(GAME_FORM));
+  const player1Id = player1_Id;
+  const player2Id = bye ? NO_ID : player2_Id;
+
+  return Object.assign(
+    {},
+    {
+      ...NEW_GAME_INFO,
+      bye,
+      bye_player,
+      player1: {
+        ...NEW_GAME_INFO.player1,
+        game_type: GAME_TYPE.LOSE,
+        winner_chose: true,
+        id: player1Id,
+      },
+      player2: {
+        ...NEW_GAME_INFO.player2,
+        game_type: GAME_TYPE.WIN,
+        winner_chose: false,
+        id: player2Id,
+      },
+    }
+  );
 }

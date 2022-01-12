@@ -4,6 +4,7 @@
       <h3>3/填寫日期與場地與調整隊伍</h3>
       <Single v-if="type === CONTEST_TYPE.SINGLE.id" />
       <Double v-if="type === CONTEST_TYPE.DOUBLE.id" />
+      <Round v-if="type === CONTEST_TYPE.ROUND.id" />
     </div>
     <div class="step">
       <router-link to="/step_two" custom v-slot="{ navigate }">
@@ -21,6 +22,7 @@ import { mapState, mapActions, mapMutations } from "vuex";
 import { CONTEST_TYPE } from "../utils/Enum";
 import Single from "../components/Single";
 import Double from "../components/Double";
+import Round from "../components/Round";
 
 export default {
   data() {
@@ -33,7 +35,7 @@ export default {
     // temp for test
     this.contestInfoSizeChange(this.teamCount);
   },
-  components: { Single, Double },
+  components: { Single, Double, Round },
   computed: {
     ...mapState(["teamCount", "type"]),
   },

@@ -9,6 +9,7 @@ import {
   GAME_FORM,
   CONTEST_INFO_DEFAULT,
   ROUND_IDX,
+  NO_ID,
 } from "../utils/Enum";
 import {
   gameSizeGet,
@@ -16,11 +17,12 @@ import {
   roundOneInfoBuild,
   checkPlayerIDInWinContest,
   gameInfoCheck,
+  roundRobinBuild,
 } from "../utils/ContestFunc";
 
 export default createStore({
   state: {
-    type: CONTEST_TYPE.DOUBLE.id,
+    type: CONTEST_TYPE.ROUND.id,
     teamCount: 0,
     teamInfo: [],
     contestInfo: JSON.parse(JSON.stringify(CONTEST_INFO_DEFAULT)),
@@ -302,6 +304,41 @@ export default createStore({
       );
       state.contestInfo.LOSE = newGameInfo;
     },
+    roundRobinOne(state, { game_count }) {
+      const teamMaxId = state.teamCount - 1;
+      let newGameInfo = Object.assign([], state.contestInfo.WIN);
+
+      newGameInfo.push(
+        Array.from({ length: game_count }, (v, i) => {
+          const bye = i * 2 + 1 > teamMaxId;
+          const player1_Id = i * 2;
+          const player2_Id = bye ? NO_ID : i * 2 + 1;
+          return roundRobinBuild({ player1_Id, player2_Id, bye });
+        })
+      );
+      state.contestInfo.WIN = newGameInfo;
+    },
+    roundRobinOther(state, { round_count, game_count }) {
+      const teamMaxId = state.teamCount - 1;
+      let newGameInfo = Object.assign([], state.contestInfo.WIN);
+      const noMoveId = newGameInfo[0][0].player1.id;
+
+      for (let roundIdx = 1; roundIdx < round_count; roundIdx++) {
+        if (roundIdx === round_count - 1) break;
+
+        // const preRound = newGameInfo[roundIdx - 1];
+        newGameInfo.push(
+          Array.from({ length: game_count }, (v, i) => {
+            const bye = i * 2 + 1 > teamMaxId;
+            const player1_Id = i === 0 ? noMoveId : 1;
+            const player2_Id = bye ? NO_ID : 2;
+            return roundRobinBuild({ player1_Id, player2_Id, bye });
+          })
+        );
+      }
+
+      state.contestInfo.WIN = newGameInfo;
+    },
   },
   actions: {
     singleInfoSizeChange({ commit }, { base, exponent }) {
@@ -345,6 +382,13 @@ export default createStore({
         commit("roundLoseFromLoseWin", { winRoundIdx, gameLenInLose });
       }
     },
+    roundInfoSizeChange({ state, commit }) {
+      const round_count =
+        state.teamCount % 2 === 0 ? state.teamCount - 1 : state.teamCount;
+      const game_count = Math.ceil(state.teamCount / 2);
+      commit("roundRobinOne", { game_count });
+      commit("roundRobinOther", { round_count, game_count });
+    },
     contestInfoSizeChange({ state, dispatch, commit }) {
       const { base, exponent } = gameSizeGet(state.teamCount);
       const CONTEST_TYPE_KEY = Object.keys(CONTEST_TYPE);
@@ -355,6 +399,9 @@ export default createStore({
           break;
         case CONTEST_TYPE_KEY[1]:
           dispatch("doubleInfoSizeChange", { base, exponent });
+          break;
+        case CONTEST_TYPE_KEY[2]:
+          dispatch("roundInfoSizeChange", { base, exponent });
           break;
         default:
           break;
