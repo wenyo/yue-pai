@@ -5,6 +5,7 @@ import {
   GAME_TYPE,
   GAME_FORM,
   NO_ID,
+  ROUND_IDX,
 } from "../utils/Enum";
 
 export function gameSizeGet(team_count) {
@@ -221,11 +222,75 @@ export function playerSortCheck({ player_info, player_pre }) {
   return { player_info, player_pre };
 }
 
-export function roundRobinBuild({ player1_Id, player2_Id, bye }) {
-  const bye_player = bye ? [PLAYER_KEY.PLAYER2] : [];
+export function roundRobinIdOrderGet({ game_idx, game_last_idx }) {
+  let result = {
+    player1_order: {
+      game_idx: -1,
+      player_key: "",
+    },
+    player2_order: {
+      game_idx: -1,
+      player_key: "",
+    },
+  };
+
+  switch (game_idx) {
+    case ROUND_IDX.ONE:
+      result = {
+        player1_order: {
+          game_idx: ROUND_IDX.ONE,
+          player_key: PLAYER_KEY.PLAYER1,
+        },
+        player2_order: {
+          game_idx: ROUND_IDX.TWO,
+          player_key: PLAYER_KEY.PLAYER1,
+        },
+      };
+      break;
+
+    case game_last_idx:
+      result = {
+        player1_order: {
+          game_idx: game_idx,
+          player_key: PLAYER_KEY.PLAYER2,
+        },
+        player2_order: {
+          game_idx: game_idx - 1,
+          player_key: PLAYER_KEY.PLAYER2,
+        },
+      };
+      break;
+
+    default:
+      result = {
+        player1_order: {
+          game_idx: game_idx + 1,
+          player_key: PLAYER_KEY.PLAYER1,
+        },
+        player2_order: {
+          game_idx: game_idx - 1,
+          player_key: PLAYER_KEY.PLAYER2,
+        },
+      };
+      break;
+  }
+  return result;
+}
+
+export function roundRobinBuild({ player1_Id, player2_Id }) {
   const NEW_GAME_INFO = JSON.parse(JSON.stringify(GAME_FORM));
-  const player1Id = player1_Id;
-  const player2Id = bye ? NO_ID : player2_Id;
+  let bye = false;
+  let bye_player = [];
+
+  if (player1_Id === NO_ID) {
+    bye = true;
+    bye_player.push(PLAYER_KEY.PLAYER1);
+  }
+
+  if (player2_Id === NO_ID) {
+    bye = true;
+    bye_player.push(PLAYER_KEY.PLAYER2);
+  }
 
   return Object.assign(
     {},
@@ -237,13 +302,13 @@ export function roundRobinBuild({ player1_Id, player2_Id, bye }) {
         ...NEW_GAME_INFO.player1,
         game_type: GAME_TYPE.LOSE,
         winner_chose: true,
-        id: player1Id,
+        id: player1_Id,
       },
       player2: {
         ...NEW_GAME_INFO.player2,
         game_type: GAME_TYPE.WIN,
         winner_chose: false,
-        id: player2Id,
+        id: player2_Id,
       },
     }
   );

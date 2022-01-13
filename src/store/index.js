@@ -18,6 +18,7 @@ import {
   checkPlayerIDInWinContest,
   gameInfoCheck,
   roundRobinBuild,
+  roundRobinIdOrderGet,
 } from "../utils/ContestFunc";
 
 export default createStore({
@@ -46,7 +47,7 @@ export default createStore({
           {},
           {
             ...TEAM_FORM,
-            id: i.toString(),
+            id: i,
             name: i.toString() + "!!",
             is_seed: i % 4 === 0,
           }
@@ -319,22 +320,28 @@ export default createStore({
       state.contestInfo.WIN = newGameInfo;
     },
     roundRobinOther(state, { round_count, game_count }) {
-      const teamMaxId = state.teamCount - 1;
+      const game_last_idx = game_count - 1;
       let newGameInfo = Object.assign([], state.contestInfo.WIN);
-      const noMoveId = newGameInfo[0][0].player1.id;
 
       for (let roundIdx = 1; roundIdx < round_count; roundIdx++) {
-        if (roundIdx === round_count - 1) break;
+        const preRound = newGameInfo[roundIdx - 1];
+        const newGameInRound = Array.from({ length: game_count }, (v, i) => {
+          const { player1_order, player2_order } = roundRobinIdOrderGet({
+            game_idx: i,
+            game_last_idx,
+          });
 
-        // const preRound = newGameInfo[roundIdx - 1];
-        newGameInfo.push(
-          Array.from({ length: game_count }, (v, i) => {
-            const bye = i * 2 + 1 > teamMaxId;
-            const player1_Id = i === 0 ? noMoveId : 1;
-            const player2_Id = bye ? NO_ID : 2;
-            return roundRobinBuild({ player1_Id, player2_Id, bye });
-          })
-        );
+          const player1_Id =
+            preRound[player1_order.game_idx][player1_order.player_key].id;
+
+          const player2_Id =
+            preRound[player2_order.game_idx][player2_order.player_key].id;
+
+          return roundRobinBuild({ player1_Id, player2_Id });
+        }).sort((a, b) => {
+          return b.bye ? -1 : 1;
+        });
+        newGameInfo.push(newGameInRound);
       }
 
       state.contestInfo.WIN = newGameInfo;

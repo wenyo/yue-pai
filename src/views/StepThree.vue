@@ -31,7 +31,7 @@ export default {
     };
   },
   created() {
-    this.teamCountChange(5);
+    this.teamCountChange(7);
     // temp for test
     this.contestInfoSizeChange(this.teamCount);
   },
