@@ -338,8 +338,6 @@ export default createStore({
             preRound[player2_order.game_idx][player2_order.player_key].id;
 
           return roundRobinBuild({ player1_Id, player2_Id });
-        }).sort((a, b) => {
-          return b.bye ? -1 : 1;
         });
         newGameInfo.push(newGameInRound);
       }
