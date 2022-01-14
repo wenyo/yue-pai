@@ -73,3 +73,11 @@ export const GAME_FORM = {
   bye_player: [],
   show: true,
 };
+
+export const BUTTON_TYPE = {
+  MASTER: "master",
+  SECOND: "second",
+  THIRD: "third",
+  FORTH: "forth",
+  FIVE: "five",
+};

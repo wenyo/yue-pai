@@ -1,5 +1,11 @@
 <template>
   <div class="home">
+    <img class="rabbit" src="@/assets/img/rabbit.png" alt="rabbit background" />
+    <img
+      class="exclamation"
+      src="@/assets/img/exclamation_mark.svg"
+      alt="exclamation mark"
+    />
     <div class="contain">
       <div class="logo">
         <img src="../assets/img/logo-bg.svg" alt="" />
@@ -8,10 +14,12 @@
       <ul>
         <li v-for="(info, type) in CONTEST_TYPE" :key="type">{{ info.ch }}</li>
       </ul>
-      <div>
-        <button>讀取舊檔</button>
+      <div class="btn-area">
+        <Button :type="BUTTON_TYPE.FIVE">讀取舊檔</Button>
         <router-link to="/step_one" custom v-slot="{ navigate }">
-          <button @click="navigate">開新賽程</button>
+          <Button :type="BUTTON_TYPE.SECOND" :click_fun="navigate"
+            >開新賽程</Button
+          >
         </router-link>
       </div>
     </div>
@@ -22,37 +30,88 @@
 </template>
 
 <script>
-import { CONTEST_TYPE } from "../utils/Enum";
+import { CONTEST_TYPE, BUTTON_TYPE } from "../utils/Enum";
+import Button from "../components/Button.vue";
 export default {
   name: "Home",
   data() {
     return {
       CONTEST_TYPE,
+      BUTTON_TYPE,
     };
   },
+  components: { Button },
 };
 </script>
 
 <style scoped lang="scss">
 .home {
+  position: relative;
   width: 100vw;
   height: 100vh;
   background: url("../assets/img/bg-homepage.jpg") center;
   background-repeat: no-repeat;
   background-size: cover;
+  overflow: hidden;
+}
+
+.rabbit {
+  position: absolute;
+  z-index: 1;
+  width: 40%;
+  min-width: 500px;
+  top: 50%;
+  left: 60%;
+  transform: translateY(-50%);
+}
+
+.exclamation {
+  z-index: 1;
+  position: absolute;
+  width: 150px;
+  bottom: 50px;
+  left: 10px;
 }
 
 .contain {
   width: 60%;
   height: 88vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .logo {
-  width: 50%;
+  width: 70%;
   position: relative;
-  // img {
-  //   position: absolute;
-  // }
+  margin-bottom: 10px;
+
+  & img:last-child {
+    position: absolute;
+    left: 50%;
+    top: 40px;
+    transform: translateX(-50%);
+    width: 90%;
+  }
+}
+
+ul {
+  display: flex;
+  flex-direction: row;
+  color: $primary-color-third;
+  margin: 20px 0;
+  font-weight: bold;
+
+  & li:not(:last-child) {
+    margin-right: 10px;
+  }
+}
+
+.btn-area {
+  button {
+    margin: 0 10px;
+  }
 }
 
 footer {
