@@ -1,4 +1,5 @@
 <template>
+  <Header />
   <div class="contain">
     <div class="article">
       <h3>1/選擇賽制與隊伍數</h3>
@@ -30,12 +31,14 @@
 <script>
 import { mapMutations, mapState } from "vuex";
 import { CONTEST_TYPE } from "../utils/Enum.js";
+import Header from "../components/Header.vue";
 export default {
   data() {
     return {
       CONTEST_TYPE,
     };
   },
+  components: { Header },
   computed: {
     ...mapState(["type", "teamCount"]),
     teamCountNum: {

@@ -1,5 +1,5 @@
 <template>
-  <button :class="`${type} ${class_name}`" @click="click_fun">
+  <button :class="`${type} ${name}`" @click="click_fun">
     <slot></slot>
   </button>
 </template>
@@ -8,7 +8,7 @@
 import { BUTTON_TYPE } from "../utils/Enum";
 export default {
   props: {
-    class_name: {
+    name: {
       type: String,
       default: "",
     },

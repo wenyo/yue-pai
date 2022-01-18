@@ -6,7 +6,7 @@
       src="@/assets/img/exclamation_mark.svg"
       alt="exclamation mark"
     />
-    <div class="contain">
+    <div class="home-contain">
       <div class="logo">
         <img src="../assets/img/logo-bg.svg" alt="" />
         <img src="../assets/img/logo-yue_pai.svg" alt="" />
@@ -73,7 +73,7 @@ export default {
   left: 10px;
 }
 
-.contain {
+.home-contain {
   width: 60%;
   height: 88vh;
   display: flex;
