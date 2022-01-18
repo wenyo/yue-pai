@@ -1,6 +1,7 @@
 <template>
   <Header />
   <div class="contain">
+    <StepLine :now-step="1" />
     <div class="article">
       <h3>1/選擇賽制與隊伍數</h3>
       <label for="contest">選擇賽制</label>
@@ -32,13 +33,14 @@
 import { mapMutations, mapState } from "vuex";
 import { CONTEST_TYPE } from "../utils/Enum.js";
 import Header from "../components/Header.vue";
+import StepLine from "../components/StepLine.vue";
 export default {
   data() {
     return {
       CONTEST_TYPE,
     };
   },
-  components: { Header },
+  components: { Header, StepLine },
   computed: {
     ...mapState(["type", "teamCount"]),
     teamCountNum: {

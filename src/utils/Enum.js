@@ -81,3 +81,9 @@ export const BUTTON_TYPE = {
   FORTH: "forth",
   FIVE: "five",
 };
+
+export const STEP_IDX = {
+  ONE: 1,
+  TWO: 2,
+  THREE: 3,
+};
