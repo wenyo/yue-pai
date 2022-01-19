@@ -32,6 +32,7 @@
 <script>
 import { CONTEST_TYPE, BUTTON_TYPE } from "../utils/Enum";
 import Button from "../components/Button.vue";
+
 export default {
   name: "Home",
   data() {

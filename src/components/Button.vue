@@ -39,6 +39,7 @@ button {
   border: 1px solid $dark-100;
   border-radius: 2px;
   font-weight: bold;
+  height: 30px;
 }
 
 .master {

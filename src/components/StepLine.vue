@@ -1,8 +1,8 @@
 <template>
   <ul>
     <template v-for="idx in Object.values(STEP_IDX)" :key="idx">
-      <li v-if="nowStep === idx" class="now-step">0</li>
-      <li v-else>{{ idx }}</li>
+      <li v-if="nowStep === idx" class="now-step"></li>
+      <li :class="{ 'prev-step': nowStep > idx }" v-else>{{ idx }}</li>
     </template>
   </ul>
 </template>
@@ -23,7 +23,6 @@ export default {
 ul {
   display: flex;
   justify-content: space-between;
-  padding: 0 20px;
 }
 
 li {
@@ -38,6 +37,10 @@ li {
 
   &.now-step {
     background: url("../assets/img/step-now.svg") no-repeat;
+  }
+
+  &.prev-step {
+    color: $dark-100;
   }
 }
 
