@@ -2,8 +2,8 @@
   <Header />
   <div class="contain">
     <StepLine :now-step="3" />
+    <h3 class="step-title">3/填寫日期與場地與調整隊伍</h3>
     <div class="article">
-      <h3>3/填寫日期與場地與調整隊伍</h3>
       <Single v-if="type === CONTEST_TYPE.SINGLE.id" />
       <Double v-if="type === CONTEST_TYPE.DOUBLE.id" />
       <Round v-if="type === CONTEST_TYPE.ROUND.id" />
