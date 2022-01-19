@@ -39,8 +39,6 @@ export default {
     };
   },
   created() {
-    this.teamCountChange(7);
-    // temp for test
     this.contestInfoSizeChange(this.teamCount);
   },
   components: { Single, Double, Round, Button, Footer, StepLine, Header },

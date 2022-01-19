@@ -23,7 +23,7 @@ import {
 
 export default createStore({
   state: {
-    type: CONTEST_TYPE.ROUND.id,
+    type: "",
     teamCount: 0,
     teamInfo: [],
     contestInfo: JSON.parse(JSON.stringify(CONTEST_INFO_DEFAULT)),
@@ -38,8 +38,6 @@ export default createStore({
       state.contestInfo = JSON.parse(JSON.stringify(CONTEST_INFO_DEFAULT));
     },
     teamCountChange(state, payload) {
-      // temp for test
-      // const newTeamCount = parseInt(payload.target.value);
       const newTeamCount = payload;
       state.teamCount = newTeamCount;
       state.teamInfo = Array.from({ length: newTeamCount }, (v, i) =>
@@ -70,7 +68,6 @@ export default createStore({
 
       const thisGame = state.contestInfo[type][roundIdx][idx];
       let nextWinRound = state.contestInfo[GAME_TYPE.WIN][roundIdx + 1];
-      // const nextLoseGame = state.contestInfo[GAME_TYPE.LOSE][roundIdx];
 
       if (state.type === CONTEST_TYPE.ROUND.id && !nextWinRound) return;
 

@@ -23,6 +23,7 @@
           class="size-l"
           type="number"
           id="team-count"
+          min="0"
           v-model="teamCountNum"
         />
       </div>
@@ -33,7 +34,12 @@
       <Button :type="BUTTON_TYPE.FIVE" :click_fun="navigate">上一步</Button>
     </router-link>
     <router-link to="/step_two" custom v-slot="{ navigate }">
-      <Button :type="BUTTON_TYPE.SECOND" :click_fun="navigate">下一步</Button>
+      <Button
+        :type="BUTTON_TYPE.SECOND"
+        :click_fun="navigate"
+        :disabled="type === '' || teamCount <= 0"
+        >下一步</Button
+      >
     </router-link>
   </div>
   <Footer />
