@@ -40,7 +40,7 @@
             ? ''
             : game[PLAYER_KEY[playerKey]].score
         "
-        :disabled="game.bye"
+        :disabled="game.bye || game[PLAYER_KEY[playerKey]].id === NO_ID"
       />
     </div>
     <!-- date -->
