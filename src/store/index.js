@@ -15,7 +15,7 @@ import {
   gameSizeGet,
   roundOneGameSortGet,
   roundOneInfoBuild,
-  checkPlayerIDInWinContest,
+  checkPlayerIDInContest,
   gameInfoCheck,
   roundRobinBuild,
   roundRobinIdOrderGet,
@@ -87,15 +87,15 @@ export default createStore({
           case true:
             scoreResult = {
               ...scoreResult,
-              winner: thisGame[PLAYER_KEY.PLAYER1].id,
-              loser: thisGame[PLAYER_KEY.PLAYER2].id,
+              winner: player1Info.id,
+              loser: player2Info.id,
             };
             break;
           case false:
             scoreResult = {
               ...scoreResult,
-              winner: thisGame[PLAYER_KEY.PLAYER2].id,
-              loser: thisGame[PLAYER_KEY.PLAYER1].id,
+              winner: player2Info.id,
+              loser: player1Info.id,
             };
             break;
           default:
@@ -104,14 +104,29 @@ export default createStore({
       }
 
       // WIN contest
-      const contestWinInfo = state.contestInfo[GAME_TYPE.WIN];
-      state.contestInfo[GAME_TYPE.WIN] = checkPlayerIDInWinContest({
+      if (type === GAME_TYPE.WIN) {
+        state.contestInfo[GAME_TYPE.WIN] = checkPlayerIDInContest({
+          roundIdx,
+          idx,
+          contestInfo: state.contestInfo[GAME_TYPE.WIN],
+          player1Id: player1Info.id,
+          player2Id: player2Info.id,
+          scoreResult,
+          this_game_type: type,
+          game_type: GAME_TYPE.WIN,
+        });
+      }
+
+      // LOSE contest
+      state.contestInfo[GAME_TYPE.LOSE] = checkPlayerIDInContest({
         roundIdx,
         idx,
-        contestWinInfo,
-        player1Info,
-        player2Info,
+        contestInfo: state.contestInfo[GAME_TYPE.LOSE],
+        player1Id: player1Info.id,
+        player2Id: player2Info.id,
         scoreResult,
+        this_game_type: type,
+        game_type: GAME_TYPE.LOSE,
       });
     },
     seedChange(state, { is_seed, idx }) {

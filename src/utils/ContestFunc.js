@@ -123,42 +123,41 @@ export function roundOneInfoBuild({
   return newGameInfo;
 }
 
-export function checkPlayerIDInWinContest({
+export function checkPlayerIDInContest({
   roundIdx,
   idx,
-  contestWinInfo,
-  player1Info,
-  player2Info,
+  contestInfo,
+  player1Id,
+  player2Id,
   scoreResult,
+  this_game_type,
+  game_type,
 }) {
+  const nextRoundIdx = game_type === GAME_TYPE.WIN ? roundIdx + 1 : roundIdx;
   for (
-    let roundIdxTemp = roundIdx + 1;
-    roundIdxTemp < contestWinInfo.length;
+    let roundIdxTemp = nextRoundIdx; // next roundIdx
+    roundIdxTemp < contestInfo.length;
     roundIdxTemp++
   ) {
-    const roundInfoTemp = contestWinInfo[roundIdxTemp];
+    const roundInfoTemp = contestInfo[roundIdxTemp];
     for (const gameInfoTemp of roundInfoTemp) {
       for (const playerIdx of Object.keys(PLAYER_KEY)) {
         const playerKey = [PLAYER_KEY[playerIdx]];
         const playerSort = gameInfoTemp[playerKey].sort;
 
-        gameInfoTemp[playerKey].game_type === GAME_TYPE.WIN;
+        if (gameInfoTemp[playerKey].game_type !== this_game_type) continue;
 
         // clear all origin winner id
         if (
-          gameInfoTemp[playerKey].id === player1Info.id ||
-          gameInfoTemp[playerKey].id === player2Info.id
+          gameInfoTemp[playerKey].id === player1Id ||
+          gameInfoTemp[playerKey].id === player2Id
         ) {
           gameInfoTemp[playerKey].id = NO_ID;
           gameInfoTemp[playerKey].score = NO_SCORE;
         }
 
         // add new winner id
-        if (
-          roundIdxTemp === roundIdx + 1 &&
-          playerSort.roundIdx === roundIdx &&
-          playerSort.game_idx === idx
-        ) {
+        if (playerSort.roundIdx === roundIdx && playerSort.game_idx === idx) {
           gameInfoTemp[playerKey].id = gameInfoTemp[playerKey].winner_chose
             ? scoreResult.winner
             : scoreResult.loser;
@@ -166,7 +165,7 @@ export function checkPlayerIDInWinContest({
       }
     }
   }
-  return contestWinInfo;
+  return contestInfo;
 }
 
 export function byePlayerKeyGet(bye_player) {
