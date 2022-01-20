@@ -3,10 +3,14 @@ import {
   PLAYER_KEY,
   NO_SCORE,
   GAME_TYPE,
-  GAME_FORM,
   NO_ID,
   ROUND_IDX,
+  GAME_FORM,
 } from "../utils/Enum";
+
+export function newGameForm() {
+  return JSON.parse(JSON.stringify(GAME_FORM));
+}
 
 export function gameSizeGet(team_count) {
   const base = 2;
@@ -279,7 +283,7 @@ export function roundRobinIdOrderGet({ game_idx, game_last_idx }) {
 }
 
 export function roundRobinBuild({ player1_Id, player2_Id }) {
-  const NEW_GAME_INFO = JSON.parse(JSON.stringify(GAME_FORM));
+  const NEW_GAME_INFO = newGameForm();
   let bye = false;
   let bye_player = [];
 

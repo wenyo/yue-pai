@@ -1,5 +1,6 @@
 <template>
   <li v-if="game.show">
+    <div>{{ round }}-{{ game_number }}</div>
     <!-- team name & score -->
     <div v-for="playerKey in Object.keys(PLAYER_KEY)" :key="playerKey">
       <input
@@ -101,6 +102,9 @@ export default {
     ...mapState(["teamInfo", "contestInfo"]),
     round() {
       return this.roundIdx + 1;
+    },
+    game_number() {
+      return this.idx + 1;
     },
   },
   methods: {

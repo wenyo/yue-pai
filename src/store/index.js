@@ -6,7 +6,6 @@ import {
   NO_SCORE,
   CONTEST_VALUE,
   TEAM_FORM,
-  GAME_FORM,
   CONTEST_INFO_DEFAULT,
   ROUND_IDX,
   NO_ID,
@@ -19,6 +18,7 @@ import {
   gameInfoCheck,
   roundRobinBuild,
   roundRobinIdOrderGet,
+  newGameForm,
 } from "../utils/ContestFunc";
 
 export default createStore({
@@ -135,11 +135,7 @@ export default createStore({
     roundOneWin(state, { gameLen }) {
       const playerCountInGame = 2;
       let newGameInfo = Object.assign([], state.contestInfo.WIN);
-      newGameInfo.unshift(
-        Array.from({ length: gameLen }, () =>
-          JSON.parse(JSON.stringify(GAME_FORM))
-        )
-      );
+      newGameInfo.unshift(Array.from({ length: gameLen }, () => newGameForm()));
 
       // seed player
       const seedPlayer = state.teamInfo
@@ -171,7 +167,7 @@ export default createStore({
 
       newGameInfo.unshift(
         Array.from({ length: gameLen }, (v, i) => {
-          const NEW_GAME_FORM = JSON.parse(JSON.stringify(GAME_FORM));
+          const NEW_GAME_FORM = newGameForm();
           return Object.assign(
             {},
             {
@@ -192,13 +188,13 @@ export default createStore({
       );
       state.contestInfo.WIN = newGameInfo;
     },
-    thirdPlaceAdd(state) {
+    thirdPlaceWinAdd(state) {
       const lastRoundIdx = state.contestInfo.WIN.length - 1;
       const lastTwoRoundIdx = lastRoundIdx - 1;
       const lastTowRound = state.contestInfo.WIN[lastTwoRoundIdx];
       if (lastTowRound[0].bye || lastTowRound[1].bye) return;
 
-      const NEW_GAME_FORM = JSON.parse(JSON.stringify(GAME_FORM));
+      const NEW_GAME_FORM = newGameForm();
       const thirdPlaceInfo = Object.assign(
         {},
         {
@@ -225,13 +221,72 @@ export default createStore({
       );
       state.contestInfo.WIN[lastRoundIdx].push(thirdPlaceInfo);
     },
+    thirdPlaceLoseAdd(state) {
+      const lastWinRoundIdx = state.contestInfo.WIN.length - 1;
+      const lastLoseRoundIdx = state.contestInfo.LOSE.length - 1;
+      const NEW_GAME_FORM = newGameForm();
+
+      const championGame = {
+        ...NEW_GAME_FORM,
+        player1: {
+          ...NEW_GAME_FORM.player1,
+          game_type: GAME_TYPE.WIN,
+          winner_chose: true,
+          sort: { roundIdx: lastWinRoundIdx, game_idx: 1 },
+        },
+        player2: {
+          ...NEW_GAME_FORM.player2,
+          game_type: GAME_TYPE.LOSE,
+          winner_chose: true,
+          sort: { roundIdx: lastLoseRoundIdx, game_idx: 1 },
+        },
+      };
+
+      const thirdPlace = {
+        ...NEW_GAME_FORM,
+        player1: {
+          ...NEW_GAME_FORM.player1,
+          game_type: GAME_TYPE.WIN,
+          winner_chose: false,
+          sort: { roundIdx: lastWinRoundIdx, game_idx: 1 },
+        },
+        player2: {
+          ...NEW_GAME_FORM.player2,
+          game_type: GAME_TYPE.LOSE,
+          winner_chose: false,
+          sort: { roundIdx: lastLoseRoundIdx, game_idx: 1 },
+        },
+      };
+      state.contestInfo.WIN.push([championGame, thirdPlace]);
+    },
+    // 什麼時候加？
+    championAdd(state) {
+      const lastWinRoundIdx = state.contestInfo.WIN.length - 1;
+      const NEW_GAME_FORM = newGameForm();
+      const championGame = {
+        ...NEW_GAME_FORM,
+        player1: {
+          ...NEW_GAME_FORM.player1,
+          game_type: GAME_TYPE.WIN,
+          winner_chose: true,
+          sort: { roundIdx: lastWinRoundIdx, game_idx: 1 },
+        },
+        player2: {
+          ...NEW_GAME_FORM.player2,
+          game_type: GAME_TYPE.LOSE,
+          winner_chose: false,
+          sort: { roundIdx: lastWinRoundIdx, game_idx: 1 },
+        },
+      };
+      state.contestInfo.WIN.push([championGame]);
+    },
     roundLoseFromLose(state, { winRoundIdx, gameLenInLose }) {
       const winContest = state.contestInfo.WIN[winRoundIdx];
       const winRoundLen = winContest.length;
       const gameType =
         winRoundIdx === ROUND_IDX.ONE ? GAME_TYPE.WIN : GAME_TYPE.LOSE;
       const winnerChose = winRoundIdx === ROUND_IDX.ONE ? false : true;
-      const NEW_GAME_FORM = JSON.parse(JSON.stringify(GAME_FORM));
+      const NEW_GAME_FORM = newGameForm();
 
       let newGameInfo = Object.assign([], state.contestInfo.LOSE);
       newGameInfo.push(
@@ -285,7 +340,7 @@ export default createStore({
       newGameInfo.push(
         Array.from({ length: gameLenInLose }, (v, i) => {
           const player2GameIdx = gameLenInLose - i - 1;
-          const NEW_GAME_INFO = JSON.parse(JSON.stringify(GAME_FORM));
+          const NEW_GAME_INFO = newGameForm();
 
           let gameInfo = Object.assign(
             {},
@@ -378,7 +433,7 @@ export default createStore({
             break;
         }
       }
-      commit("thirdPlaceAdd");
+      commit("thirdPlaceWinAdd");
     },
     doubleInfoSizeChange({ commit }, { base, exponent }) {
       // WIN
@@ -403,6 +458,7 @@ export default createStore({
         commit("roundLoseFromLose", { winRoundIdx, gameLenInLose });
         commit("roundLoseFromLoseWin", { winRoundIdx, gameLenInLose });
       }
+      commit("thirdPlaceLoseAdd");
     },
     roundInfoSizeChange({ state, commit }) {
       const round_count =
