@@ -46,8 +46,7 @@ export default createStore({
           {
             ...TEAM_FORM,
             id: i,
-            name: i.toString() + "!!",
-            is_seed: i % 4 === 0,
+            name: i.toString() + "??",
           }
         )
       );
@@ -79,8 +78,8 @@ export default createStore({
         player1Info.score !== player2Info.score;
       let scoreResult = {
         has_result,
-        winner: "",
-        loser: "",
+        winner: NO_ID,
+        loser: NO_ID,
       };
 
       if (scoreResult.has_result) {
@@ -157,17 +156,18 @@ export default createStore({
 
       newGameInfo.unshift(
         Array.from({ length: gameLen }, (v, i) => {
+          const NEW_GAME_FORM = JSON.parse(JSON.stringify(GAME_FORM));
           return Object.assign(
             {},
             {
-              ...GAME_FORM,
+              ...NEW_GAME_FORM,
               player1: {
-                ...GAME_FORM.player1,
+                ...NEW_GAME_FORM.player1,
                 game_type: GAME_TYPE.WIN,
                 sort: { roundIdx, game_idx: i * 2 },
               },
               player2: {
-                ...GAME_FORM.player2,
+                ...NEW_GAME_FORM.player2,
                 game_type: GAME_TYPE.WIN,
                 sort: { roundIdx, game_idx: i * 2 + 1 },
               },
@@ -180,12 +180,16 @@ export default createStore({
     thirdPlaceAdd(state) {
       const lastRoundIdx = state.contestInfo.WIN.length - 1;
       const lastTwoRoundIdx = lastRoundIdx - 1;
+      const lastTowRound = state.contestInfo.WIN[lastTwoRoundIdx];
+      if (lastTowRound[0].bye || lastTowRound[1].bye) return;
+
+      const NEW_GAME_FORM = JSON.parse(JSON.stringify(GAME_FORM));
       const thirdPlaceInfo = Object.assign(
         {},
         {
-          ...GAME_FORM,
+          ...NEW_GAME_FORM,
           player1: {
-            ...GAME_FORM.player1,
+            ...NEW_GAME_FORM.player1,
             game_type: GAME_TYPE.WIN,
             winner_chose: false,
             sort: {
@@ -194,7 +198,7 @@ export default createStore({
             },
           },
           player2: {
-            ...GAME_FORM.player2,
+            ...NEW_GAME_FORM.player2,
             game_type: GAME_TYPE.WIN,
             winner_chose: false,
             sort: {
@@ -212,6 +216,7 @@ export default createStore({
       const gameType =
         winRoundIdx === ROUND_IDX.ONE ? GAME_TYPE.WIN : GAME_TYPE.LOSE;
       const winnerChose = winRoundIdx === ROUND_IDX.ONE ? false : true;
+      const NEW_GAME_FORM = JSON.parse(JSON.stringify(GAME_FORM));
 
       let newGameInfo = Object.assign([], state.contestInfo.LOSE);
       newGameInfo.push(
@@ -236,18 +241,18 @@ export default createStore({
           return Object.assign(
             {},
             {
-              ...GAME_FORM,
+              ...NEW_GAME_FORM,
               show: player1Exist || player2Exist,
               bye: !player1Exist || !player2Exist,
               bye_player,
               player1: {
-                ...GAME_FORM.player1,
+                ...NEW_GAME_FORM.player1,
                 game_type: gameType,
                 sort: player1Sort,
                 winner_chose: winnerChose,
               },
               player2: {
-                ...GAME_FORM.player2,
+                ...NEW_GAME_FORM.player2,
                 game_type: gameType,
                 sort: player2Sort,
                 winner_chose: winnerChose,

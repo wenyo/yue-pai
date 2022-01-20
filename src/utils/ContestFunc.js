@@ -149,7 +149,7 @@ export function checkPlayerIDInWinContest({
           gameInfoTemp[playerKey].id === player1Info.id ||
           gameInfoTemp[playerKey].id === player2Info.id
         ) {
-          gameInfoTemp[playerKey].id = "";
+          gameInfoTemp[playerKey].id = NO_ID;
           gameInfoTemp[playerKey].score = NO_SCORE;
         }
 
@@ -159,7 +159,9 @@ export function checkPlayerIDInWinContest({
           playerSort.roundIdx === roundIdx &&
           playerSort.game_idx === idx
         ) {
-          gameInfoTemp[playerKey].id = scoreResult.winner;
+          gameInfoTemp[playerKey].id = gameInfoTemp[playerKey].winner_chose
+            ? scoreResult.winner
+            : scoreResult.loser;
         }
       }
     }
