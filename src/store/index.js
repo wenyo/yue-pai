@@ -46,7 +46,7 @@ export default createStore({
           {
             ...TEAM_FORM,
             id: i,
-            name: i.toString() + "??",
+            name: i.toString(),
           }
         )
       );
