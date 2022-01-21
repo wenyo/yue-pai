@@ -104,18 +104,17 @@ export default createStore({
       }
 
       // WIN contest
-      if (type === GAME_TYPE.WIN) {
-        state.contestInfo[GAME_TYPE.WIN] = checkPlayerIDInContest({
-          roundIdx,
-          idx,
-          contestInfo: state.contestInfo[GAME_TYPE.WIN],
-          player1Id: player1Info.id,
-          player2Id: player2Info.id,
-          scoreResult,
-          this_game_type: type,
-          game_type: GAME_TYPE.WIN,
-        });
-      }
+
+      state.contestInfo[GAME_TYPE.WIN] = checkPlayerIDInContest({
+        roundIdx,
+        idx,
+        contestInfo: state.contestInfo[GAME_TYPE.WIN],
+        player1Id: player1Info.id,
+        player2Id: player2Info.id,
+        scoreResult,
+        this_game_type: type,
+        game_type: GAME_TYPE.WIN,
+      });
 
       // LOSE contest
       state.contestInfo[GAME_TYPE.LOSE] = checkPlayerIDInContest({
@@ -128,6 +127,20 @@ export default createStore({
         this_game_type: type,
         game_type: GAME_TYPE.LOSE,
       });
+
+      // check double championshipAdd
+      if (state.type !== CONTEST_TYPE.DOUBLE.id) return;
+
+      const championshipRound = state.contestInfo[GAME_TYPE.WIN].length - 2;
+      const championshipGameIdx = 0;
+      if (roundIdx !== championshipRound || championshipGameIdx !== idx) return;
+
+      const championshipAddRound = state.contestInfo[GAME_TYPE.WIN].length - 1;
+      const championshipAddGameIdx = 0;
+
+      state.contestInfo[GAME_TYPE.WIN][championshipAddRound][
+        championshipAddGameIdx
+      ].show = player1Info.score < player2Info.score;
     },
     seedChange(state, { is_seed, idx }) {
       state.teamInfo[idx].is_seed = is_seed;
@@ -205,7 +218,7 @@ export default createStore({
             winner_chose: false,
             sort: {
               roundIdx: lastTwoRoundIdx,
-              game_idx: 0,
+              game_idx: ROUND_IDX.ONE,
             },
           },
           player2: {
@@ -214,7 +227,7 @@ export default createStore({
             winner_chose: false,
             sort: {
               roundIdx: lastTwoRoundIdx,
-              game_idx: 1,
+              game_idx: ROUND_IDX.TWO,
             },
           },
         }
@@ -232,34 +245,18 @@ export default createStore({
           ...NEW_GAME_FORM.player1,
           game_type: GAME_TYPE.WIN,
           winner_chose: true,
-          sort: { roundIdx: lastWinRoundIdx, game_idx: 1 },
+          sort: { roundIdx: lastWinRoundIdx, game_idx: ROUND_IDX.ONE },
         },
         player2: {
           ...NEW_GAME_FORM.player2,
           game_type: GAME_TYPE.LOSE,
           winner_chose: true,
-          sort: { roundIdx: lastLoseRoundIdx, game_idx: 1 },
+          sort: { roundIdx: lastLoseRoundIdx, game_idx: ROUND_IDX.ONE },
         },
       };
 
-      const thirdPlace = {
-        ...NEW_GAME_FORM,
-        player1: {
-          ...NEW_GAME_FORM.player1,
-          game_type: GAME_TYPE.WIN,
-          winner_chose: false,
-          sort: { roundIdx: lastWinRoundIdx, game_idx: 1 },
-        },
-        player2: {
-          ...NEW_GAME_FORM.player2,
-          game_type: GAME_TYPE.LOSE,
-          winner_chose: false,
-          sort: { roundIdx: lastLoseRoundIdx, game_idx: 1 },
-        },
-      };
-      state.contestInfo.WIN.push([championGame, thirdPlace]);
+      state.contestInfo.WIN.push([championGame]);
     },
-    // 什麼時候加？
     championAdd(state) {
       const lastWinRoundIdx = state.contestInfo.WIN.length - 1;
       const NEW_GAME_FORM = newGameForm();
@@ -269,14 +266,15 @@ export default createStore({
           ...NEW_GAME_FORM.player1,
           game_type: GAME_TYPE.WIN,
           winner_chose: true,
-          sort: { roundIdx: lastWinRoundIdx, game_idx: 1 },
+          sort: { roundIdx: lastWinRoundIdx, game_idx: ROUND_IDX.ONE },
         },
         player2: {
           ...NEW_GAME_FORM.player2,
-          game_type: GAME_TYPE.LOSE,
+          game_type: GAME_TYPE.WIN,
           winner_chose: false,
-          sort: { roundIdx: lastWinRoundIdx, game_idx: 1 },
+          sort: { roundIdx: lastWinRoundIdx, game_idx: ROUND_IDX.ONE },
         },
+        show: false,
       };
       state.contestInfo.WIN.push([championGame]);
     },
@@ -459,6 +457,7 @@ export default createStore({
         commit("roundLoseFromLoseWin", { winRoundIdx, gameLenInLose });
       }
       commit("thirdPlaceLoseAdd");
+      commit("championAdd");
     },
     roundInfoSizeChange({ state, commit }) {
       const round_count =

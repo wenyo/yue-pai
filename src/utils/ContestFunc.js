@@ -137,14 +137,22 @@ export function checkPlayerIDInContest({
   this_game_type,
   game_type,
 }) {
-  const nextRoundIdx = game_type === GAME_TYPE.WIN ? roundIdx + 1 : roundIdx;
   for (
-    let roundIdxTemp = nextRoundIdx; // next roundIdx
+    let roundIdxTemp = roundIdx; // next roundIdx
     roundIdxTemp < contestInfo.length;
     roundIdxTemp++
   ) {
     const roundInfoTemp = contestInfo[roundIdxTemp];
-    for (const gameInfoTemp of roundInfoTemp) {
+    for (const gameIdxTemp in roundInfoTemp) {
+      // 同場比賽跳過
+      if (
+        this_game_type === game_type &&
+        roundIdxTemp === roundIdx &&
+        idx === parseInt(gameIdxTemp)
+      )
+        continue;
+
+      const gameInfoTemp = roundInfoTemp[gameIdxTemp];
       for (const playerIdx of Object.keys(PLAYER_KEY)) {
         const playerKey = [PLAYER_KEY[playerIdx]];
         const playerSort = gameInfoTemp[playerKey].sort;
