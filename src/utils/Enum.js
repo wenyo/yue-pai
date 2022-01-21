@@ -72,6 +72,8 @@ export const GAME_FORM = {
   bye: false,
   bye_player: [],
   show: true,
+  championship: false,
+  third_place: false,
 };
 
 export const BUTTON_TYPE = {

@@ -175,7 +175,7 @@ export default createStore({
         byeCount,
       });
     },
-    roundOtherWin(state, { roundIdx, gameLen }) {
+    roundOtherWin(state, { roundIdx, gameLen, last_round = false }) {
       let newGameInfo = Object.assign([], state.contestInfo.WIN);
 
       newGameInfo.unshift(
@@ -195,6 +195,7 @@ export default createStore({
                 game_type: GAME_TYPE.WIN,
                 sort: { roundIdx, game_idx: i * 2 + 1 },
               },
+              championship: last_round,
             }
           );
         })
@@ -230,11 +231,12 @@ export default createStore({
               game_idx: ROUND_IDX.TWO,
             },
           },
+          third_place: true,
         }
       );
       state.contestInfo.WIN[lastRoundIdx].push(thirdPlaceInfo);
     },
-    thirdPlaceLoseAdd(state) {
+    championLoseAdd(state) {
       const lastWinRoundIdx = state.contestInfo.WIN.length - 1;
       const lastLoseRoundIdx = state.contestInfo.LOSE.length - 1;
       const NEW_GAME_FORM = newGameForm();
@@ -253,6 +255,7 @@ export default createStore({
           winner_chose: true,
           sort: { roundIdx: lastLoseRoundIdx, game_idx: ROUND_IDX.ONE },
         },
+        championship: true,
       };
 
       state.contestInfo.WIN.push([championGame]);
@@ -274,6 +277,7 @@ export default createStore({
           winner_chose: false,
           sort: { roundIdx: lastWinRoundIdx, game_idx: ROUND_IDX.ONE },
         },
+        championship: true,
         show: false,
       };
       state.contestInfo.WIN.push([championGame]);
@@ -419,6 +423,7 @@ export default createStore({
     singleInfoSizeChange({ commit }, { base, exponent }) {
       for (let winGameIdx = 0; winGameIdx <= exponent; winGameIdx++) {
         const gameLen = Math.pow(base, winGameIdx);
+        console.log(winGameIdx, exponent - winGameIdx - 1);
         switch (winGameIdx) {
           case exponent:
             commit("roundOneWin", { gameLen });
@@ -427,6 +432,7 @@ export default createStore({
             commit("roundOtherWin", {
               roundIdx: exponent - winGameIdx - 1,
               gameLen,
+              last_round: exponent - winGameIdx - 1 === exponent - 1,
             });
             break;
         }
@@ -456,7 +462,7 @@ export default createStore({
         commit("roundLoseFromLose", { winRoundIdx, gameLenInLose });
         commit("roundLoseFromLoseWin", { winRoundIdx, gameLenInLose });
       }
-      commit("thirdPlaceLoseAdd");
+      commit("championLoseAdd");
       commit("championAdd");
     },
     roundInfoSizeChange({ state, commit }) {

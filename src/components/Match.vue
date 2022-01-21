@@ -1,6 +1,10 @@
 <template>
   <li v-if="game.show">
-    <div>{{ round }}-{{ game_number }}</div>
+    <div class="title">
+      <span>{{ round }}-{{ game_number }}</span>
+      <span class="red-icon" v-if="game.championship">決</span>
+      <span class="red-icon" v-if="game.third_place">季</span>
+    </div>
     <!-- team name & score -->
     <div v-for="playerKey in Object.keys(PLAYER_KEY)" :key="playerKey">
       <input
@@ -152,5 +156,21 @@ li {
   .w-50 {
     width: 50%;
   }
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.red-icon {
+  display: inline-block;
+  font-weight: bolder;
+  font-size: 13px;
+  color: $primary-color-second;
+  border: 2px solid $primary-color-second;
+  border-radius: 50%;
+  margin-left: 2px;
 }
 </style>
