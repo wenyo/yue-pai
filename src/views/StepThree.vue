@@ -1,7 +1,7 @@
 <template>
   <Header />
+  <StepLine :now-step="3" />
   <div class="contain">
-    <StepLine :now-step="3" />
     <h3 class="step-title">3/填寫日期與場地與調整隊伍</h3>
     <div class="article">
       <Single v-if="type === CONTEST_TYPE.SINGLE.id" />

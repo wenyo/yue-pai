@@ -1,7 +1,7 @@
 <template>
   <Header />
+  <StepLine :now-step="2" />
   <div class="contain">
-    <StepLine :now-step="2" />
     <h3 class="step-title">2/填寫隊伍名稱並選擇種子選手</h3>
     <div class="article">
       <ul>

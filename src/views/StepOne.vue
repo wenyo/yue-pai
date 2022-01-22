@@ -1,7 +1,7 @@
 <template>
   <Header />
+  <StepLine :now-step="1" />
   <div class="contain">
-    <StepLine :now-step="1" />
     <h3 class="step-title">1/選擇賽制與隊伍數</h3>
     <div class="article">
       <div class="setting-item">

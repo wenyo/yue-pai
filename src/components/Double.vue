@@ -114,8 +114,10 @@ export default {
   margin-bottom: 50px;
 }
 ul {
+  min-width: 25vw;
   li {
     margin-bottom: 20px;
+    width: 100%;
   }
 }
 </style>

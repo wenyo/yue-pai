@@ -49,7 +49,7 @@ header {
 }
 
 .read-file {
-  position: fixed;
+  position: absolute;
   right: 10px;
   margin-bottom: 5px;
 }
