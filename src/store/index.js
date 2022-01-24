@@ -19,6 +19,7 @@ import {
   roundRobinBuild,
   roundRobinIdOrderGet,
   newGameForm,
+  byePlayerKeyGet,
 } from "../utils/ContestFunc";
 
 export default createStore({
@@ -282,29 +283,55 @@ export default createStore({
       };
       state.contestInfo.WIN.push([championGame]);
     },
-    roundLoseFromLose(state, { winRoundIdx, gameLenInLose }) {
-      const winContest = state.contestInfo.WIN[winRoundIdx];
-      const winRoundLen = winContest.length;
+    roundLoseFromLose(state, { roundIdx, gameLenInLose }) {
       const gameType =
-        winRoundIdx === ROUND_IDX.ONE ? GAME_TYPE.WIN : GAME_TYPE.LOSE;
-      const winnerChose = winRoundIdx === ROUND_IDX.ONE ? false : true;
-      const NEW_GAME_FORM = newGameForm();
+        roundIdx === ROUND_IDX.ONE ? GAME_TYPE.WIN : GAME_TYPE.LOSE;
+      const contest = state.contestInfo[gameType][roundIdx];
+      const contestLen = contest.length;
+      const winnerChose = roundIdx === ROUND_IDX.ONE ? false : true;
 
       let newGameInfo = Object.assign([], state.contestInfo.LOSE);
       newGameInfo.push(
         Array.from({ length: gameLenInLose }, (v, i) => {
-          const player1GameIdx = i;
-          const player2GameIdx = i + winRoundLen / 2;
-          const player1Exist = !winContest[player1GameIdx].bye || winnerChose;
-          const player2Exist = !winContest[player2GameIdx].bye || winnerChose;
-          let player1Sort = {
-            roundIdx: winRoundIdx,
-            game_idx: player1GameIdx,
+          const NEW_GAME_FORM = newGameForm();
+          const player1SortGameIdx = i;
+          const player2SortGameIdx = i + contestLen / 2;
+          const play1PreGame = contest[player1SortGameIdx];
+          const play2PreGame = contest[player2SortGameIdx];
+          const player1Exist = !play1PreGame.bye || winnerChose;
+          const player2Exist = !play2PreGame.bye || winnerChose;
+          let player1Info = {
+            ...NEW_GAME_FORM.player1,
+            game_type: gameType,
+            sort: {
+              roundIdx: roundIdx,
+              game_idx: player1SortGameIdx,
+            },
+            winner_chose: winnerChose,
           };
-          let player2Sort = {
-            roundIdx: winRoundIdx,
-            game_idx: player2GameIdx,
+          let player2Info = {
+            ...NEW_GAME_FORM.player1,
+            game_type: gameType,
+            sort: {
+              roundIdx: roundIdx,
+              game_idx: player2SortGameIdx,
+            },
+            winner_chose: winnerChose,
           };
+
+          if (winnerChose && play1PreGame.bye) {
+            const prevPlayerKey = byePlayerKeyGet(play1PreGame.bye_player);
+            player1Info = JSON.parse(
+              JSON.stringify(play1PreGame[prevPlayerKey])
+            );
+          }
+
+          if (winnerChose && play2PreGame.bye) {
+            const prevPlayerKey = byePlayerKeyGet(play2PreGame.bye_player);
+            player2Info = JSON.parse(
+              JSON.stringify(play2PreGame[prevPlayerKey])
+            );
+          }
 
           let bye_player = [];
           if (!player1Exist) bye_player.push(PLAYER_KEY.PLAYER1);
@@ -317,27 +344,17 @@ export default createStore({
               show: player1Exist || player2Exist,
               bye: !player1Exist || !player2Exist,
               bye_player,
-              player1: {
-                ...NEW_GAME_FORM.player1,
-                game_type: gameType,
-                sort: player1Sort,
-                winner_chose: winnerChose,
-              },
-              player2: {
-                ...NEW_GAME_FORM.player2,
-                game_type: gameType,
-                sort: player2Sort,
-                winner_chose: winnerChose,
-              },
+              player1: player1Info,
+              player2: player2Info,
             }
           );
         })
       );
       state.contestInfo.LOSE = newGameInfo;
     },
-    roundLoseFromLoseWin(state, { winRoundIdx, gameLenInLose }) {
+    roundLoseFromLoseWin(state, { roundIdx, gameLenInLose }) {
       const prevRoundIdxLose = state.contestInfo.LOSE.length - 1;
-      const prevRoundIdxWin = winRoundIdx + 1;
+      const prevRoundIdxWin = roundIdx + 1;
       let newGameInfo = Object.assign([], state.contestInfo.LOSE);
       newGameInfo.push(
         Array.from({ length: gameLenInLose }, (v, i) => {
@@ -457,10 +474,10 @@ export default createStore({
       }
 
       // LOSE
-      for (let winRoundIdx = 0; winRoundIdx < exponent; winRoundIdx++) {
-        const gameLenInLose = Math.pow(base, exponent - winRoundIdx - 1);
-        commit("roundLoseFromLose", { winRoundIdx, gameLenInLose });
-        commit("roundLoseFromLoseWin", { winRoundIdx, gameLenInLose });
+      for (let roundIdx = 0; roundIdx < exponent; roundIdx++) {
+        const gameLenInLose = Math.pow(base, exponent - roundIdx - 1);
+        commit("roundLoseFromLose", { roundIdx, gameLenInLose });
+        commit("roundLoseFromLoseWin", { roundIdx, gameLenInLose });
       }
       commit("championLoseAdd");
       commit("championAdd");

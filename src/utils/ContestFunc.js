@@ -216,6 +216,7 @@ export function gameInfoCheck({ game_info, contest_all }) {
         break;
       case 2:
         game_info.bye_player.push(playerKey);
+        game_info.bye = true;
         break;
 
       default:

@@ -46,9 +46,7 @@ export const TEAM_FORM = {
   is_seed: false,
 };
 
-// 需加上判斷：player 是否為當前輪空隊伍
 export const GAME_FORM = {
-  type: GAME_TYPE.WIN,
   player1: {
     score: NO_SCORE,
     //round 1
