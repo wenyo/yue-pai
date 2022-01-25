@@ -51,7 +51,7 @@
     <!-- date -->
     <div>
       <input
-        class="w-50"
+        class="w-40"
         type="date"
         name=""
         id=""
@@ -61,9 +61,10 @@
           gameDateChange({ roundIdx, idx: idx, date: $event.target.value })
         "
       />
+      <input class="w-30" type="time" name="" id="" :disabled="game.bye" />
       <!-- place -->
       <input
-        class="w-50"
+        class="w-30"
         type="text"
         name=""
         id=""
@@ -152,6 +153,9 @@ li {
   }
   .w-30 {
     width: 30%;
+  }
+  .w-40 {
+    width: 40%;
   }
   .w-50 {
     width: 50%;
