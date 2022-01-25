@@ -10,6 +10,7 @@
         :contestType="GAME_TYPE.WIN"
         :team-name-change="teamNameChange"
         :game-date-change="gameDateChangeByWin"
+        :game-time-change="gameTimeChangeByWin"
         :game-place-change="gamePlaceChangeByWin"
         :game-score-change="gameScoreChangeByWin"
       />
@@ -26,6 +27,7 @@
         :contestType="GAME_TYPE.LOSE"
         :team-name-change="teamNameChange"
         :game-date-change="gameDateChangeByLose"
+        :game-time-change="gameTimeChangeByLose"
         :game-place-change="gamePlaceChangeByLose"
         :game-score-change="gameScoreChangeByLose"
       />
@@ -51,6 +53,7 @@ export default {
     ...mapMutations([
       "teamNameChange",
       "gameDateChangeByType",
+      "gameTimeChangeByType",
       "gamePlaceChangeByType",
       "gameScoreChangeByType",
     ]),
@@ -68,6 +71,22 @@ export default {
         roundIdx,
         idx,
         date,
+      });
+    },
+    gameTimeChangeByWin({ roundIdx, idx, time }) {
+      this.gameTimeChangeByType({
+        type: GAME_TYPE.WIN,
+        roundIdx,
+        idx,
+        time,
+      });
+    },
+    gameTimeChangeByLose({ roundIdx, idx, time }) {
+      this.gameDateChangeByType({
+        type: GAME_TYPE.LOSE,
+        roundIdx,
+        idx,
+        time,
       });
     },
     gamePlaceChangeByWin({ roundIdx, idx, place }) {

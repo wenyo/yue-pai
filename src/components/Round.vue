@@ -9,9 +9,10 @@
         :roundIdx="roundIdx"
         :contestType="GAME_TYPE.WIN"
         :team-name-change="teamNameChange"
-        :game-date-change="gameDateChangeByWin"
-        :game-place-change="gamePlaceChangeByWin"
-        :game-score-change="gameScoreChangeByWin"
+        :game-date-change="gameDateChange"
+        :game-time-change="gameTimeChange"
+        :game-place-change="gamePlaceChange"
+        :game-score-change="gameScoreChange"
       />
     </ul>
   </div>
@@ -35,10 +36,11 @@ export default {
     ...mapMutations([
       "teamNameChange",
       "gameDateChangeByType",
+      "gameTimeChangeByType",
       "gamePlaceChangeByType",
       "gameScoreChangeByType",
     ]),
-    gameDateChangeByWin({ roundIdx, idx, date }) {
+    gameDateChange({ roundIdx, idx, date }) {
       this.gameDateChangeByType({
         type: GAME_TYPE.WIN,
         roundIdx,
@@ -46,15 +48,15 @@ export default {
         date,
       });
     },
-    gameDateChangeByLose({ roundIdx, idx, date }) {
-      this.gameDateChangeByType({
-        type: GAME_TYPE.LOSE,
+    gameTimeChange({ roundIdx, idx, time }) {
+      this.gameTimeChangeByType({
+        type: GAME_TYPE.WIN,
         roundIdx,
         idx,
-        date,
+        time,
       });
     },
-    gamePlaceChangeByWin({ roundIdx, idx, place }) {
+    gamePlaceChange({ roundIdx, idx, place }) {
       this.gamePlaceChangeByType({
         type: GAME_TYPE.WIN,
         roundIdx,
@@ -62,26 +64,9 @@ export default {
         place,
       });
     },
-    gamePlaceChangeByLose({ roundIdx, idx, place }) {
-      this.gamePlaceChangeByType({
-        type: GAME_TYPE.LOSE,
-        roundIdx,
-        idx,
-        place,
-      });
-    },
-    gameScoreChangeByWin({ roundIdx, idx, playerKey, score }) {
+    gameScoreChange({ roundIdx, idx, playerKey, score }) {
       this.gameScoreChangeByType({
         type: GAME_TYPE.WIN,
-        roundIdx,
-        idx,
-        playerKey,
-        score,
-      });
-    },
-    gameScoreChangeByLose({ roundIdx, idx, playerKey, score }) {
-      this.gameScoreChangeByType({
-        type: GAME_TYPE.LOSE,
         roundIdx,
         idx,
         playerKey,

@@ -56,7 +56,11 @@ export default createStore({
       state.teamInfo[idx].name = name;
     },
     gameDateChangeByType(state, { type, roundIdx, idx, date }) {
-      state.contestInfo[type][roundIdx][idx].time = date;
+      state.contestInfo[type][roundIdx][idx].date = date;
+    },
+    gameTimeChangeByType(state, { type, roundIdx, idx, time }) {
+      state.contestInfo[type][roundIdx][idx].time = time;
+      console.log(state.contestInfo);
     },
     gamePlaceChangeByType(state, { type, roundIdx, idx, place }) {
       state.contestInfo[type][roundIdx][idx].place = place;

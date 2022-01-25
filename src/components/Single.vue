@@ -9,6 +9,7 @@
         :roundIdx="roundIdx"
         :team-name-change="teamNameChange"
         :game-date-change="gameDateChange"
+        :game-time-change="gameTimeChange"
         :game-place-change="gamePlaceChange"
         :game-score-change="gameScoreChange"
       />
@@ -29,6 +30,7 @@ export default {
     ...mapMutations([
       "teamNameChange",
       "gameDateChangeByType",
+      "gameTimeChangeByType",
       "gamePlaceChangeByType",
       "gameScoreChangeByType",
     ]),
@@ -38,6 +40,14 @@ export default {
         roundIdx,
         idx,
         date,
+      });
+    },
+    gameTimeChange({ roundIdx, idx, time }) {
+      this.gameTimeChangeByType({
+        type: GAME_TYPE.WIN,
+        roundIdx,
+        idx,
+        time,
       });
     },
     gamePlaceChange({ roundIdx, idx, place }) {

@@ -13,9 +13,10 @@
     <router-link to="/step_two" custom v-slot="{ navigate }">
       <Button :type="BUTTON_TYPE.FIVE" :click_fun="navigate">上一步</Button>
     </router-link>
-    <router-link to="/step_three" custom v-slot="{ navigate }">
-      <Button :type="BUTTON_TYPE.SECOND" :click_fun="navigate">下一步</Button>
-    </router-link>
+    <div class="btn-area">
+      <Button :type="BUTTON_TYPE.FORTH">列印賽程表</Button>
+      <Button :type="BUTTON_TYPE.SECOND">下載賽程表</Button>
+    </div>
   </div>
   <Footer />
 </template>
@@ -65,5 +66,8 @@ ul {
   li {
     width: 25%;
   }
+}
+.btn-area button {
+  margin-left: 15px;
 }
 </style>

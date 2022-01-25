@@ -56,12 +56,22 @@
         name=""
         id=""
         :disabled="game.bye"
-        :value="game.time"
+        :value="game.date"
         @change="
           gameDateChange({ roundIdx, idx: idx, date: $event.target.value })
         "
       />
-      <input class="w-30" type="time" name="" id="" :disabled="game.bye" />
+      <input
+        class="w-30"
+        type="time"
+        name=""
+        id=""
+        :value="game.time"
+        @change="
+          gameTimeChange({ roundIdx, idx: idx, time: $event.target.value })
+        "
+        :disabled="game.bye"
+      />
       <!-- place -->
       <input
         class="w-30"
@@ -91,6 +101,7 @@ export default {
     "roundIdx",
     "teamNameChange",
     "gameDateChange",
+    "gameTimeChange",
     "gamePlaceChange",
     "gameScoreChange",
   ],

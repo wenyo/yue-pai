@@ -56,7 +56,7 @@ button {
 }
 .forth {
   background-color: $primary-color-forth;
-  color: $dark-500;
+  color: $dark-100;
 }
 .five {
   background-color: $primary-color-five;

@@ -66,6 +66,7 @@ export const GAME_FORM = {
     winner_chose: true,
   },
   place: "",
+  date: "",
   time: "",
   bye: false,
   bye_player: [],
