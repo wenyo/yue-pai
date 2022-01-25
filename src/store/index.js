@@ -24,12 +24,17 @@ import {
 
 export default createStore({
   state: {
+    contestName: "",
     type: "",
     teamCount: 0,
     teamInfo: [],
     contestInfo: JSON.parse(JSON.stringify(CONTEST_INFO_DEFAULT)),
   },
   mutations: {
+    contestNameChange(state, payload) {
+      const newContestName = payload;
+      state.contestName = newContestName;
+    },
     typeChange(state, payload) {
       const newType = payload.target.value;
       if (!CONTEST_VALUE.includes(newType)) return;
@@ -60,7 +65,6 @@ export default createStore({
     },
     gameTimeChangeByType(state, { type, roundIdx, idx, time }) {
       state.contestInfo[type][roundIdx][idx].time = time;
-      console.log(state.contestInfo);
     },
     gamePlaceChangeByType(state, { type, roundIdx, idx, place }) {
       state.contestInfo[type][roundIdx][idx].place = place;
@@ -444,7 +448,6 @@ export default createStore({
     singleInfoSizeChange({ commit }, { base, exponent }) {
       for (let winGameIdx = 0; winGameIdx <= exponent; winGameIdx++) {
         const gameLen = Math.pow(base, winGameIdx);
-        console.log(winGameIdx, exponent - winGameIdx - 1);
         switch (winGameIdx) {
           case exponent:
             commit("roundOneWin", { gameLen });
