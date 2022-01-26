@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import download from "downloadjs";
 import {
   CONTEST_TYPE,
   GAME_TYPE,
@@ -31,6 +32,13 @@ export default createStore({
     contestInfo: JSON.parse(JSON.stringify(CONTEST_INFO_DEFAULT)),
   },
   mutations: {
+    downloadJSON(state) {
+      const nowTime = new Date();
+      const fileName = `${state.contestName}_${nowTime.getFullYear()}-${
+        nowTime.getMonth() + 1
+      }-${nowTime.getDate()}.json`;
+      download(JSON.stringify(state), fileName, "text/plain");
+    },
     contestNameChange(state, payload) {
       const newContestName = payload;
       state.contestName = newContestName;

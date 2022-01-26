@@ -15,7 +15,9 @@
     </router-link>
     <div class="btn-area">
       <Button :type="BUTTON_TYPE.FORTH">列印賽程表</Button>
-      <Button :type="BUTTON_TYPE.SECOND">下載賽程表</Button>
+      <Button :type="BUTTON_TYPE.SECOND" @click="downloadJSON"
+        >下載賽程表</Button
+      >
     </div>
   </div>
   <Footer />
@@ -47,7 +49,7 @@ export default {
     ...mapState(["teamCount", "type"]),
   },
   methods: {
-    ...mapMutations(["teamCountChange"]),
+    ...mapMutations(["teamCountChange", "downloadJSON"]),
     ...mapActions(["contestInfoSizeChange"]),
   },
 };
