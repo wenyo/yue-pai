@@ -137,8 +137,9 @@ export function checkPlayerIDInContest({
   this_game_type,
   game_type,
 }) {
+  const roundCheckIdx = this_game_type === game_type ? roundIdx : 0;
   for (
-    let roundIdxTemp = roundIdx; // next roundIdx
+    let roundIdxTemp = roundCheckIdx; // next roundIdx
     roundIdxTemp < contestInfo.length;
     roundIdxTemp++
   ) {

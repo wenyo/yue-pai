@@ -82,8 +82,7 @@ export default createStore({
       state.contestInfo[type][roundIdx][idx][playerKey].score =
         score === "" ? NO_SCORE : score;
 
-      let nextWinRound = state.contestInfo[GAME_TYPE.WIN][roundIdx + 1];
-      if (state.type === CONTEST_TYPE.ROUND.id || !nextWinRound) return;
+      if (state.type === CONTEST_TYPE.ROUND.id) return;
 
       // check winner for next round
       const thisGame = state.contestInfo[type][roundIdx][idx];
@@ -121,7 +120,6 @@ export default createStore({
       }
 
       // WIN contest
-
       state.contestInfo[GAME_TYPE.WIN] = checkPlayerIDInContest({
         roundIdx,
         idx,
