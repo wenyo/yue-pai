@@ -39,6 +39,14 @@ export default createStore({
       }-${nowTime.getDate()}.json`;
       download(JSON.stringify(state), fileName, "text/plain");
     },
+    filesContentGet(state, payload) {
+      const stateKeys = Object.keys(state);
+      const payloadKeys = Object.keys(payload);
+      for (const key of stateKeys) {
+        if (!payloadKeys.includes(key)) continue;
+        state[key] = payload[key];
+      }
+    },
     contestNameChange(state, payload) {
       const newContestName = payload;
       state.contestName = newContestName;

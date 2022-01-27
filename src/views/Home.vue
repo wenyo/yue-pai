@@ -15,7 +15,7 @@
         <li v-for="(info, type) in CONTEST_TYPE" :key="type">{{ info.ch }}</li>
       </ul>
       <div class="btn-area">
-        <Button :type="BUTTON_TYPE.FIVE">讀取舊檔</Button>
+        <ReadFile />
         <router-link to="/step_one" custom v-slot="{ navigate }">
           <Button :type="BUTTON_TYPE.SECOND" :click_fun="navigate"
             >開新賽程</Button
@@ -32,6 +32,7 @@
 <script>
 import { CONTEST_TYPE, BUTTON_TYPE } from "../utils/Enum";
 import Button from "../components/Button.vue";
+import ReadFile from "../components/ReadFile.vue";
 
 export default {
   name: "Home",
@@ -41,7 +42,7 @@ export default {
       BUTTON_TYPE,
     };
   },
-  components: { Button },
+  components: { Button, ReadFile },
 };
 </script>
 

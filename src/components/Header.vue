@@ -12,21 +12,15 @@
         placeholder="請填入賽事名稱"
       />
     </div>
-    <Button :type="BUTTON_TYPE.FIVE" :name="'read-file'">讀取舊檔</Button>
+    <ReadFile className="read-file" />
   </header>
 </template>
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { BUTTON_TYPE } from "../utils/Enum";
-import Button from "../components/Button";
+import ReadFile from "../components/ReadFile.vue";
 export default {
-  data() {
-    return {
-      BUTTON_TYPE,
-    };
-  },
-  components: { Button },
+  components: { ReadFile },
   computed: {
     ...mapState(["contestName"]),
     contestNameShow: {
