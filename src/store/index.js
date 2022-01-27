@@ -30,9 +30,11 @@ export default createStore({
     teamCount: 0,
     teamInfo: [],
     contestInfo: JSON.parse(JSON.stringify(CONTEST_INFO_DEFAULT)),
+    isOldData: false,
   },
   mutations: {
     downloadJSON(state) {
+      state.isOldData = true;
       const nowTime = new Date();
       const fileName = `${state.contestName}_${nowTime.getFullYear()}-${
         nowTime.getMonth() + 1
@@ -514,6 +516,7 @@ export default createStore({
       commit("roundRobinOther", { round_count, game_count });
     },
     contestInfoSizeChange({ state, dispatch, commit }) {
+      if (state.isOldData) return;
       const { base, exponent } = gameSizeGet(state.teamCount);
       const CONTEST_TYPE_KEY = Object.keys(CONTEST_TYPE);
       commit("contestInfoReset");
