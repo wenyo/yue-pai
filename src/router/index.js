@@ -3,6 +3,7 @@ import Home from "../views/Home.vue";
 import StepOne from "../views/StepOne.vue";
 import StepTwo from "../views/StepTwo.vue";
 import StepThree from "../views/StepThree.vue";
+import PrintContest from "../views/PrintContest.vue";
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: "/step_three",
     name: "StepThree",
     component: StepThree,
+  },
+  {
+    path: "/print_contest",
+    name: "PrintContest",
+    component: PrintContest,
   },
 ];
 

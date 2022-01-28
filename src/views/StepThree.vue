@@ -14,7 +14,11 @@
       <Button :type="BUTTON_TYPE.FIVE" :click_fun="navigate">上一步</Button>
     </router-link>
     <div class="btn-area">
-      <Button :type="BUTTON_TYPE.FORTH">列印賽程表</Button>
+      <router-link to="/print_contest" custom v-slot="{ navigate }">
+        <Button :type="BUTTON_TYPE.FORTH" :click_fun="navigate"
+          >列印賽程表</Button
+        >
+      </router-link>
       <Button :type="BUTTON_TYPE.SECOND" @click="downloadJSON"
         >下載賽程表</Button
       >
