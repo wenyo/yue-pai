@@ -30,11 +30,11 @@ export default createStore({
     teamCount: 0,
     teamInfo: [],
     contestInfo: JSON.parse(JSON.stringify(CONTEST_INFO_DEFAULT)),
-    isOldData: false,
+    isContestReset: true,
   },
   mutations: {
     downloadJSON(state) {
-      state.isOldData = true;
+      state.isContestReset = false;
       const nowTime = new Date();
       const fileName = `${state.contestName}_${nowTime.getFullYear()}-${
         nowTime.getMonth() + 1
@@ -57,12 +57,14 @@ export default createStore({
       const newType = payload.target.value;
       if (!CONTEST_VALUE.includes(newType)) return;
       state.type = newType;
+      state.isContestReset = true;
     },
-    contestInfoReset(state) {
+    contestInfoDefault(state) {
       state.contestInfo = JSON.parse(JSON.stringify(CONTEST_INFO_DEFAULT));
     },
     teamCountChange(state, payload) {
       const newTeamCount = payload;
+      state.isContestReset = true;
       state.teamCount = newTeamCount;
       state.teamInfo = Array.from({ length: newTeamCount }, (v, i) =>
         Object.assign(
@@ -169,6 +171,7 @@ export default createStore({
     },
     seedChange(state, { is_seed, idx }) {
       state.teamInfo[idx].is_seed = is_seed;
+      state.isContestReset = true;
     },
     roundOneWin(state, { gameLen }) {
       const playerCountInGame = 2;
@@ -516,10 +519,10 @@ export default createStore({
       commit("roundRobinOther", { round_count, game_count });
     },
     contestInfoSizeChange({ state, dispatch, commit }) {
-      if (state.isOldData) return;
+      if (!state.isContestReset) return;
       const { base, exponent } = gameSizeGet(state.teamCount);
       const CONTEST_TYPE_KEY = Object.keys(CONTEST_TYPE);
-      commit("contestInfoReset");
+      commit("contestInfoDefault");
       switch (state.type) {
         case CONTEST_TYPE_KEY[0]:
           dispatch("singleInfoSizeChange", { base, exponent });
