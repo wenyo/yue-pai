@@ -310,6 +310,42 @@ export default createStore({
       };
       state.contestInfo.WIN.push([championGame]);
     },
+    roundOneAllByeCheck(state) {
+      const loseContest = state.contestInfo[GAME_TYPE.LOSE];
+      const isOneNotBye = loseContest[0].includes((round) => !round.bye);
+
+      if (isOneNotBye) return;
+
+      const newLoseContest = loseContest.map((round) =>
+        round.map((game) => {
+          const player1Info = game.player1;
+          const player2Info = game.player2;
+          const player1LoseAdd =
+            player1Info.game_type === GAME_TYPE.LOSE ? -1 : 0;
+          const player2LoseAdd =
+            player2Info.game_type === GAME_TYPE.LOSE ? -1 : 0;
+          return {
+            ...game,
+            player1: {
+              ...player1Info,
+              sort: {
+                ...player1Info.sort,
+                roundIdx: player1Info.sort.roundIdx + player1LoseAdd,
+              },
+            },
+            player2: {
+              ...player2Info,
+              sort: {
+                ...player2Info.sort,
+                roundIdx: player2Info.sort.roundIdx + player2LoseAdd,
+              },
+            },
+          };
+        })
+      );
+      newLoseContest.shift();
+      state.contestInfo[GAME_TYPE.LOSE] = newLoseContest;
+    },
     roundLoseFromLose(state, { roundIdx, gameLenInLose }) {
       const gameType =
         roundIdx === ROUND_IDX.ONE ? GAME_TYPE.WIN : GAME_TYPE.LOSE;
@@ -508,6 +544,7 @@ export default createStore({
         commit("roundLoseFromLose", { roundIdx, gameLenInLose });
         commit("roundLoseFromLoseWin", { roundIdx, gameLenInLose });
       }
+      commit("roundOneAllByeCheck");
       commit("championLoseAdd");
       commit("championAdd");
     },
