@@ -1,11 +1,13 @@
 <template>
-  <div>54546546</div>
+  <MatchPrint />
 </template>
 
 <script>
+import MatchPrint from "../components/MatchPrint.vue";
 export default {
   mounted() {
-    window.print();
+    // window.print();
   },
+  components: { MatchPrint },
 };
 </script>
