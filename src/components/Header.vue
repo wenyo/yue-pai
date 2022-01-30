@@ -41,7 +41,6 @@ export default {
 <style lang="scss" scope>
 header {
   height: 75px;
-  margin-bottom: 25px;
   background-color: $primary-color-third;
   background: url("../assets/img/header.jpg") top;
   display: flex;

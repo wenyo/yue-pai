@@ -22,7 +22,7 @@ export default {
 <style lang="scss" scoped>
 ul {
   display: flex;
-  padding: 0 20px;
+  padding: 20px;
   justify-content: space-between;
 }
 
@@ -48,11 +48,11 @@ li {
 ul {
   & :not(:last-child)::after {
     content: "";
-    width: calc(50vw - 20px);
+    width: calc(50vw - 90px);
     height: 1px;
     position: absolute;
-    z-index: -1;
-    left: 0;
+    z-index: 0;
+    left: 50px;
     border-bottom: 1px dashed $dark-100;
   }
 }

@@ -1,40 +1,42 @@
 <template>
   <Header />
-  <StepLine :now-step="2" />
-  <div class="contain">
-    <h3 class="step-title">2/填寫隊伍名稱並選擇種子選手</h3>
-    <div class="article">
-      <ul>
-        <li v-for="idx in column" :key="idx">
-          <div>隊伍名稱</div>
-          <div>種子</div>
-        </li>
-        <li v-for="(info, idx) in teamInfo" :key="idx">
-          <input
-            type="text"
-            name=""
-            id=""
-            :value="info.name"
-            @change="teamNameChange({ name: $event.target.value, idx })"
-          />
-          <input
-            type="checkbox"
-            name=""
-            id=""
-            :checked="info.is_seed"
-            @change="seedChange({ is_seed: $event.target.checked, idx })"
-          />
-        </li>
-      </ul>
+  <div class="outer">
+    <StepLine :now-step="2" />
+    <div class="contain">
+      <h3 class="step-title">2/填寫隊伍名稱並選擇種子選手</h3>
+      <div class="article">
+        <ul>
+          <li v-for="idx in column" :key="idx">
+            <div>隊伍名稱</div>
+            <div>種子</div>
+          </li>
+          <li v-for="(info, idx) in teamInfo" :key="idx">
+            <input
+              type="text"
+              name=""
+              id=""
+              :value="info.name"
+              @change="teamNameChange({ name: $event.target.value, idx })"
+            />
+            <input
+              type="checkbox"
+              name=""
+              id=""
+              :checked="info.is_seed"
+              @change="seedChange({ is_seed: $event.target.checked, idx })"
+            />
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
-  <div class="step">
-    <router-link to="/step_one" custom v-slot="{ navigate }">
-      <Button :type="BUTTON_TYPE.FIVE" :click_fun="navigate">上一步</Button>
-    </router-link>
-    <router-link to="/step_three" custom v-slot="{ navigate }">
-      <Button :type="BUTTON_TYPE.SECOND" :click_fun="navigate">下一步</Button>
-    </router-link>
+    <div class="step">
+      <router-link to="/step_one" custom v-slot="{ navigate }">
+        <Button :type="BUTTON_TYPE.FIVE" :click_fun="navigate">上一步</Button>
+      </router-link>
+      <router-link to="/step_three" custom v-slot="{ navigate }">
+        <Button :type="BUTTON_TYPE.SECOND" :click_fun="navigate">下一步</Button>
+      </router-link>
+    </div>
   </div>
   <Footer />
 </template>

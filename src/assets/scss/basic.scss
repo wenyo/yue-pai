@@ -1,10 +1,12 @@
+.outer {
+  background: url("../img/bg-index.jpg") right;
+  background-size: cover;
+}
 .contain {
   padding: 0 20px;
   min-width: calc(100vw - 40px);
   height: calc(100vh - 50px - 100px - 70px - 50px);
   overflow: auto;
-  background: url("../img/bg-index.jpg") right;
-  background-size: cover;
 }
 
 .step {

@@ -1,27 +1,29 @@
 <template>
   <Header />
-  <StepLine :now-step="3" />
-  <div class="contain">
-    <h3 class="step-title">3/填寫日期與場地與調整隊伍</h3>
-    <div class="article">
-      <Single v-if="type === CONTEST_TYPE.SINGLE.id" />
-      <Double v-if="type === CONTEST_TYPE.DOUBLE.id" />
-      <Round v-if="type === CONTEST_TYPE.ROUND.id" />
+  <div class="outer">
+    <StepLine :now-step="3" />
+    <div class="contain">
+      <h3 class="step-title">3/填寫日期與場地與調整隊伍</h3>
+      <div class="article">
+        <Single v-if="type === CONTEST_TYPE.SINGLE.id" />
+        <Double v-if="type === CONTEST_TYPE.DOUBLE.id" />
+        <Round v-if="type === CONTEST_TYPE.ROUND.id" />
+      </div>
     </div>
-  </div>
-  <div class="step">
-    <router-link to="/step_two" custom v-slot="{ navigate }">
-      <Button :type="BUTTON_TYPE.FIVE" :click_fun="navigate">上一步</Button>
-    </router-link>
-    <div class="btn-area">
-      <router-link to="/print_contest" custom v-slot="{ navigate }">
-        <Button :type="BUTTON_TYPE.FORTH" :click_fun="navigate"
-          >列印賽程表</Button
-        >
+    <div class="step">
+      <router-link to="/step_two" custom v-slot="{ navigate }">
+        <Button :type="BUTTON_TYPE.FIVE" :click_fun="navigate">上一步</Button>
       </router-link>
-      <Button :type="BUTTON_TYPE.SECOND" @click="downloadJSON"
-        >下載賽程表</Button
-      >
+      <div class="btn-area">
+        <router-link to="/print_contest" custom v-slot="{ navigate }">
+          <Button :type="BUTTON_TYPE.FORTH" :click_fun="navigate"
+            >列印賽程表</Button
+          >
+        </router-link>
+        <Button :type="BUTTON_TYPE.SECOND" @click="downloadJSON"
+          >下載賽程表</Button
+        >
+      </div>
     </div>
   </div>
   <Footer />
