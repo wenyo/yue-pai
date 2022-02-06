@@ -2,27 +2,27 @@
   <div class="game">
     <div class="top">
       <div>1-1</div>
-      <div>場地</div>
+      <div>{{ game.place }}</div>
     </div>
     <ul class="middle">
       <li>
-        <div>隊伍1</div>
-        <div>10</div>
+        <div>{{ game.player1.id }}</div>
+        <div>{{ game.player1.score }}</div>
       </li>
       <li>
-        <div>隊伍2</div>
-        <div>2</div>
+        <div>{{ game.player2.id }}</div>
+        <div>{{ game.player1.score }}</div>
       </li>
     </ul>
     <div class="bottom">
-      <div>2022/01/01</div>
-      <div>10:20</div>
+      <div>{{ game.date }}</div>
+      <div>{{ game.time }}</div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default { props: ["game"] };
 </script>
 <style lang="scss" scoped>
 .game {

@@ -1,13 +1,13 @@
 <template>
-  <MatchPrint />
+  <Single />
 </template>
 
 <script>
-import MatchPrint from "../components/MatchPrint.vue";
+import Single from "../components/print/Single.vue";
 export default {
   mounted() {
     // window.print();
   },
-  components: { MatchPrint },
+  components: { Single },
 };
 </script>
