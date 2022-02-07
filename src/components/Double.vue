@@ -82,7 +82,7 @@ export default {
       });
     },
     gameTimeChangeByLose({ roundIdx, idx, time }) {
-      this.gameDateChangeByType({
+      this.gameTimeChangeByType({
         type: GAME_TYPE.LOSE,
         roundIdx,
         idx,
