@@ -22,7 +22,8 @@ export default {
 <style lang="scss" scoped>
 ul {
   display: flex;
-  padding: 20px;
+  padding: 15px;
+  padding-top: 20px;
   justify-content: space-between;
 }
 
