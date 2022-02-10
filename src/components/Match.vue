@@ -1,9 +1,9 @@
 <template>
-  <li v-if="game.show">
+  <li v-if="match_data.game.show">
     <div class="title">
-      <span>{{ round }}-{{ game_number }}</span>
-      <span class="red-icon" v-if="game.championship">決</span>
-      <span class="red-icon" v-if="game.third_place">季</span>
+      <span>{{ match_data.round }}-{{ match_data.game_number }}</span>
+      <span class="red-icon" v-if="match_data.game.championship">決</span>
+      <span class="red-icon" v-if="match_data.game.third_place">季</span>
     </div>
     <!-- team name & score -->
     <div v-for="playerKey in Object.keys(PLAYER_KEY)" :key="playerKey">
@@ -18,13 +18,9 @@
             name: $event.target.value,
           })
         "
-        :placeholder="placeholderGet(PLAYER_KEY[playerKey])"
-        :value="valueGet(PLAYER_KEY[playerKey])"
-        :disabled="
-          contestType === GAME_TYPE.LOSE ||
-          round !== ROUND.ONE ||
-          (game.bye && game[PLAYER_KEY[playerKey]].id === NO_ID)
-        "
+        :placeholder="match_data.namePlaceholderGet(PLAYER_KEY[playerKey])"
+        :value="match_data.nameGet(PLAYER_KEY[playerKey])"
+        :disabled="match_data.nameDisabled(playerKey)"
       />
       <input
         class="w-30"
@@ -33,19 +29,15 @@
         id=""
         @change="
           gameScoreChange({
-            roundIdx,
-            idx: idx,
+            roundIdx: match_data.roundIdx,
+            idx: match_data.idx,
             playerKey: PLAYER_KEY[playerKey],
             score: $event.target.value,
           })
         "
-        :placeholder="game.bye ? '-' : '比分'"
-        :value="
-          game[PLAYER_KEY[playerKey]].score === NO_SCORE
-            ? ''
-            : game[PLAYER_KEY[playerKey]].score
-        "
-        :disabled="game.bye || game[PLAYER_KEY[playerKey]].id === NO_ID"
+        :placeholder="match_data.game.bye ? '-' : '比分'"
+        :value="match_data.scoreValue(playerKey)"
+        :disabled="match_data.scoreDisabled(playerKey)"
       />
     </div>
     <!-- date -->
@@ -55,10 +47,14 @@
         type="date"
         name=""
         id=""
-        :disabled="game.bye"
-        :value="game.date"
+        :disabled="match_data.game.bye"
+        :value="match_data.game.date"
         @change="
-          gameDateChange({ roundIdx, idx: idx, date: $event.target.value })
+          gameDateChange({
+            roundIdx: match_data.roundIdx,
+            idx: match_data.idx,
+            date: $event.target.value,
+          })
         "
       />
       <input
@@ -66,11 +62,15 @@
         type="time"
         name=""
         id=""
-        :value="game.time"
+        :value="match_data.game.time"
         @change="
-          gameTimeChange({ roundIdx, idx: idx, time: $event.target.value })
+          gameTimeChange({
+            roundIdx: match_data.roundIdx,
+            idx: match_data.idx,
+            time: $event.target.value,
+          })
         "
-        :disabled="game.bye"
+        :disabled="match_data.game.bye"
       />
       <!-- place -->
       <input
@@ -78,9 +78,9 @@
         type="text"
         name=""
         id=""
-        :value="game.place"
-        :placeholder="game.bye ? '-' : '場地'"
-        :disabled="game.bye"
+        :value="match_data.game.place"
+        :placeholder="match_data.game.bye ? '-' : '場地'"
+        :disabled="match_data.game.bye"
         @change="
           gamePlaceChange({ roundIdx, idx: idx, place: $event.target.value })
         "
@@ -92,6 +92,7 @@
 <script>
 import { mapState } from "vuex";
 import { ROUND, PLAYER_KEY, NO_SCORE, GAME_TYPE, NO_ID } from "../utils/Enum";
+import MatchData from "./MatchData.js";
 
 export default {
   props: [
@@ -115,36 +116,15 @@ export default {
     };
   },
   computed: {
-    ...mapState(["teamInfo", "contestInfo"]),
-    round() {
-      return this.roundIdx + 1;
-    },
-    game_number() {
-      return this.idx + 1;
-    },
-  },
-  methods: {
-    placeholderGetFromPrevGame(playerKey) {
-      const gameType = this.game[playerKey].game_type;
-      const winnerChose = this.game[playerKey].winner_chose;
-      const sort = this.game[playerKey].sort;
-      const gameTypeText = gameType === GAME_TYPE.WIN ? "勝部" : "敗部";
-      const winnerChoseText = winnerChose ? "勝者" : "敗者";
-      const prevRound = sort.roundIdx + 1;
-      const prevGameSort = sort.game_idx + 1;
-
-      return `${gameTypeText}-${prevRound}-${prevGameSort} ${winnerChoseText}`;
-    },
-    placeholderGet(playerKey) {
-      if (this.game.bye_player.includes(playerKey)) return "輪空";
-
-      if (this.round === this.ROUND.ONE && this.contestType === GAME_TYPE.WIN)
-        return "隊伍名稱";
-      return this.placeholderGetFromPrevGame(playerKey);
-    },
-    valueGet(playerKey) {
-      const id = this.game[playerKey].id;
-      return id === this.NO_ID ? "" : this.teamInfo[id].name;
+    ...mapState(["teamInfo"]),
+    match_data() {
+      return new MatchData({
+        contestType: this.contestType,
+        game: this.game,
+        idx: this.idx,
+        roundIdx: this.roundIdx,
+        teamInfo: this.teamInfo,
+      });
     },
   },
 };
