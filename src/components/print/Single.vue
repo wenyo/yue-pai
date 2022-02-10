@@ -2,9 +2,11 @@
   <div>
     <ul v-for="(roundInfo, roundIdx) in contestInfo.WIN" :key="roundIdx">
       <Match
-        v-for="(gameInfo, gameIdx) in roundInfo"
-        :game="gameInfo"
-        :key="gameIdx"
+        v-for="(game, idx) in roundInfo"
+        :key="idx"
+        :game="game"
+        :idx="idx"
+        :roundIdx="roundIdx"
       />
     </ul>
   </div>
