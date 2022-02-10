@@ -312,9 +312,12 @@ export default createStore({
     },
     roundOneAllByeCheck(state) {
       const loseContest = state.contestInfo[GAME_TYPE.LOSE];
-      const isOneNotBye = loseContest[0].includes((round) => !round.bye);
-
+      const isOneNotBye = loseContest[0]
+        .map((round) => round.bye)
+        .includes(false);
       if (isOneNotBye) return;
+
+      loseContest.shift();
 
       const newLoseContest = loseContest.map((round) =>
         round.map((game) => {
@@ -343,7 +346,6 @@ export default createStore({
           };
         })
       );
-      newLoseContest.shift();
       state.contestInfo[GAME_TYPE.LOSE] = newLoseContest;
     },
     roundLoseFromLose(state, { roundIdx, gameLenInLose }) {
