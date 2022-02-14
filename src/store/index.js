@@ -91,7 +91,8 @@ export default createStore({
     },
     gameScoreChangeByType(state, { type, roundIdx, idx, playerKey, score }) {
       // add score
-      state.contestInfo[type][roundIdx][idx][playerKey].score =
+      const playerKeyName = PLAYER_KEY[playerKey];
+      state.contestInfo[type][roundIdx][idx][playerKeyName].score =
         score === "" ? NO_SCORE : score;
 
       if (state.type === CONTEST_TYPE.ROUND.id) return;

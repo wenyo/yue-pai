@@ -1,5 +1,5 @@
 <template>
-  <div class="game">
+  <li class="game">
     <div class="top">
       <span>{{ match_data.round }}-{{ match_data.game_number }}</span>
       <div>{{ match_data.game.place ?? "" }}</div>
@@ -19,7 +19,7 @@
       <div>{{ match_data.game.date ?? "" }}</div>
       <div>{{ match_data.game.time ?? "" }}</div>
     </div>
-  </div>
+  </li>
 </template>
 
 <script>
@@ -34,7 +34,7 @@ import {
 import MatchData from "../MatchData.js";
 
 export default {
-  props: ["contestType", "game", "idx", "roundIdx"], // game data???
+  props: ["contestType", "game", "idx", "roundIdx"],
   data() {
     return {
       ROUND,
@@ -62,6 +62,7 @@ export default {
 <style lang="scss" scoped>
 .game {
   width: fit-content;
+  margin-bottom: 20px;
 }
 .top,
 .bottom {

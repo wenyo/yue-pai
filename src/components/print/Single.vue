@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="contest">
     <ul v-for="(roundInfo, roundIdx) in contestInfo.WIN" :key="roundIdx">
       <Match
         v-for="(game, idx) in roundInfo"
@@ -25,3 +25,12 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.contest {
+  display: flex;
+}
+ul {
+  margin-right: 60px;
+}
+</style>
