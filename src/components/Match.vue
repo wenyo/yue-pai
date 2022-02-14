@@ -14,12 +14,12 @@
         id=""
         @change="
           teamNameChange({
-            idx: game[PLAYER_KEY[playerKey]].id,
+            idx: game[playerKey].id,
             name: $event.target.value,
           })
         "
-        :placeholder="match_data.namePlaceholderGet(PLAYER_KEY[playerKey])"
-        :value="match_data.nameGet(PLAYER_KEY[playerKey])"
+        :placeholder="match_data.namePlaceholderGet(playerKey)"
+        :value="match_data.nameGet(playerKey)"
         :disabled="match_data.nameDisabled(playerKey)"
       />
       <input
@@ -31,7 +31,7 @@
           gameScoreChange({
             roundIdx: match_data.roundIdx,
             idx: match_data.idx,
-            playerKey: PLAYER_KEY[playerKey],
+            playerKey: playerKey,
             score: $event.target.value,
           })
         "

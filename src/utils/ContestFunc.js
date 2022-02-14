@@ -315,13 +315,13 @@ export function roundRobinBuild({ player1_Id, player2_Id }) {
       bye_player,
       player1: {
         ...NEW_GAME_INFO.player1,
-        game_type: GAME_TYPE.LOSE,
+        game_type: GAME_TYPE.NONE,
         winner_chose: true,
         id: player1_Id,
       },
       player2: {
         ...NEW_GAME_INFO.player2,
-        game_type: GAME_TYPE.WIN,
+        game_type: GAME_TYPE.NONE,
         winner_chose: false,
         id: player2_Id,
       },

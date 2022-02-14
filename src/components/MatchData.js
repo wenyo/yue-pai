@@ -25,15 +25,15 @@ export default class MatchData {
   }
 
   namePlaceholderGet(playerKey) {
-    if (this.game.bye_player.includes(playerKey)) return "輪空";
+    if (this.game.bye_player.includes(PLAYER_KEY[playerKey])) return "輪空";
 
     if (this.round === ROUND.ONE && this.contestType === GAME_TYPE.WIN)
       return "隊伍名稱";
-    return this.namePlaceholderGetFromPrevGame(playerKey);
+    return this.namePlaceholderGetFromPrevGame(PLAYER_KEY[playerKey]);
   }
 
   nameGet(playerKey) {
-    const id = this.game[playerKey].id;
+    const id = this.game[PLAYER_KEY[playerKey]].id;
     return id === NO_ID ? "" : this.teamInfo[id].name;
   }
 

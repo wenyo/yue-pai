@@ -21,6 +21,7 @@ export const CONTEST_VALUE = Object.keys(CONTEST_TYPE).map(
 );
 
 export const GAME_TYPE = {
+  NONE: "NONE",
   WIN: "WIN",
   LOSE: "LOSE",
 };
@@ -52,7 +53,7 @@ export const GAME_FORM = {
     //round 1
     id: NO_ID,
     //round others
-    game_type: "",
+    game_type: GAME_TYPE.NONE,
     sort: { roundIdx: -1, game_idx: -1 },
     winner_chose: true,
   },
@@ -61,7 +62,7 @@ export const GAME_FORM = {
     //round 1
     id: NO_ID,
     //round others
-    game_type: "",
+    game_type: GAME_TYPE.NONE,
     sort: { roundIdx: -1, game_idx: -1 },
     winner_chose: true,
   },

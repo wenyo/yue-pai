@@ -6,12 +6,11 @@
     </div>
     <ul class="middle">
       <li v-for="playerKey in Object.keys(PLAYER_KEY)" :key="playerKey">
-        <div>
-          {{
-            match_data.nameGet(PLAYER_KEY[playerKey]) !== ""
-              ? match_data.nameGet(PLAYER_KEY[playerKey])
-              : match_data.namePlaceholderGet(playerKey)
-          }}
+        <div v-if="match_data.nameGet(playerKey) !== ''">
+          {{ match_data.nameGet(playerKey) }}
+        </div>
+        <div v-else>
+          {{ match_data.namePlaceholderGet(playerKey) }}
         </div>
         <div>{{ match_data.scoreValue(playerKey) }}</div>
       </li>
