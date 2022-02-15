@@ -38,7 +38,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 header {
   height: 75px;
   background-color: $primary-color-third;
