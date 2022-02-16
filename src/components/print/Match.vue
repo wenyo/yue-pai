@@ -12,7 +12,10 @@
         <div v-else>
           {{ match_data.namePlaceholderGet(playerKey) }}
         </div>
-        <div>{{ match_data.scoreValue(playerKey) }}</div>
+        <div v-if="match_data.scoreValue(playerKey) !== ''">
+          {{ match_data.scoreValue(playerKey) }}
+        </div>
+        <div class="font-dark-200" v-else>比分</div>
       </li>
     </ul>
     <div class="bottom">
@@ -86,5 +89,9 @@ export default {
       width: 30%;
     }
   }
+}
+
+.font-dark-200 {
+  color: $dark-200;
 }
 </style>
