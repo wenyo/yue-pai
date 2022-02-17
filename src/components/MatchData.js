@@ -1,4 +1,11 @@
-import { ROUND, PLAYER_KEY, NO_SCORE, GAME_TYPE, NO_ID } from "../utils/Enum";
+import {
+  ROUND,
+  PLAYER_KEY,
+  NO_SCORE,
+  GAME_TYPE,
+  NO_ID,
+  CONTEST_TYPE,
+} from "../utils/Enum";
 
 export default class MatchData {
   constructor(props) {
@@ -16,12 +23,16 @@ export default class MatchData {
     const gameType = this.game[playerKey].game_type;
     const winnerChose = this.game[playerKey].winner_chose;
     const sort = this.game[playerKey].sort;
-    const gameTypeText = gameType === GAME_TYPE.WIN ? "勝部" : "敗部";
+    const gameTypeText =
+      this.contestType === CONTEST_TYPE.SINGLE.id
+        ? ""
+        : gameType === GAME_TYPE.WIN
+        ? "勝部"
+        : "敗部";
     const winnerChoseText = winnerChose ? "勝者" : "敗者";
     const prevRound = sort.roundIdx + 1;
     const prevGameSort = sort.game_idx + 1;
-
-    return `${gameTypeText}-${prevRound}-${prevGameSort} ${winnerChoseText}`;
+    return `${gameTypeText}${prevRound}-${prevGameSort} ${winnerChoseText}`;
   }
 
   namePlaceholderGet(playerKey) {

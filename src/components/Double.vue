@@ -7,7 +7,7 @@
         :game="game"
         :idx="idx"
         :roundIdx="roundIdx"
-        :contestType="GAME_TYPE.WIN"
+        :contestType="type"
         :team-name-change="teamNameChange"
         :game-date-change="gameDateChangeByWin"
         :game-time-change="gameTimeChangeByWin"
@@ -24,7 +24,7 @@
         :game="game"
         :idx="idx"
         :roundIdx="roundIdx"
-        :contestType="GAME_TYPE.LOSE"
+        :contestType="type"
         :team-name-change="teamNameChange"
         :game-date-change="gameDateChangeByLose"
         :game-time-change="gameTimeChangeByLose"
@@ -47,7 +47,7 @@ export default {
   },
   components: { Match },
   computed: {
-    ...mapState(["contestInfo"]),
+    ...mapState(["contestInfo", "type"]),
   },
   methods: {
     ...mapMutations([

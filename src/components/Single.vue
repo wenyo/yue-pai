@@ -5,6 +5,7 @@
         v-for="(game, idx) in roundInfo"
         :key="idx"
         :game="game"
+        :contest-type="type"
         :idx="idx"
         :roundIdx="roundIdx"
         :team-name-change="teamNameChange"
@@ -24,7 +25,7 @@ import { GAME_TYPE } from "../utils/Enum";
 export default {
   components: { Match },
   computed: {
-    ...mapState(["contestInfo"]),
+    ...mapState(["contestInfo", "type"]),
   },
   methods: {
     ...mapMutations([

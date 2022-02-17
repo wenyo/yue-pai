@@ -9,13 +9,13 @@
         <div v-if="match_data.nameGet(playerKey) !== ''">
           {{ match_data.nameGet(playerKey) }}
         </div>
-        <div v-else>
+        <div v-else class="font-dark-200">
           {{ match_data.namePlaceholderGet(playerKey) }}
         </div>
         <div v-if="match_data.scoreValue(playerKey) !== ''">
           {{ match_data.scoreValue(playerKey) }}
         </div>
-        <div class="font-dark-200" v-else>比分</div>
+        <div v-else class="font-dark-200">比分</div>
       </li>
     </ul>
     <div class="bottom">
@@ -50,7 +50,7 @@ export default {
   computed: {
     ...mapState(["teamInfo"]),
     match_data() {
-      console.log(this.game);
+      console.log(this.contestType);
       return new MatchData({
         contestType: this.contestType,
         game: this.game,

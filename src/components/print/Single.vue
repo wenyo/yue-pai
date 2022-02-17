@@ -7,6 +7,7 @@
         :game="game"
         :idx="idx"
         :roundIdx="roundIdx"
+        :contestType="type"
       />
     </ul>
   </div>
@@ -21,7 +22,7 @@ export default {
   },
   components: { Match },
   computed: {
-    ...mapState(["contestInfo"]),
+    ...mapState(["contestInfo", "type"]),
   },
 };
 </script>
@@ -29,6 +30,7 @@ export default {
 <style lang="scss" scoped>
 .contest {
   display: flex;
+  align-items: center;
 }
 ul {
   margin-right: 60px;

@@ -6,7 +6,8 @@
         :key="idx"
         :game="game"
         :idx="idx"
-        :roundIdx="roundIdx"
+        :round-idx="roundIdx"
+        :contest-type="type"
       />
     </ul>
   </div>
@@ -17,7 +18,8 @@
         :key="idx"
         :game="game"
         :idx="idx"
-        :roundIdx="roundIdx"
+        :round-idx="roundIdx"
+        :contest-type="type"
       />
     </ul>
   </div>
@@ -32,7 +34,7 @@ export default {
   },
   components: { Match },
   computed: {
-    ...mapState(["contestInfo"]),
+    ...mapState(["contestInfo", "type"]),
   },
 };
 </script>
