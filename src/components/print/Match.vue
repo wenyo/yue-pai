@@ -1,21 +1,27 @@
 <template>
   <li class="game">
     <div class="top">
-      <span>{{ match_data.round }}-{{ match_data.game_number }}</span>
-      <div>{{ match_data.game.place ?? "" }}</div>
+      <span class="font-dark-200"
+        >{{ match_data.round }}-{{ match_data.game_number }}</span
+      >
+      <div class="place">{{ match_data.game.place ?? "" }}</div>
     </div>
     <ul class="middle">
-      <li v-for="playerKey in Object.keys(PLAYER_KEY)" :key="playerKey">
+      <li
+        v-for="playerKey in Object.keys(PLAYER_KEY)"
+        :key="playerKey"
+        :class="{ 'font-dark-200': loser === PLAYER_KEY[playerKey] }"
+      >
         <div v-if="match_data.nameGet(playerKey) !== ''">
           {{ match_data.nameGet(playerKey) }}
         </div>
-        <div v-else class="font-dark-200">
+        <div v-else class="font-dark-300">
           {{ match_data.namePlaceholderGet(playerKey) }}
         </div>
         <div v-if="match_data.scoreValue(playerKey) !== ''">
           {{ match_data.scoreValue(playerKey) }}
         </div>
-        <div v-else class="font-dark-200">比分</div>
+        <div v-else class="font-dark-300">比分</div>
       </li>
     </ul>
     <div class="bottom">
@@ -33,6 +39,7 @@ import {
   NO_SCORE,
   GAME_TYPE,
   NO_ID,
+  NO_PLAYER,
 } from "../../utils/Enum";
 import MatchData from "../MatchData.js";
 
@@ -59,6 +66,20 @@ export default {
         teamInfo: this.teamInfo,
       });
     },
+    loser() {
+      const player1Score = this.match_data.scoreValue("PLAYER1");
+      const player2Score = this.match_data.scoreValue("PLAYER2");
+      const emptyScore = "";
+
+      if (player1Score === emptyScore || player2Score === emptyScore)
+        return NO_PLAYER;
+
+      if (player1Score < player2Score) return PLAYER_KEY.PLAYER1;
+
+      if (player1Score > player2Score) return PLAYER_KEY.PLAYER2;
+
+      return NO_PLAYER;
+    },
   },
 };
 </script>
@@ -66,6 +87,7 @@ export default {
 .game {
   width: fit-content;
   margin-bottom: 20px;
+  font-size: 14px;
 }
 .top,
 .bottom {
@@ -73,25 +95,44 @@ export default {
   justify-content: space-between;
 }
 
+.place {
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .middle {
+  margin-bottom: 2px;
   li {
     width: 150px;
     display: flex;
+
+    &:first-child {
+      margin-bottom: -1px;
+    }
   }
+
   div {
+    padding: 2px 4px;
     border: 1px solid $dark-100;
-    padding: 2px;
     box-sizing: border-box;
+
     &:first-child {
       width: 70%;
     }
+
     &:last-child {
       width: 30%;
+      margin-left: -1px;
     }
   }
 }
 
 .font-dark-200 {
   color: $dark-200;
+}
+
+.font-dark-300 {
+  color: $dark-300;
 }
 </style>

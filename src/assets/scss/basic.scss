@@ -41,3 +41,7 @@ select {
 input[type="number"].size-l {
   width: 200px;
 }
+
+@page {
+  size: A3 landscape; /* 紙張大小 */
+}
