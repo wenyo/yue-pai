@@ -128,6 +128,10 @@ export default {
   }
 }
 
+.bottom {
+  height: 15px;
+}
+
 .font-dark-200 {
   color: $dark-200;
 }
