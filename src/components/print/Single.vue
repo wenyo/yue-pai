@@ -30,13 +30,39 @@ export default {
     cssVars() {
       return {
         "--bg-color": "pink",
+        "--const-len": this.contestInfo.WIN.length,
+        "--round-one-len": this.contestInfo.WIN[0].length,
+        "--test": [0, 0, 0],
       };
+    },
+    methods: {
+      paddingTopGet(n) {
+        const liHeight = 70;
+        const liMargin = 20;
+        const multiplier = Math.pow(2, n);
+        const prevRoundHeight = liHeight * multiplier + liMargin * multiplier;
+
+        console.log(prevRoundHeight);
+
+        return prevRoundHeight / 2 - liHeight / 2;
+      },
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+@function pow($number, $exponent) {
+  $value: 1;
+
+  @if $exponent > 0 {
+    @for $i from 1 through $exponent {
+      $value: $value * $number;
+    }
+  }
+
+  @return $value;
+}
 .contest {
   display: flex;
   align-items: center;
@@ -45,24 +71,17 @@ ul {
   margin-right: 60px;
   position: relative;
   color: var(--bg-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
-  $max: 20;
+  $max: 6;
   @for $i from 2 through $max {
-    @if $i==2 {
-      &:nth-child(#{$i}) {
-        li:first-child {
-          margin-top: 45px;
-        }
-
-        li:nth-child(2) {
-          margin-top: 100px;
-        }
-
-        @for $j from 3 through $max {
-          li:nth-child(#{$j}) {
-            margin-top: 110px;
-          }
-        }
+    &:nth-child(#{$i}) {
+      @if $i==2 {
+        padding: 45px 0;
+      } @else {
+        padding: #{(70 * pow(2, $i - 1) + 20 * (pow(2, $i - 1)-1)) / 2-35}px 0;
       }
     }
   }

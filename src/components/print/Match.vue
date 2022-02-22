@@ -86,7 +86,6 @@ export default {
 <style lang="scss" scoped>
 .game {
   width: fit-content;
-  margin-bottom: 20px;
   font-size: 14px;
 }
 .top,
