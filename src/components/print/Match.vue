@@ -87,11 +87,13 @@ export default {
 .game {
   width: fit-content;
   font-size: 14px;
+  height: 70px;
 }
 .top,
 .bottom {
   display: flex;
   justify-content: space-between;
+  height: 15px;
 }
 
 .place {
@@ -101,13 +103,13 @@ export default {
 }
 
 .middle {
-  margin-bottom: 2px;
   li {
+    height: 20px;
     width: 150px;
     display: flex;
 
-    &:first-child {
-      margin-bottom: -1px;
+    &:first-child > div {
+      border-bottom: unset;
     }
   }
 
@@ -125,10 +127,6 @@ export default {
       margin-left: -1px;
     }
   }
-}
-
-.bottom {
-  height: 15px;
 }
 
 .font-dark-200 {

@@ -1,6 +1,7 @@
 <template>
   <div class="contest" :style="cssVars">
     <ul
+      class="round"
       v-for="(roundInfo, roundIdx) in contestInfo.WIN"
       :key="roundIdx"
       :style="`height:${90 * contestInfo.WIN[0].length}px`"
@@ -29,7 +30,6 @@ export default {
     ...mapState(["contestInfo", "type"]),
     cssVars() {
       return {
-        "--bg-color": "pink",
         "--const-len": this.contestInfo.WIN.length,
         "--round-one-len": this.contestInfo.WIN[0].length,
         "--test": [0, 0, 0],
@@ -67,10 +67,10 @@ export default {
   display: flex;
   align-items: center;
 }
+
 ul {
-  margin-right: 60px;
+  margin-right: 40px;
   position: relative;
-  color: var(--bg-color);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -81,9 +81,101 @@ ul {
       @if $i==2 {
         padding: 45px 0;
       } @else {
-        padding: #{(70 * pow(2, $i - 1) + 20 * (pow(2, $i - 1)-1)) / 2-35}px 0;
+        padding: #{90 * pow(2, $i - 2) - 45}px 0;
       }
     }
   }
+}
+
+.round > li {
+  position: relative;
+}
+
+.round > li::after {
+  content: "";
+  width: 20px;
+  border-right: 1px solid #000;
+  position: absolute;
+  right: -20px;
+}
+
+.round:not(:first-child) > li::before {
+  content: "";
+  width: 20px;
+  height: 1px;
+  background-color: #000;
+  position: absolute;
+  left: -20px;
+  top: 50%;
+}
+
+// fix:長度是錯ㄉQQ
+.round:first-child > li:nth-child(odd)::after {
+  border-right: 2px solid pink;
+  height: 100%;
+  border-top: 1px solid #000;
+  top: 50%;
+}
+
+.round:first-child > li:nth-child(even)::after {
+  height: 45px;
+  border-bottom: 1px solid #000;
+  bottom: calc(50% - 1px);
+}
+
+.round:nth-child(2) > li:nth-child(odd)::after {
+  border-right: 1px solid pink;
+  height: 110px;
+  border-top: 1px solid #000;
+  top: 50%;
+}
+
+.round:nth-child(2) > li:nth-child(even)::after {
+  height: 110px;
+  border-bottom: 1px solid #000;
+  bottom: calc(50% - 1px);
+}
+
+.round:nth-child(3) > li:nth-child(odd)::after {
+  border-right: 1px solid pink;
+  height: 290px;
+  border-top: 1px solid #000;
+  top: 50%;
+}
+
+.round:nth-child(3) > li:nth-child(even)::after {
+  height: 290px;
+  border-bottom: 1px solid #000;
+  bottom: calc(50% - 1px);
+}
+
+.round:nth-child(4) > li:nth-child(odd)::after {
+  border-right: 1px solid pink;
+  height: 650px;
+  border-top: 1px solid #000;
+  top: 50%;
+}
+
+.round:nth-child(4) > li:nth-child(even)::after {
+  height: 650px;
+  border-bottom: 1px solid #000;
+  bottom: calc(50% - 1px);
+}
+
+.round:nth-child(5) > li:nth-child(odd)::after {
+  border-right: 1px solid pink;
+  height: 1370px;
+  border-top: 1px solid #000;
+  top: 50%;
+}
+
+.round:nth-child(5) > li:nth-child(even)::after {
+  height: 1370px;
+  border-bottom: 1px solid #000;
+  bottom: calc(50% - 1px);
+}
+
+.round:last-child > li::after {
+  content: unset;
 }
 </style>
