@@ -12,7 +12,12 @@
         />
       </ul>
       <ul class="line" v-if="roundIdx !== contestInfo.WIN.length - 1">
-        <li :key="idx" v-for="(game, idx) in roundInfo"></li>
+        <template :key="idx" v-for="(game, idx) in roundInfo">
+          <template v-if="idx !== roundInfo.length - 1">
+            <li></li>
+            <li></li>
+          </template>
+        </template>
       </ul>
     </template>
   </div>
@@ -65,18 +70,21 @@ export default {
   @return $value;
 }
 .contest {
+  height: fit-content;
   display: flex;
-  align-items: center;
 }
 
 .round {
-  height: var(--ul-height);
   padding: 0 0;
-  // margin-right: 20px;
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  height: fit-content;
+
+  .game {
+    position: relative;
+    margin-bottom: 20px;
+  }
 
   $max: 6;
   @for $i from 2 through $max {
@@ -86,12 +94,12 @@ export default {
       } @else {
         padding: #{90 * pow(2, $i - 2) - 45}px 0;
       }
+
+      &:not(:last-child) .game:not(:last-child) {
+        margin-bottom: #{90 * (pow(2, $i - 1) - 1) + 20}px;
+      }
     }
   }
-}
-
-.game {
-  position: relative;
 }
 
 .game::after {
@@ -113,22 +121,53 @@ export default {
 }
 
 .line {
-  height: var(--ul-height);
+  height: fit-content;
   width: 20px;
+  margin-left: -1px;
   margin-right: 20px;
   display: flex;
   flex-direction: column;
 
+  &:nth-child(2) > li {
+    height: 45px;
+  }
+
+  &:nth-child(4) > li {
+    height: 90px;
+  }
+
+  &:nth-child(6) > li {
+    height: 180px;
+  }
+
+  &:nth-child(8) > li {
+    height: 360px;
+  }
+
+  &:nth-child(10) > li {
+    height: 720px;
+  }
+
   li {
-    flex: 1;
-    border: 1px solid #000;
+    display: block;
+    box-sizing: border-box;
+
+    &:nth-child(4n-3) {
+      border-top: 1px solid #000;
+      border-right: 1px solid #000;
+    }
+
+    &:nth-child(4n-2) {
+      box-shadow: 0 1px 0 gray;
+      border-right: 1px solid #000;
+    }
   }
 
   $max: 6;
   @for $i from 1 through $max {
     &:nth-child(#{$i * 2}) {
       @if $i==1 {
-        padding: 35px 0;
+        padding-top: 35px;
       } @else if $i==2 {
         padding: #{45 + 35}px 0;
       } @else {
@@ -137,74 +176,4 @@ export default {
     }
   }
 }
-
-// fix:長度是錯ㄉQQ
-// .round:first-child > .game:nth-child(odd)::after {
-//   border-right: 2px solid pink;
-//   height: 20px;
-//   border-top: 1px solid #000;
-//   top: 50%;
-// }
-
-// .round:first-child > .game:nth-child(even)::after {
-//   // height: 100%;
-//   border-bottom: 1px solid #000;
-//   bottom: calc(50% - 1px);
-// }
-
-// .round:nth-child(2) > .game:nth-child(odd)::after {
-//   border-right: 1px solid pink;
-//   height: 100%;
-//   border-top: 1px solid #000;
-//   top: 50%;
-// }
-
-// .round:nth-child(2) > .game:nth-child(even)::after {
-//   height: 110px;
-//   border-bottom: 1px solid #000;
-//   bottom: calc(50% - 1px);
-// }
-
-// .round:nth-child(3) > .game:nth-child(odd)::after {
-//   border-right: 1px solid pink;
-//   height: 290px;
-//   border-top: 1px solid #000;
-//   top: 50%;
-// }
-
-// .round:nth-child(3) > .game:nth-child(even)::after {
-//   height: 290px;
-//   border-bottom: 1px solid #000;
-//   bottom: calc(50% - 1px);
-// }
-
-// .round:nth-child(4) > .game:nth-child(odd)::after {
-//   border-right: 1px solid pink;
-//   height: 650px;
-//   border-top: 1px solid #000;
-//   top: 50%;
-// }
-
-// .round:nth-child(4) > .game:nth-child(even)::after {
-//   height: 650px;
-//   border-bottom: 1px solid #000;
-//   bottom: calc(50% - 1px);
-// }
-
-// .round:nth-child(5) > .game:nth-child(odd)::after {
-//   border-right: 1px solid pink;
-//   height: 1370px;
-//   border-top: 1px solid #000;
-//   top: 50%;
-// }
-
-// .round:nth-child(5) > .game:nth-child(even)::after {
-//   height: 1370px;
-//   border-bottom: 1px solid #000;
-//   bottom: calc(50% - 1px);
-// }
-
-// .round:last-child > .game::after {
-//   content: unset;
-// }
 </style>
