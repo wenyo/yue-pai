@@ -1,19 +1,20 @@
 <template>
   <div class="contest" :style="cssVars">
-    <ul
-      class="round"
-      v-for="(roundInfo, roundIdx) in contestInfo.WIN"
-      :key="roundIdx"
-    >
-      <Match
-        v-for="(game, idx) in roundInfo"
-        :key="idx"
-        :game="game"
-        :idx="idx"
-        :roundIdx="roundIdx"
-        :contestType="type"
-      />
-    </ul>
+    <template v-for="(roundInfo, roundIdx) in contestInfo.WIN" :key="roundIdx">
+      <ul class="round">
+        <Match
+          v-for="(game, idx) in roundInfo"
+          :key="idx"
+          :game="game"
+          :idx="idx"
+          :roundIdx="roundIdx"
+          :contestType="type"
+        />
+      </ul>
+      <ul class="line" v-if="roundIdx !== contestInfo.WIN.length - 1">
+        <li :key="idx" v-for="(game, idx) in roundInfo"></li>
+      </ul>
+    </template>
   </div>
 </template>
 
@@ -67,10 +68,11 @@ export default {
   display: flex;
   align-items: center;
 }
+
 .round {
   height: var(--ul-height);
   padding: 0 0;
-  margin-right: 40px;
+  // margin-right: 20px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -78,7 +80,7 @@ export default {
 
   $max: 6;
   @for $i from 2 through $max {
-    &:nth-child(#{$i}) {
+    &:nth-child(#{$i * 2 - 1}) {
       @if $i==2 {
         padding: 45px 0;
       } @else {
@@ -110,73 +112,99 @@ export default {
   top: 50%;
 }
 
+.line {
+  height: var(--ul-height);
+  width: 20px;
+  margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+
+  li {
+    flex: 1;
+    border: 1px solid #000;
+  }
+
+  $max: 6;
+  @for $i from 1 through $max {
+    &:nth-child(#{$i * 2}) {
+      @if $i==1 {
+        padding: 35px 0;
+      } @else if $i==2 {
+        padding: #{45 + 35}px 0;
+      } @else {
+        padding: #{90 * pow(2, $i - 2) - 10}px 0;
+      }
+    }
+  }
+}
+
 // fix:長度是錯ㄉQQ
-.round:first-child > .game:nth-child(odd)::after {
-  border-right: 2px solid pink;
-  height: 20px;
-  border-top: 1px solid #000;
-  top: 50%;
-}
+// .round:first-child > .game:nth-child(odd)::after {
+//   border-right: 2px solid pink;
+//   height: 20px;
+//   border-top: 1px solid #000;
+//   top: 50%;
+// }
 
-.round:first-child > .game:nth-child(even)::after {
-  // height: 100%;
-  border-bottom: 1px solid #000;
-  bottom: calc(50% - 1px);
-}
+// .round:first-child > .game:nth-child(even)::after {
+//   // height: 100%;
+//   border-bottom: 1px solid #000;
+//   bottom: calc(50% - 1px);
+// }
 
-.round:nth-child(2) > .game:nth-child(odd)::after {
-  border-right: 1px solid pink;
-  height: 100%;
-  border-top: 1px solid #000;
-  top: 50%;
-}
+// .round:nth-child(2) > .game:nth-child(odd)::after {
+//   border-right: 1px solid pink;
+//   height: 100%;
+//   border-top: 1px solid #000;
+//   top: 50%;
+// }
 
-.round:nth-child(2) > .game:nth-child(even)::after {
-  height: 110px;
-  border-bottom: 1px solid #000;
-  bottom: calc(50% - 1px);
-}
+// .round:nth-child(2) > .game:nth-child(even)::after {
+//   height: 110px;
+//   border-bottom: 1px solid #000;
+//   bottom: calc(50% - 1px);
+// }
 
-.round:nth-child(3) > .game:nth-child(odd)::after {
-  border-right: 1px solid pink;
-  height: 290px;
-  border-top: 1px solid #000;
-  top: 50%;
-}
+// .round:nth-child(3) > .game:nth-child(odd)::after {
+//   border-right: 1px solid pink;
+//   height: 290px;
+//   border-top: 1px solid #000;
+//   top: 50%;
+// }
 
-.round:nth-child(3) > .game:nth-child(even)::after {
-  height: 290px;
-  border-bottom: 1px solid #000;
-  bottom: calc(50% - 1px);
-}
+// .round:nth-child(3) > .game:nth-child(even)::after {
+//   height: 290px;
+//   border-bottom: 1px solid #000;
+//   bottom: calc(50% - 1px);
+// }
 
-.round:nth-child(4) > .game:nth-child(odd)::after {
-  border-right: 1px solid pink;
-  height: 650px;
-  border-top: 1px solid #000;
-  top: 50%;
-}
+// .round:nth-child(4) > .game:nth-child(odd)::after {
+//   border-right: 1px solid pink;
+//   height: 650px;
+//   border-top: 1px solid #000;
+//   top: 50%;
+// }
 
-.round:nth-child(4) > .game:nth-child(even)::after {
-  height: 650px;
-  border-bottom: 1px solid #000;
-  bottom: calc(50% - 1px);
-}
+// .round:nth-child(4) > .game:nth-child(even)::after {
+//   height: 650px;
+//   border-bottom: 1px solid #000;
+//   bottom: calc(50% - 1px);
+// }
 
-.round:nth-child(5) > .game:nth-child(odd)::after {
-  border-right: 1px solid pink;
-  height: 1370px;
-  border-top: 1px solid #000;
-  top: 50%;
-}
+// .round:nth-child(5) > .game:nth-child(odd)::after {
+//   border-right: 1px solid pink;
+//   height: 1370px;
+//   border-top: 1px solid #000;
+//   top: 50%;
+// }
 
-.round:nth-child(5) > .game:nth-child(even)::after {
-  height: 1370px;
-  border-bottom: 1px solid #000;
-  bottom: calc(50% - 1px);
-}
+// .round:nth-child(5) > .game:nth-child(even)::after {
+//   height: 1370px;
+//   border-bottom: 1px solid #000;
+//   bottom: calc(50% - 1px);
+// }
 
-.round:last-child > .game::after {
-  content: unset;
-}
+// .round:last-child > .game::after {
+//   content: unset;
+// }
 </style>
