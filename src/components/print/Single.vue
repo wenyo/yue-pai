@@ -4,7 +4,6 @@
       class="round"
       v-for="(roundInfo, roundIdx) in contestInfo.WIN"
       :key="roundIdx"
-      :style="`height:${90 * contestInfo.WIN[0].length}px`"
     >
       <Match
         v-for="(game, idx) in roundInfo"
@@ -33,6 +32,7 @@ export default {
         "--const-len": this.contestInfo.WIN.length,
         "--round-one-len": this.contestInfo.WIN[0].length,
         "--test": [0, 0, 0],
+        "--ul-height": `${90 * this.contestInfo.WIN[0].length}px`,
       };
     },
     methods: {
@@ -51,7 +51,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @function pow($number, $exponent) {
   $value: 1;
 
@@ -67,8 +67,9 @@ export default {
   display: flex;
   align-items: center;
 }
-
-ul {
+.round {
+  height: var(--ul-height);
+  padding: 0 0;
   margin-right: 40px;
   position: relative;
   display: flex;
@@ -87,11 +88,11 @@ ul {
   }
 }
 
-.round > li {
+.game {
   position: relative;
 }
 
-.round > li::after {
+.game::after {
   content: "";
   width: 20px;
   border-right: 1px solid #000;
@@ -99,7 +100,7 @@ ul {
   right: -20px;
 }
 
-.round:not(:first-child) > li::before {
+.round:not(:first-child) > .game::before {
   content: "";
   width: 20px;
   height: 1px;
@@ -110,72 +111,72 @@ ul {
 }
 
 // fix:長度是錯ㄉQQ
-.round:first-child > li:nth-child(odd)::after {
+.round:first-child > .game:nth-child(odd)::after {
   border-right: 2px solid pink;
+  height: 20px;
+  border-top: 1px solid #000;
+  top: 50%;
+}
+
+.round:first-child > .game:nth-child(even)::after {
+  // height: 100%;
+  border-bottom: 1px solid #000;
+  bottom: calc(50% - 1px);
+}
+
+.round:nth-child(2) > .game:nth-child(odd)::after {
+  border-right: 1px solid pink;
   height: 100%;
   border-top: 1px solid #000;
   top: 50%;
 }
 
-.round:first-child > li:nth-child(even)::after {
-  height: 45px;
-  border-bottom: 1px solid #000;
-  bottom: calc(50% - 1px);
-}
-
-.round:nth-child(2) > li:nth-child(odd)::after {
-  border-right: 1px solid pink;
-  height: 110px;
-  border-top: 1px solid #000;
-  top: 50%;
-}
-
-.round:nth-child(2) > li:nth-child(even)::after {
+.round:nth-child(2) > .game:nth-child(even)::after {
   height: 110px;
   border-bottom: 1px solid #000;
   bottom: calc(50% - 1px);
 }
 
-.round:nth-child(3) > li:nth-child(odd)::after {
+.round:nth-child(3) > .game:nth-child(odd)::after {
   border-right: 1px solid pink;
   height: 290px;
   border-top: 1px solid #000;
   top: 50%;
 }
 
-.round:nth-child(3) > li:nth-child(even)::after {
+.round:nth-child(3) > .game:nth-child(even)::after {
   height: 290px;
   border-bottom: 1px solid #000;
   bottom: calc(50% - 1px);
 }
 
-.round:nth-child(4) > li:nth-child(odd)::after {
+.round:nth-child(4) > .game:nth-child(odd)::after {
   border-right: 1px solid pink;
   height: 650px;
   border-top: 1px solid #000;
   top: 50%;
 }
 
-.round:nth-child(4) > li:nth-child(even)::after {
+.round:nth-child(4) > .game:nth-child(even)::after {
   height: 650px;
   border-bottom: 1px solid #000;
   bottom: calc(50% - 1px);
 }
 
-.round:nth-child(5) > li:nth-child(odd)::after {
+.round:nth-child(5) > .game:nth-child(odd)::after {
   border-right: 1px solid pink;
   height: 1370px;
   border-top: 1px solid #000;
   top: 50%;
 }
 
-.round:nth-child(5) > li:nth-child(even)::after {
+.round:nth-child(5) > .game:nth-child(even)::after {
   height: 1370px;
   border-bottom: 1px solid #000;
   bottom: calc(50% - 1px);
 }
 
-.round:last-child > li::after {
+.round:last-child > .game::after {
   content: unset;
 }
 </style>
