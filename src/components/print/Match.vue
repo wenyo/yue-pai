@@ -1,9 +1,13 @@
 <template>
   <li class="game">
     <div class="top">
-      <span class="font-dark-200"
-        >{{ match_data.round }}-{{ match_data.game_number }}</span
-      >
+      <div class="title">
+        <span class="font-dark-200"
+          >{{ match_data.round }}-{{ match_data.game_number }}</span
+        >
+        <span class="red-icon" v-if="match_data.game.championship">決</span>
+        <span class="red-icon" v-if="match_data.game.third_place">季</span>
+      </div>
       <div class="place">{{ match_data.game.place ?? "" }}</div>
     </div>
     <ul class="middle">
@@ -135,5 +139,15 @@ export default {
 
 .font-dark-300 {
   color: $dark-300;
+}
+
+.title {
+  position: relative;
+}
+
+.red-icon {
+  position: absolute;
+  top: -2px;
+  font-size: 12px;
 }
 </style>

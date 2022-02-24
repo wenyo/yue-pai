@@ -156,16 +156,6 @@ li {
 .title {
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
-}
-
-.red-icon {
-  display: inline-block;
-  font-weight: bolder;
-  font-size: 13px;
-  color: $primary-color-second;
-  border: 2px solid $primary-color-second;
-  border-radius: 50%;
-  margin-left: 2px;
+  height: 20px;
 }
 </style>

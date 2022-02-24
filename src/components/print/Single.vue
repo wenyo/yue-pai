@@ -1,5 +1,5 @@
 <template>
-  <div class="contest" :style="cssVars">
+  <div class="contest single" :style="cssVars">
     <template v-for="(roundInfo, roundIdx) in contestInfo.WIN" :key="roundIdx">
       <ul class="round">
         <Match
@@ -27,9 +27,6 @@
 import { mapState } from "vuex";
 import Match from "./Match.vue";
 export default {
-  mounted() {
-    // window.print();
-  },
   components: { Match },
   computed: {
     ...mapState(["contestInfo", "type"]),
@@ -40,18 +37,6 @@ export default {
         "--test": [0, 0, 0],
         "--ul-height": `${90 * this.contestInfo.WIN[0].length}px`,
       };
-    },
-    methods: {
-      paddingTopGet(n) {
-        const liHeight = 70;
-        const liMargin = 20;
-        const multiplier = Math.pow(2, n);
-        const prevRoundHeight = liHeight * multiplier + liMargin * multiplier;
-
-        console.log(prevRoundHeight);
-
-        return prevRoundHeight / 2 - liHeight / 2;
-      },
     },
   },
 };
@@ -75,16 +60,11 @@ export default {
 }
 
 .round {
-  padding: 0 0;
+  padding: 0;
   position: relative;
   display: flex;
   flex-direction: column;
   height: fit-content;
-
-  .game {
-    position: relative;
-    margin-bottom: 20px;
-  }
 
   $max: 6;
   @for $i from 2 through $max {
@@ -100,24 +80,38 @@ export default {
       }
     }
   }
-}
 
-.game::after {
-  content: "";
-  width: 20px;
-  border-right: 1px solid #000;
-  position: absolute;
-  right: -20px;
-}
+  .game {
+    position: relative;
+    margin-bottom: 20px;
 
-.round:not(:first-child) > .game::before {
-  content: "";
-  width: 20px;
-  height: 1px;
-  background-color: #000;
-  position: absolute;
-  left: -20px;
-  top: 50%;
+    &::after {
+      content: "";
+      width: 20px;
+      border-right: 1px solid #000;
+      position: absolute;
+      right: -20px;
+    }
+  }
+
+  &:not(:first-child) > .game::before {
+    content: "";
+    width: 20px;
+    height: 1px;
+    background-color: #000;
+    position: absolute;
+    left: -20px;
+    top: 50%;
+  }
+
+  &:last-child > .game:first-child {
+    margin-left: 150px;
+
+    &:before {
+      width: 170px;
+      left: -170px;
+    }
+  }
 }
 
 .line {

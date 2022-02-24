@@ -18,9 +18,6 @@ import Single from "../components/print/Single.vue";
 import Double from "../components/print/Double.vue";
 import Round from "../components/print/Round.vue";
 export default {
-  mounted() {
-    // window.print();
-  },
   data() {
     return {
       CONTEST_TYPE,
@@ -36,6 +33,7 @@ export default {
 <style lang="scss" scoped>
 .print {
   margin: 20px;
+  width: fit-content;
 }
 
 .title {
