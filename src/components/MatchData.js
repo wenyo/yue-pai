@@ -48,6 +48,11 @@ export default class MatchData {
     return id === NO_ID ? "" : this.teamInfo[id].name;
   }
 
+  idGet(playerKey) {
+    const id = this.game[PLAYER_KEY[playerKey]].id;
+    return id === NO_ID ? "" : id;
+  }
+
   nameDisabled(playerKey) {
     return (
       this.contestType === GAME_TYPE.LOSE ||

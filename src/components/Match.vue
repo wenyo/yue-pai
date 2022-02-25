@@ -14,7 +14,7 @@
         id=""
         @change="
           teamNameChange({
-            idx: game[playerKey].id,
+            idx: match_data.idGet(playerKey),
             name: $event.target.value,
           })
         "
@@ -81,9 +81,7 @@
         :value="match_data.game.place"
         :placeholder="match_data.game.bye ? '-' : '場地'"
         :disabled="match_data.game.bye"
-        @change="
-          gamePlaceChange({ roundIdx, idx: idx, place: $event.target.value })
-        "
+        @change="gamePlaceChange({ roundIdx, idx: idx, place: $event.target.value })"
       />
     </div>
   </li>
