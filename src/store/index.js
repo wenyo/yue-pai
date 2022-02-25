@@ -21,6 +21,7 @@ import {
   roundRobinIdOrderGet,
   newGameForm,
   byePlayerKeyGet,
+  playerKeyOtherGet,
 } from "../utils/ContestFunc";
 
 export default createStore({
@@ -31,6 +32,7 @@ export default createStore({
     teamInfo: [],
     contestInfo: JSON.parse(JSON.stringify(CONTEST_INFO_DEFAULT)),
     isContestReset: true,
+    roundScore: [],
   },
   mutations: {
     downloadJSON(state) {
@@ -94,11 +96,30 @@ export default createStore({
       const playerKeyName = PLAYER_KEY[playerKey];
       state.contestInfo[type][roundIdx][idx][playerKeyName].score =
         score === "" ? NO_SCORE : score;
+      const thisGame = state.contestInfo[type][roundIdx][idx];
 
-      if (state.type === CONTEST_TYPE.ROUND.id) return;
+      if (state.type === CONTEST_TYPE.ROUND.id) {
+        if (state.roundScore.length === 0) {
+          state.roundScore = Array.from({ length: state.teamCount }, (v1, i) =>
+            Array.from({ length: state.teamCount }, (v2, j) =>
+              i < j ? [NO_SCORE, NO_SCORE] : null
+            )
+          );
+        }
+
+        const playerNowInfo = thisGame[playerKeyName];
+        const playerOtherInfo = thisGame[playerKeyOtherGet(playerKeyName)];
+        const isNowIdSmall = playerNowInfo.id < playerOtherInfo.id;
+        const scoreX = isNowIdSmall ? playerNowInfo.id : playerOtherInfo.id;
+        const scoreY = !isNowIdSmall ? playerNowInfo.id : playerOtherInfo.id;
+        const scoreSort = isNowIdSmall ? 0 : 1;
+
+        state.roundScore[scoreX][scoreY][scoreSort] = score;
+        console.log(state.roundScore);
+        return;
+      }
 
       // check winner for next round
-      const thisGame = state.contestInfo[type][roundIdx][idx];
       const player1Info = thisGame[PLAYER_KEY.PLAYER1];
       const player2Info = thisGame[PLAYER_KEY.PLAYER2];
       const has_result =

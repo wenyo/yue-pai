@@ -1,6 +1,10 @@
 <template>
   <div class="contest">
-    <ul v-for="(roundInfo, roundIdx) in contestInfo.WIN" :key="roundIdx">
+    <ul
+      class="round no-line"
+      v-for="(roundInfo, roundIdx) in contestInfo.WIN"
+      :key="roundIdx"
+    >
       <Match
         v-for="(game, idx) in roundInfo"
         :key="idx"
@@ -10,18 +14,23 @@
       />
     </ul>
   </div>
+  <table class="score-table">
+    <tr>
+      <th>計分板</th>
+    </tr>
+    <tr>
+      <th v-for="(team, idx) in teamInfo" :key="idx">{{ team.name }}</th>
+    </tr>
+  </table>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import Match from "./Match.vue";
 export default {
-  mounted() {
-    // window.print();
-  },
   components: { Match },
   computed: {
-    ...mapState(["contestInfo"]),
+    ...mapState(["contestInfo", "teamInfo"]),
   },
 };
 </script>
@@ -30,7 +39,12 @@ export default {
 .contest {
   display: flex;
 }
-ul {
-  margin-right: 60px;
+
+.round {
+  margin-right: 40px;
+
+  li {
+    margin-bottom: 20px;
+  }
 }
 </style>
