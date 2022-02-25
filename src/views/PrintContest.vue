@@ -5,7 +5,7 @@
       <div class="type">{{ CONTEST_TYPE[type].ch }}</div>
     </div>
     <img src="../assets/img/print-line.jpg" alt="" />
-    <Single v-if="type === CONTEST_TYPE.SINGLE.id" />
+    <Single v-if="type === CONTEST_TYPE.SINGLE.id" class="single" />
     <Double v-if="type === CONTEST_TYPE.DOUBLE.id" />
     <Round v-if="type === CONTEST_TYPE.ROUND.id" />
   </div>
@@ -55,5 +55,32 @@ img {
 h1 {
   font-weight: bolder;
   font-size: 22px;
+}
+</style>
+
+<style lang="scss">
+.line {
+  height: fit-content;
+  width: 20px;
+  margin-left: -1px;
+  margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.game {
+  position: relative;
+}
+
+.round {
+  &:not(:first-child) > .game::before {
+    content: "";
+    width: 20px;
+    height: 1px;
+    background-color: #000;
+    position: absolute;
+    left: -20px;
+    top: 50%;
+  }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="contest single" :style="cssVars">
+  <div class="contest" :style="cssVars">
     <template v-for="(roundInfo, roundIdx) in contestInfo.WIN" :key="roundIdx">
       <ul class="round">
         <Match
@@ -32,17 +32,14 @@ export default {
     ...mapState(["contestInfo", "type"]),
     cssVars() {
       return {
-        "--const-len": this.contestInfo.WIN.length,
-        "--round-one-len": this.contestInfo.WIN[0].length,
-        "--test": [0, 0, 0],
-        "--ul-height": `${90 * this.contestInfo.WIN[0].length}px`,
+        "--win-padding": `${90 * Math.pow(2, this.contestInfo.WIN.length - 4) - 45}px `,
       };
     },
   },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @function pow($number, $exponent) {
   $value: 1;
 
@@ -54,6 +51,7 @@ export default {
 
   @return $value;
 }
+
 .contest {
   height: fit-content;
   display: flex;
@@ -82,46 +80,11 @@ export default {
   }
 
   .game {
-    position: relative;
     margin-bottom: 20px;
-
-    &::after {
-      content: "";
-      width: 20px;
-      border-right: 1px solid #000;
-      position: absolute;
-      right: -20px;
-    }
-  }
-
-  &:not(:first-child) > .game::before {
-    content: "";
-    width: 20px;
-    height: 1px;
-    background-color: #000;
-    position: absolute;
-    left: -20px;
-    top: 50%;
-  }
-
-  &:last-child > .game:first-child {
-    margin-left: 150px;
-
-    &:before {
-      width: 170px;
-      left: -170px;
-    }
   }
 }
 
 .line {
-  height: fit-content;
-  width: 20px;
-  margin-left: -1px;
-  margin-right: 20px;
-  display: flex;
-  flex-direction: column;
-
   &:nth-child(2) > li {
     height: 45px;
   }
@@ -167,6 +130,23 @@ export default {
       } @else {
         padding: #{90 * pow(2, $i - 2) - 10}px 0;
       }
+    }
+  }
+}
+
+.win {
+  & .round:nth-last-child(3),
+  & .line:nth-last-child(2),
+  & .round:nth-last-child(1) {
+    padding: var(--win-padding) 0;
+  }
+
+  &:last-child > .game:first-child {
+    margin-left: 150px;
+
+    &:before {
+      width: 170px;
+      left: -170px;
     }
   }
 }
