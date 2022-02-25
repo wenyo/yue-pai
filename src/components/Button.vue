@@ -40,6 +40,11 @@ button {
   border-radius: 2px;
   font-weight: bold;
   height: 30px;
+
+  &:disabled,
+  &[disabled] {
+    opacity: 0.5;
+  }
 }
 
 .master {
