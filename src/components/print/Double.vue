@@ -71,7 +71,8 @@ export default {
       &:nth-child(#{$i}) {
         padding: #{pow(2, floor($i/4))-1} px;
         padding: #{80 * (pow(2, floor($i/4))-1)}px 0;
-        .game {
+
+        .game:not(:last-child) {
           margin-bottom: #{160 * pow(2, (floor($i / 4))) - 70}px;
         }
       }
@@ -80,30 +81,29 @@ export default {
 }
 
 .line {
-  li {
-    display: block;
-    box-sizing: border-box;
+  $max: 19;
+  @for $i from 4 through $max {
+    @if $i % 4 == 0 {
+      $rule1: $i / pow(2, 2);
+      $rule2: pow(2, $rule1 - 1);
+      &:nth-child(#{$i}) {
+        padding-top: #{35 + 80 * ($rule2 - 1)}px;
 
-    &:nth-child(4n-3) {
-      border-top: unset;
-      border-right: unset;
-    }
+        li {
+          display: block;
+          box-sizing: border-box;
+          height: #{80 * $rule2}px;
 
-    &:nth-child(4n-2) {
-      box-shadow: unset;
-      border-right: unset;
-    }
-  }
+          &:nth-child(4n-3) {
+            border-top: 1px solid #000;
+            border-right: 1px solid #000;
+          }
 
-  $max: 6;
-  @for $i from 1 through $max {
-    &:nth-child(#{$i * 2}) {
-      @if $i==1 {
-        padding-top: 35px;
-      } @else if $i==2 {
-        padding: #{45 + 35}px 0;
-      } @else {
-        padding: #{90 * pow(2, $i - 2) - 10}px 0;
+          &:nth-child(4n-2) {
+            box-shadow: 0 1px 0 gray;
+            border-right: 1px solid #000;
+          }
+        }
       }
     }
   }
