@@ -26,6 +26,8 @@
             id="team-count"
             min="0"
             v-model="teamCountNum"
+            @change="roundScoreDefault"
+            :disabled="type === ''"
           />
         </div>
       </div>
@@ -48,7 +50,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from "vuex";
+import { mapMutations, mapState, mapActions } from "vuex";
 import { CONTEST_TYPE, BUTTON_TYPE } from "../utils/Enum.js";
 import Header from "../components/Header.vue";
 import StepLine from "../components/StepLine.vue";
@@ -75,7 +77,8 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["typeChange", "teamCountChange"]),
+    ...mapMutations(["typeChange", "teamCountChange", "roundScoreDefault"]),
+    ...mapActions(["teamCountDataChange"]),
   },
 };
 </script>

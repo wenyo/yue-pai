@@ -55,7 +55,7 @@ export default {
     ...mapState(["teamCount", "type"]),
   },
   methods: {
-    ...mapMutations(["teamCountChange", "downloadJSON"]),
+    ...mapMutations(["downloadJSON"]),
     ...mapActions(["contestInfoSizeChange"]),
   },
 };

@@ -95,13 +95,13 @@ export default {
           height: #{80 * $rule2}px;
 
           &:nth-child(4n-3) {
-            border-top: 1px solid #000;
-            border-right: 1px solid #000;
+            border-top: 1px solid $dark-100;
+            border-right: 1px solid $dark-100;
           }
 
           &:nth-child(4n-2) {
             box-shadow: 0 1px 0 gray;
-            border-right: 1px solid #000;
+            border-right: 1px solid $dark-100;
           }
         }
       }

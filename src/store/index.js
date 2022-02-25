@@ -99,22 +99,16 @@ export default createStore({
       const thisGame = state.contestInfo[type][roundIdx][idx];
 
       if (state.type === CONTEST_TYPE.ROUND.id) {
-        if (state.roundScore.length === 0) {
-          state.roundScore = Array.from({ length: state.teamCount }, (v1, i) =>
-            Array.from({ length: state.teamCount }, (v2, j) =>
-              i < j ? [NO_SCORE, NO_SCORE] : null
-            )
-          );
-        }
-
         const playerNowInfo = thisGame[playerKeyName];
         const playerOtherInfo = thisGame[playerKeyOtherGet(playerKeyName)];
         const isNowIdSmall = playerNowInfo.id < playerOtherInfo.id;
         const scoreX = isNowIdSmall ? playerNowInfo.id : playerOtherInfo.id;
         const scoreY = !isNowIdSmall ? playerNowInfo.id : playerOtherInfo.id;
         const scoreSort = isNowIdSmall ? 0 : 1;
+        const scoreSort1 = !isNowIdSmall ? 0 : 1;
 
         state.roundScore[scoreX][scoreY][scoreSort] = score;
+        state.roundScore[scoreY][scoreX][scoreSort1] = score;
         console.log(state.roundScore);
         return;
       }
@@ -190,6 +184,14 @@ export default createStore({
       state.contestInfo[GAME_TYPE.WIN][championshipAddRound][
         championshipAddGameIdx
       ].show = player1Info.score < player2Info.score;
+    },
+    roundScoreDefault(state) {
+      if (state.type !== CONTEST_TYPE.ROUND.id) return;
+      state.roundScore = Array.from({ length: state.teamCount }, (v1, i) =>
+        Array.from({ length: state.teamCount }, (v2, j) =>
+          i === j ? null : [NO_SCORE, NO_SCORE]
+        )
+      );
     },
     seedChange(state, { is_seed, idx }) {
       state.teamInfo[idx].is_seed = is_seed;
@@ -598,6 +600,10 @@ export default createStore({
           break;
       }
       console.log(state.contestInfo);
+    },
+    teamCountDataChange({ commit }, { value }) {
+      commit("teamCountChange", { value });
+      commit("roundScoreDefault");
     },
   },
   modules: {},

@@ -112,13 +112,13 @@ export default {
     box-sizing: border-box;
 
     &:nth-child(4n-3) {
-      border-top: 1px solid #000;
-      border-right: 1px solid #000;
+      border-top: 1px solid $dark-100;
+      border-right: 1px solid $dark-100;
     }
 
     &:nth-child(4n-2) {
-      box-shadow: 0 1px 0 gray;
-      border-right: 1px solid #000;
+      box-shadow: 0 1px 0 $dark-300;
+      border-right: 1px solid $dark-100;
     }
   }
 

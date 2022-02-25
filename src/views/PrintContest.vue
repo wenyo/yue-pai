@@ -77,7 +77,7 @@ h1 {
     content: "";
     width: 20px;
     height: 1px;
-    background-color: #000;
+    background-color: $dark-100;
     position: absolute;
     left: -20px;
     top: 50%;
