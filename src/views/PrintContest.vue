@@ -72,7 +72,7 @@ h1 {
   position: relative;
 }
 
-.round {
+.round:not(.no-line) {
   &:not(:first-child) > .game::before {
     content: "";
     width: 20px;

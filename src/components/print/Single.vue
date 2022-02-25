@@ -32,7 +32,9 @@ export default {
     ...mapState(["contestInfo", "type"]),
     cssVars() {
       return {
-        "--win-padding": `${90 * Math.pow(2, this.contestInfo.WIN.length - 4) - 45}px `,
+        "--win-padding": `${
+          90 * Math.pow(2, this.contestInfo.WIN.length - 4) - 45
+        }px `,
       };
     },
   },
@@ -134,20 +136,22 @@ export default {
   }
 }
 
-.win {
-  & .round:nth-last-child(3),
-  & .line:nth-last-child(2),
-  & .round:nth-last-child(1) {
-    padding: var(--win-padding) 0;
-  }
-
-  &:last-child > .game:first-child {
+.single {
+  & :last-child > .game:first-child {
     margin-left: 150px;
 
     &:before {
       width: 170px;
       left: -170px;
     }
+  }
+}
+
+.win {
+  & .round:nth-last-child(3),
+  & .line:nth-last-child(2),
+  & .round:nth-last-child(1) {
+    padding: var(--win-padding) 0;
   }
 }
 </style>
