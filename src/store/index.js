@@ -13,7 +13,7 @@ import {
 } from "../utils/Enum";
 import {
   gameSizeGet,
-  roundOneGameSortGet,
+  roundOneSortGet,
   roundOneInfoBuild,
   checkPlayerIDInContest,
   gameInfoCheck,
@@ -109,7 +109,6 @@ export default createStore({
 
         state.roundScore[scoreX][scoreY][scoreSort] = score;
         state.roundScore[scoreY][scoreX][scoreSort1] = score;
-        console.log(state.roundScore);
         return;
       }
 
@@ -181,9 +180,7 @@ export default createStore({
       const championshipAddRound = state.contestInfo[GAME_TYPE.WIN].length - 1;
       const championshipAddGameIdx = 0;
 
-      state.contestInfo[GAME_TYPE.WIN][championshipAddRound][
-        championshipAddGameIdx
-      ].show = player1Info.score < player2Info.score;
+      state.contestInfo[GAME_TYPE.WIN][championshipAddRound][championshipAddGameIdx].show = player1Info.score < player2Info.score;
     },
     roundScoreDefault(state) {
       if (state.type !== CONTEST_TYPE.ROUND.id) return;
@@ -216,7 +213,10 @@ export default createStore({
       let byeCount = gameLen * 2 - state.teamCount;
 
       // sort order array
-      const sortOrder = roundOneGameSortGet(gameLen * playerCountInGame);
+      const sortOrder = roundOneSortGet(
+        gameLen * playerCountInGame,
+        GAME_TYPE.WIN
+      );
 
       state.contestInfo.WIN = roundOneInfoBuild({
         sortOrder,
@@ -371,6 +371,56 @@ export default createStore({
         })
       );
       state.contestInfo[GAME_TYPE.LOSE] = newLoseContest;
+    },
+    roundLoseRoundOne(state) {
+      const gameLenInWIN = state.contestInfo.WIN[0].length;
+      const gameLenInLOSE = gameLenInWIN / 2;
+      const sortOrder = roundOneSortGet(gameLenInWIN, GAME_TYPE.LOSE);
+      const multiplier = 2;
+      let newGameInfo = Object.assign([], state.contestInfo.LOSE);
+
+      newGameInfo.unshift(
+        Array.from({ length: gameLenInLOSE }, (v, i) => {
+          // build basic player info
+          const NEW_GAME_FORM = newGameForm();
+          const player1SortIdx = sortOrder[multiplier * i];
+          const player2SortIdx = sortOrder[multiplier * i + 1];
+          const player1 = {
+            ...NEW_GAME_FORM.player1,
+            sort: { roundIdx: ROUND_IDX.ONE, game_idx: player1SortIdx },
+            winner_chose: false,
+            game_type: GAME_TYPE.WIN,
+          };
+          const player2 = {
+            ...NEW_GAME_FORM.player2,
+            sort: { roundIdx: ROUND_IDX.ONE, game_idx: player2SortIdx },
+            winner_chose: false,
+            game_type: GAME_TYPE.WIN,
+          };
+
+          let gameInfo = Object.assign(
+            {},
+            {
+              ...NEW_GAME_FORM,
+              player1,
+              player2,
+            }
+          );
+
+          // check prevGame is bye
+          const { game_info, contest_all } = gameInfoCheck({
+            game_info: gameInfo,
+            contest_all: state.contestInfo,
+          });
+
+          gameInfo = game_info;
+          state.contestInfo = contest_all;
+
+          return gameInfo;
+        })
+      );
+
+      state.contestInfo.LOSE = newGameInfo;
     },
     roundLoseFromLose(state, { roundIdx, gameLenInLose }) {
       const gameType =
@@ -565,14 +615,15 @@ export default createStore({
       }
 
       // LOSE
-      for (let roundIdx = 0; roundIdx < exponent; roundIdx++) {
-        const gameLenInLose = Math.pow(base, exponent - roundIdx - 1);
-        commit("roundLoseFromLose", { roundIdx, gameLenInLose });
-        commit("roundLoseFromLoseWin", { roundIdx, gameLenInLose });
-      }
-      commit("roundOneAllByeCheck");
-      commit("championLoseAdd");
-      commit("championAdd");
+      commit("roundLoseRoundOne");
+      // for (let roundIdx = 0; roundIdx < exponent; roundIdx++) {
+      // const gameLenInLose = Math.pow(base, exponent - roundIdx - 1);
+      // commit("roundLoseFromLose", { roundIdx, gameLenInLose });
+      // commit("roundLoseFromLoseWin", { roundIdx, gameLenInLose });
+      // }
+      // commit("roundOneAllByeCheck");
+      // commit("championLoseAdd");
+      // commit("championAdd");
     },
     roundInfoSizeChange({ state, commit }) {
       const round_count =

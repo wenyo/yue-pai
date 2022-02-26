@@ -40,9 +40,9 @@ export function gameSizeGet(team_count) {
   });
 }
 
-export function roundOneGameSortGet(gameLen) {
+export function roundOneSortGet(gameLen, type) {
   const halfCount = 2;
-  const teamCount = 2;
+  const teamCount = type === GAME_TYPE.WIN ? 2 : 4;
   let result = [];
   let gameIdxAry = [Array.from({ length: gameLen }, (v, i) => i)];
 
@@ -50,20 +50,33 @@ export function roundOneGameSortGet(gameLen) {
     let newGameIdx = [[], []];
     for (let gameTemp of gameIdxAry) {
       const middleNumber = gameTemp.length / halfCount;
-      newGameIdx[0].push(gameTemp.slice(0, middleNumber));
-      newGameIdx[1].push(
-        gameTemp.slice(middleNumber, gameTemp.length).reverse()
-      );
+      const firstCutGame = gameTemp.slice(0, middleNumber);
+      let secondCutGame = gameTemp.slice(middleNumber, gameTemp.length);
+      secondCutGame =
+        type === GAME_TYPE.WIN ? secondCutGame.reverse() : secondCutGame;
+
+      newGameIdx[0].push(firstCutGame);
+      newGameIdx[1].push(secondCutGame);
     }
     gameIdxAry = newGameIdx[0].concat(newGameIdx[1]);
   }
 
   let resultTemp = [];
-  for (const value of gameIdxAry) {
-    for (const idx in value) {
-      if (!resultTemp[idx]) resultTemp[idx] = [];
-      resultTemp[idx].push(value[idx]);
+  if (type === GAME_TYPE.WIN) {
+    for (const value of gameIdxAry) {
+      for (const idx in value) {
+        if (!resultTemp[idx]) resultTemp[idx] = [];
+        resultTemp[idx].push(value[idx]);
+      }
     }
+  } else if (type === GAME_TYPE.LOSE) {
+    resultTemp = [[], [], [], []];
+    for (const value of gameIdxAry) {
+      for (const idx in resultTemp) {
+        resultTemp[idx].push(value[idx]);
+      }
+    }
+    resultTemp = [resultTemp[0], resultTemp[2], resultTemp[1], resultTemp[3]];
   }
 
   for (const sortAry of resultTemp) {
@@ -205,25 +218,23 @@ export function gameInfoCheck({ game_info, contest_all }) {
     const roundIdx = playerInfo.sort.roundIdx;
     const game_idx = playerInfo.sort.game_idx;
     const playerPre = contest[roundIdx][game_idx];
+    const winner_chose = game_info.winner_chose;
 
     if (!playerPre.bye) continue;
-    switch (playerPre.bye_player.length) {
-      case 1:
-        playerSortCheck({
-          player_info: playerInfo,
-          player_pre: playerPre,
-        });
 
-        break;
-      case 2:
-        game_info.bye_player.push(playerKey);
-        game_info.bye = true;
-        break;
-
-      default:
-        break;
+    const preByePlayerCount = playerPre.bye_player.length;
+    if (preByePlayerCount === 1 && winner_chose) {
+      playerSortCheck({
+        player_info: playerInfo,
+        player_pre: playerPre,
+      });
+    } else if (preByePlayerCount === 2 || !winner_chose) {
+      game_info.bye_player.push(playerKey);
+      game_info.bye = true;
     }
   }
+
+  if (game_info.bye_player.length === 2) game_info.show = false;
   return { game_info, contest_all };
 }
 
