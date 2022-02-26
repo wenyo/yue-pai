@@ -46,6 +46,8 @@ export function roundOneSortGet(gameLen, type) {
   let result = [];
   let gameIdxAry = [Array.from({ length: gameLen }, (v, i) => i)];
 
+  if (gameLen < teamCount) return gameIdxAry[0];
+
   while (gameIdxAry[0].length > teamCount) {
     let newGameIdx = [[], []];
     for (let gameTemp of gameIdxAry) {
@@ -218,7 +220,7 @@ export function gameInfoCheck({ game_info, contest_all }) {
     const roundIdx = playerInfo.sort.roundIdx;
     const game_idx = playerInfo.sort.game_idx;
     const playerPre = contest[roundIdx][game_idx];
-    const winner_chose = game_info.winner_chose;
+    const winner_chose = playerInfo.winner_chose;
 
     if (!playerPre.bye) continue;
 
@@ -228,7 +230,7 @@ export function gameInfoCheck({ game_info, contest_all }) {
         player_info: playerInfo,
         player_pre: playerPre,
       });
-    } else if (preByePlayerCount === 2 || !winner_chose) {
+    } else {
       game_info.bye_player.push(playerKey);
       game_info.bye = true;
     }
@@ -240,7 +242,6 @@ export function gameInfoCheck({ game_info, contest_all }) {
 
 export function playerSortCheck({ player_info, player_pre }) {
   const playerOtherKey = byePlayerKeyGet(player_pre.bye_player);
-  player_pre.show = false;
   player_info.sort = player_pre[playerOtherKey].sort;
   player_info.winner_chose = player_pre[playerOtherKey].winner_chose;
   player_info.game_type = player_pre[playerOtherKey].game_type;

@@ -61,7 +61,6 @@ export default {
   computed: {
     ...mapState(["teamInfo"]),
     match_data() {
-      console.log(this.contestType);
       return new MatchData({
         contestType: this.contestType,
         game: this.game,
