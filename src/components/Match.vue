@@ -81,7 +81,9 @@
         :value="match_data.game.place"
         :placeholder="match_data.game.bye ? '-' : '場地'"
         :disabled="match_data.game.bye"
-        @change="gamePlaceChange({ roundIdx, idx: idx, place: $event.target.value })"
+        @change="
+          gamePlaceChange({ roundIdx, idx: idx, place: $event.target.value })
+        "
       />
     </div>
   </li>

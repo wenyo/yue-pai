@@ -1,5 +1,5 @@
 <template>
-  <li class="game">
+  <li class="game" :class="{ hidden: !match_data.game.show }">
     <div class="top">
       <div class="title">
         <span class="font-dark-200"
@@ -148,5 +148,9 @@ export default {
   position: absolute;
   top: -2px;
   font-size: 12px;
+}
+
+.hidden {
+  visibility: hidden;
 }
 </style>

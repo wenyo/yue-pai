@@ -28,6 +28,7 @@ export default createStore({
     contestName: "",
     type: "",
     teamCount: 0,
+    teamCountPowCheck: false,
     teamInfo: [],
     contestInfo: JSON.parse(JSON.stringify(CONTEST_INFO_DEFAULT)),
     isContestReset: true,
@@ -179,6 +180,7 @@ export default createStore({
       const championshipAddRound = state.contestInfo[GAME_TYPE.WIN].length - 1;
       const championshipAddGameIdx = 0;
 
+      // eslint-disable-next-line prettier/prettier
       state.contestInfo[GAME_TYPE.WIN][championshipAddRound][championshipAddGameIdx].show = player1Info.score < player2Info.score;
     },
     roundScoreDefault(state) {
@@ -335,10 +337,10 @@ export default createStore({
     },
     roundOneAllByeCheck(state) {
       const loseContest = state.contestInfo[GAME_TYPE.LOSE];
-      const isOneNotBye = loseContest[0]
+      state.teamCountPowCheck = loseContest[0]
         .map((round) => round.bye)
         .includes(false);
-      if (isOneNotBye) return;
+      if (state.teamCountPowCheck) return;
 
       loseContest.shift();
 
@@ -346,10 +348,10 @@ export default createStore({
         round.map((game) => {
           const player1Info = game.player1;
           const player2Info = game.player2;
-          const player1LoseAdd =
-            player1Info.game_type === GAME_TYPE.LOSE ? -1 : 0;
-          const player2LoseAdd =
-            player2Info.game_type === GAME_TYPE.LOSE ? -1 : 0;
+          // eslint-disable-next-line prettier/prettier
+          const player1LoseAdd = player1Info.game_type === GAME_TYPE.LOSE ? -1 : 0;
+          // eslint-disable-next-line prettier/prettier
+          const player2LoseAdd = player2Info.game_type === GAME_TYPE.LOSE ? -1 : 0;
           return {
             ...game,
             player1: {
@@ -422,11 +424,11 @@ export default createStore({
       state.contestInfo.LOSE = newGameInfo;
     },
     roundLoseFromLose(state, { roundIdx, gameLenInLose }) {
-      const gameType =
-        roundIdx === ROUND_IDX.ONE ? GAME_TYPE.WIN : GAME_TYPE.LOSE;
+      // eslint-disable-next-line prettier/prettier
+      const gameType = roundIdx === ROUND_IDX.ONE ? GAME_TYPE.WIN : GAME_TYPE.LOSE;
       const contest = state.contestInfo[gameType];
-      const prevRoundIdx =
-        roundIdx === ROUND_IDX.ONE ? ROUND_IDX.ONE : contest.length - 1;
+      // eslint-disable-next-line prettier/prettier
+      const prevRoundIdx = roundIdx === ROUND_IDX.ONE ? ROUND_IDX.ONE : contest.length - 1;
       const winnerChose = roundIdx === ROUND_IDX.ONE ? false : true;
 
       let newGameInfo = Object.assign([], state.contestInfo.LOSE);
@@ -478,12 +480,10 @@ export default createStore({
       state.contestInfo.LOSE = newGameInfo;
     },
     roundLoseFromLoseWin(state, { roundIdx, gameLenInLose }) {
-      const prevRoundIdxLose = roundIdx - 1;
+      const prevRoundIdxLose = state.contestInfo.LOSE.length - 1;
       const prevRoundIdxWin = roundIdx;
-      const player2Sort = roundOneSortGet(
-        gameLenInLose,
-        GAME_TYPE.LOSE
-      ).reverse();
+      // eslint-disable-next-line prettier/prettier
+      const player2Sort = roundOneSortGet(gameLenInLose, GAME_TYPE.LOSE).reverse();
       let newGameInfo = Object.assign([], state.contestInfo.LOSE);
 
       newGameInfo.push(
@@ -604,6 +604,8 @@ export default createStore({
 
       // LOSE
       commit("roundLoseRoundOne");
+      if (!state.teamCountPowCheck) exponent = exponent + 1;
+      console.log(exponent);
       for (let roundIdx = 1; roundIdx < exponent; roundIdx++) {
         const gameLenInLose = state.contestInfo.WIN[roundIdx].length;
         if (roundIdx !== 1) {
@@ -611,6 +613,15 @@ export default createStore({
         }
         commit("roundLoseFromLoseWin", { roundIdx, gameLenInLose });
       }
+
+      if (state.contestInfo.LOSE.slice(-1).length > 1) {
+        commit("roundLoseFromLose", { roundIdx: exponent, gameLenInLose: 1 });
+        commit("roundLoseFromLoseWin", {
+          roundIdx: exponent,
+          gameLenInLose: 1,
+        });
+      }
+
       commit("roundOneAllByeCheck");
       commit("championLoseAdd");
       commit("championAdd");
