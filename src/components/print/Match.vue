@@ -1,5 +1,8 @@
 <template>
-  <li class="game" :class="{ hidden: !match_data.game.show }">
+  <li
+    class="game"
+    :class="{ hidden: !match_data.game.show, 'no-bye': !match_data.game.bye }"
+  >
     <div class="top">
       <div class="title">
         <span class="font-dark-200"

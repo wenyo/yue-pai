@@ -73,7 +73,7 @@ h1 {
 }
 
 .round:not(.no-line) {
-  &:not(:first-child) > .game::before {
+  &:not(:first-child) > .no-bye::before {
     content: "";
     width: 20px;
     height: 1px;
