@@ -1,7 +1,13 @@
 <template>
   <div class="contest" :style="cssVars">
     <template v-for="(roundInfo, roundIdx) in contestInfo.WIN" :key="roundIdx">
-      <ul class="round">
+      <ul
+        class="round"
+        :class="{
+          'final-round': roundIdx === contestInfo.WIN.length - 2,
+          'final-round-add': roundIdx === contestInfo.WIN.length - 1,
+        }"
+      >
         <Match
           v-for="(game, idx) in roundInfo"
           :key="idx"
@@ -81,7 +87,7 @@ export default {
     }
   }
 
-  .game {
+  .game:not(:last-child) {
     margin-bottom: 20px;
   }
 }
@@ -147,11 +153,20 @@ export default {
   }
 }
 
-.win {
+.contest.win {
   & .round:nth-last-child(3),
   & .line:nth-last-child(2),
   & .round:nth-last-child(1) {
     padding: var(--win-padding) 0;
+  }
+
+  .final-round {
+    margin-left: 440px;
+
+    .game:before {
+      width: 480px;
+      left: -480px;
+    }
   }
 }
 </style>

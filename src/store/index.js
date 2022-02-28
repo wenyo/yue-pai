@@ -604,8 +604,8 @@ export default createStore({
 
       // LOSE
       commit("roundLoseRoundOne");
+
       if (!state.teamCountPowCheck) exponent = exponent + 1;
-      console.log(exponent);
       for (let roundIdx = 1; roundIdx < exponent; roundIdx++) {
         const gameLenInLose = state.contestInfo.WIN[roundIdx].length;
         if (roundIdx !== 1) {
@@ -614,17 +614,17 @@ export default createStore({
         commit("roundLoseFromLoseWin", { roundIdx, gameLenInLose });
       }
 
-      if (state.contestInfo.LOSE.slice(-1).length > 1) {
+      commit("roundOneAllByeCheck");
+      commit("championLoseAdd");
+      commit("championAdd");
+
+      if (Object.keys(state.contestInfo.LOSE.slice(-1)[0]).length > 1) {
         commit("roundLoseFromLose", { roundIdx: exponent, gameLenInLose: 1 });
         commit("roundLoseFromLoseWin", {
           roundIdx: exponent,
           gameLenInLose: 1,
         });
       }
-
-      commit("roundOneAllByeCheck");
-      commit("championLoseAdd");
-      commit("championAdd");
     },
     roundInfoSizeChange({ state, commit }) {
       const round_count =

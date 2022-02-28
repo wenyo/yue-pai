@@ -21,7 +21,7 @@
           :contest-type="type"
         />
       </ul>
-      <ul class="line" v-if="roundIdx !== contestInfo.LOSE.length - 1">
+      <ul class="line">
         <template :key="idx" v-for="(game, idx) in roundInfo">
           <template v-if="idx !== roundInfo.length - 1">
             <li></li>
@@ -44,7 +44,23 @@ export default {
     cssVars() {
       return {
         "--defeat-even": false,
+        "--defeat-last-line-height": `${this.lastLineHeight()}px`,
+        "--defeat-last-line-pos": `${this.lastLinePosition()}px`,
       };
+    },
+  },
+  methods: {
+    lastLineHeight() {
+      const maxWinInOneRound = this.contestInfo.WIN[0].length;
+      const maxLoseInOneRound = this.contestInfo.LOSE[0].length;
+      const winHeight = maxWinInOneRound * 70 + (maxWinInOneRound - 1) * 20;
+      const loseHeight = maxLoseInOneRound * 70 + (maxLoseInOneRound - 1) * 90;
+      return (winHeight + loseHeight) / 2 + 16;
+    },
+    lastLinePosition() {
+      const maxLoseInOneRound = this.contestInfo.LOSE[0].length;
+      const loseHeight = maxLoseInOneRound * 70 + (maxLoseInOneRound - 1) * 90;
+      return loseHeight / 2;
     },
   },
 };
@@ -190,13 +206,27 @@ $odd-start: 3;
             }
 
             &:nth-child(4n-2) {
-              box-shadow: 0 1px 0 gray;
+              box-shadow: 0 1px 0 $dark-100;
               border-right: 1px solid $dark-100;
             }
           }
         }
       }
     }
+  }
+}
+
+.lose {
+  position: absolute;
+
+  .line:last-child {
+    box-shadow: 0 1px 0 $dark-100;
+    border-right: 1px solid $dark-100;
+    padding-top: var(--defeat-last-line-height);
+    position: absolute;
+    right: -19px;
+    bottom: var(--defeat-last-line-pos);
+    margin: 0;
   }
 }
 </style>
