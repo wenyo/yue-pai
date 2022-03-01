@@ -55,7 +55,7 @@ export default {
       const maxLoseInOneRound = this.contestInfo.LOSE[0].length;
       const winHeight = maxWinInOneRound * 70 + (maxWinInOneRound - 1) * 20;
       const loseHeight = maxLoseInOneRound * 70 + (maxLoseInOneRound - 1) * 90;
-      return (winHeight + loseHeight) / 2 + 16;
+      return (winHeight + loseHeight) / 2 + 70;
     },
     lastLinePosition() {
       const maxLoseInOneRound = this.contestInfo.LOSE[0].length;
@@ -66,7 +66,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @function pow($number, $exponent) {
   $value: 1;
 
@@ -88,6 +88,16 @@ $odd-start: 3;
   display: flex;
 }
 
+.game-type {
+  border: 1px solid $dark-200;
+  width: 500px;
+  height: 30px;
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .round {
   .game:not(:last-child) {
     margin-bottom: 90px;
@@ -102,7 +112,7 @@ $odd-start: 3;
 
 .count-pow {
   .round {
-    &:nth-child(4n - 1) > .game .front-line {
+    &:nth-child(4n - 1) > .game.no-bye > .front-line {
       width: 40px;
       left: -40px;
     }
@@ -146,7 +156,7 @@ $odd-start: 3;
             }
 
             &:nth-child(4n-2) {
-              box-shadow: 0 1px 0 gray;
+              border-bottom: 1px solid $dark-100;
               border-right: 1px solid $dark-100;
             }
           }
@@ -206,7 +216,7 @@ $odd-start: 3;
             }
 
             &:nth-child(4n-2) {
-              box-shadow: 0 1px 0 $dark-100;
+              border-bottom: 1px solid $dark-100;
               border-right: 1px solid $dark-100;
             }
           }
@@ -220,7 +230,7 @@ $odd-start: 3;
   position: absolute;
 
   .line:last-child {
-    box-shadow: 0 1px 0 $dark-100;
+    border-bottom: 1px solid $dark-100;
     border-right: 1px solid $dark-100;
     padding-top: var(--defeat-last-line-height);
     position: absolute;

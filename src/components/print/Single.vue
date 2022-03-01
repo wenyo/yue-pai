@@ -3,9 +3,9 @@
     <template v-for="(roundInfo, roundIdx) in contestInfo.WIN" :key="roundIdx">
       <ul
         class="round"
-        :id="`
-           ${roundIdx === contestInfo.WIN.length - 2 ? 'final-round' : ''} ${
-          roundIdx === contestInfo.WIN.length - 1 ? 'final-round-add' : ''}`"
+        :id="`${roundIdx === contestInfo.WIN.length - 2 ? 'final-round' : ''}${
+          roundIdx === contestInfo.WIN.length - 1 ? 'final-round-add' : ''
+        }`"
       >
         <Match
           v-for="(game, idx) in roundInfo"
@@ -122,7 +122,7 @@ export default {
     }
 
     &:nth-child(4n-2) {
-      box-shadow: 0 1px 0 $dark-300;
+      border-bottom: 1px solid $dark-100;
       border-right: 1px solid $dark-100;
     }
   }
@@ -158,27 +158,17 @@ export default {
   & .round:nth-last-child(1) {
     padding: var(--win-padding) 0;
   }
-
-  #final-round {
-    margin-left: 440px;
-
-    .front-line {
-      // width: 480px;
-      // left: -480px;
-    }
-  }
 }
 </style>
 
 <style lang="scss">
-.contest.win {
-
+.win {
   #final-round {
     margin-left: 440px;
 
     .front-line {
-      // width: 480px;
-      // left: -480px;
+      width: 480px;
+      left: -480px;
     }
   }
 }

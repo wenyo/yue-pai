@@ -8,6 +8,7 @@
     <Single v-if="type === CONTEST_TYPE.SINGLE.id" class="single" />
     <Double v-if="type === CONTEST_TYPE.DOUBLE.id" />
     <Round v-if="type === CONTEST_TYPE.ROUND.id" />
+    <div class="noPrint"></div>
   </div>
 </template>
 
@@ -77,7 +78,7 @@ h1 {
     .front-line {
       width: 20px;
       height: 1px;
-      background-color: $dark-100;
+      border-top: 1px solid $dark-100;
       position: absolute;
       left: -20px;
       top: 50%;

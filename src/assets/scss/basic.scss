@@ -44,6 +44,19 @@ input[type="number"].size-l {
 
 @page {
   size: A3 landscape; /* 紙張大小 */
+  margin: 0;
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  .noBreak {
+    break-inside: avoid;
+  }
+
+  .noPrint {
+    display: none;
+  }
 }
 
 .red-icon {
