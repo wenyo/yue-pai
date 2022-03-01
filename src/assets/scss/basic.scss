@@ -42,20 +42,26 @@ input[type="number"].size-l {
   width: 200px;
 }
 
-@page {
-  size: A3 landscape; /* 紙張大小 */
-  margin: 0;
+@media print {
+  @page {
+    size: A3 landscape; /* 紙張大小 */
+    margin: 10px 0;
 
-  * {
-    -webkit-print-color-adjust: exact !important;
-  }
+    * {
+      -webkit-print-color-adjust: exact !important;
+    }
 
-  .noBreak {
-    break-inside: avoid;
-  }
+    .noBreak {
+      break-inside: avoid;
+    }
 
-  .noPrint {
-    display: none;
+    .breakPage {
+      page-break-before: always;
+    }
+
+    .noPrint {
+      display: none;
+    }
   }
 }
 

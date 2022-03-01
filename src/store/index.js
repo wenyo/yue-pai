@@ -181,7 +181,9 @@ export default createStore({
       const championshipAddGameIdx = 0;
 
       // eslint-disable-next-line prettier/prettier
-      state.contestInfo[GAME_TYPE.WIN][championshipAddRound][championshipAddGameIdx].show = player1Info.score < player2Info.score;
+      state.contestInfo[GAME_TYPE.WIN][championshipAddRound][
+        championshipAddGameIdx
+      ].show = player1Info.score < player2Info.score;
     },
     roundScoreDefault(state) {
       if (state.type !== CONTEST_TYPE.ROUND.id) return;
@@ -315,6 +317,7 @@ export default createStore({
     },
     championAdd(state) {
       const lastWinRoundIdx = state.contestInfo.WIN.length - 1;
+      const lastLoseRoundIdx = state.contestInfo.LOSE.length - 1;
       const NEW_GAME_FORM = newGameForm();
       const championGame = {
         ...NEW_GAME_FORM,
@@ -328,7 +331,7 @@ export default createStore({
           ...NEW_GAME_FORM.player2,
           game_type: GAME_TYPE.WIN,
           winner_chose: false,
-          sort: { roundIdx: lastWinRoundIdx, game_idx: ROUND_IDX.ONE },
+          sort: { roundIdx: lastLoseRoundIdx, game_idx: ROUND_IDX.ONE },
         },
         championship: true,
         show: false,
@@ -349,9 +352,11 @@ export default createStore({
           const player1Info = game.player1;
           const player2Info = game.player2;
           // eslint-disable-next-line prettier/prettier
-          const player1LoseAdd = player1Info.game_type === GAME_TYPE.LOSE ? -1 : 0;
+          const player1LoseAdd =
+            player1Info.game_type === GAME_TYPE.LOSE ? -1 : 0;
           // eslint-disable-next-line prettier/prettier
-          const player2LoseAdd = player2Info.game_type === GAME_TYPE.LOSE ? -1 : 0;
+          const player2LoseAdd =
+            player2Info.game_type === GAME_TYPE.LOSE ? -1 : 0;
           return {
             ...game,
             player1: {
@@ -425,10 +430,12 @@ export default createStore({
     },
     roundLoseFromLose(state, { roundIdx, gameLenInLose }) {
       // eslint-disable-next-line prettier/prettier
-      const gameType = roundIdx === ROUND_IDX.ONE ? GAME_TYPE.WIN : GAME_TYPE.LOSE;
+      const gameType =
+        roundIdx === ROUND_IDX.ONE ? GAME_TYPE.WIN : GAME_TYPE.LOSE;
       const contest = state.contestInfo[gameType];
       // eslint-disable-next-line prettier/prettier
-      const prevRoundIdx = roundIdx === ROUND_IDX.ONE ? ROUND_IDX.ONE : contest.length - 1;
+      const prevRoundIdx =
+        roundIdx === ROUND_IDX.ONE ? ROUND_IDX.ONE : contest.length - 1;
       const winnerChose = roundIdx === ROUND_IDX.ONE ? false : true;
 
       let newGameInfo = Object.assign([], state.contestInfo.LOSE);
@@ -483,7 +490,10 @@ export default createStore({
       const prevRoundIdxLose = state.contestInfo.LOSE.length - 1;
       const prevRoundIdxWin = roundIdx;
       // eslint-disable-next-line prettier/prettier
-      const player2Sort = roundOneSortGet(gameLenInLose, GAME_TYPE.LOSE).reverse();
+      const player2Sort = roundOneSortGet(
+        gameLenInLose,
+        GAME_TYPE.LOSE
+      ).reverse();
       let newGameInfo = Object.assign([], state.contestInfo.LOSE);
 
       newGameInfo.push(

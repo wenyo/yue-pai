@@ -1,7 +1,13 @@
 <template>
   <div class="game-type">勝部</div>
   <Single class="win" />
+  <div
+    v-if="contestInfo.WIN[0].length > 4"
+    class="breakPage"
+    style="page-break-after: always"
+  ></div>
   <div class="game-type">敗部</div>
+
   <div
     class="contest lose"
     :class="{
@@ -45,6 +51,7 @@ export default {
       return {
         "--defeat-even": false,
         "--defeat-last-line-height": `${this.lastLineHeight()}px`,
+        "--defeat-last-line-height-print": `${this.lastLineHeightInPrint()}px`,
         "--defeat-last-line-pos": `${this.lastLinePosition()}px`,
       };
     },
@@ -56,6 +63,24 @@ export default {
       const winHeight = maxWinInOneRound * 70 + (maxWinInOneRound - 1) * 20;
       const loseHeight = maxLoseInOneRound * 70 + (maxLoseInOneRound - 1) * 90;
       return (winHeight + loseHeight) / 2 + 70;
+    },
+    lastLineHeightInPrint() {
+      const pageHeight = 1122;
+      const maxWinInOneRound = this.contestInfo.WIN[0].length;
+      const maxLoseInOneRound = this.contestInfo.LOSE[0].length;
+      const winHeight = maxWinInOneRound * 70 + (maxWinInOneRound - 1) * 20;
+      const loseHeight = maxLoseInOneRound * 70 + (maxLoseInOneRound - 1) * 90;
+      // 16
+      switch (maxWinInOneRound) {
+        case 4:
+          return this.lastLineHeight();
+        case 8:
+          return pageHeight - winHeight / 2 - 146 + loseHeight / 2 + 55;
+        case 16:
+          return pageHeight * 2 - winHeight / 2 - 146 + loseHeight / 2 + 240;
+        default:
+          break;
+      }
     },
     lastLinePosition() {
       const maxLoseInOneRound = this.contestInfo.LOSE[0].length;
@@ -171,7 +196,7 @@ $odd-start: 3;
   $even-start: 5;
   $odd-start: 3;
   .round {
-    &:nth-child(4n + 1) > .game .front-line {
+    &:nth-child(4n + 1) > .game.no-bye .front-line {
       width: 40px;
       left: -40px;
     }
@@ -237,6 +262,10 @@ $odd-start: 3;
     right: -19px;
     bottom: var(--defeat-last-line-pos);
     margin: 0;
+
+    @media print {
+      padding-top: var(--defeat-last-line-height-print);
+    }
   }
 }
 </style>

@@ -157,14 +157,12 @@ export default {
 .hidden {
   visibility: hidden;
 }
-
 .contest.win {
-
   #final-round {
-
+    margin-left: 560px;
     .front-line {
-      width: 480px;
-      left: -480px;
+      width: 600px;
+      left: -600px;
     }
   }
 }
