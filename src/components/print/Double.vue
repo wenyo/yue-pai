@@ -102,7 +102,7 @@ $odd-start: 3;
 
 .count-pow {
   .round {
-    &:nth-child(4n - 1) > .game::before {
+    &:nth-child(4n - 1) > .game .front-line {
       width: 40px;
       left: -40px;
     }
@@ -161,7 +161,7 @@ $odd-start: 3;
   $even-start: 5;
   $odd-start: 3;
   .round {
-    &:nth-child(4n + 1) > .game::before {
+    &:nth-child(4n + 1) > .game .front-line {
       width: 40px;
       left: -40px;
     }

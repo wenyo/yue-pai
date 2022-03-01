@@ -35,6 +35,7 @@
       <div>{{ match_data.game.date ?? "" }}</div>
       <div>{{ match_data.game.time ?? "" }}</div>
     </div>
+    <div class="front-line"></div>
   </li>
 </template>
 
@@ -155,5 +156,16 @@ export default {
 
 .hidden {
   visibility: hidden;
+}
+
+.contest.win {
+
+  #final-round {
+
+    .front-line {
+      width: 480px;
+      left: -480px;
+    }
+  }
 }
 </style>

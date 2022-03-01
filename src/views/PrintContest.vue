@@ -73,14 +73,15 @@ h1 {
 }
 
 .round:not(.no-line) {
-  &:not(:first-child) > .no-bye::before {
-    content: "";
-    width: 20px;
-    height: 1px;
-    background-color: $dark-100;
-    position: absolute;
-    left: -20px;
-    top: 50%;
+  &:not(:first-child) > .no-bye {
+    .front-line {
+      width: 20px;
+      height: 1px;
+      background-color: $dark-100;
+      position: absolute;
+      left: -20px;
+      top: 50%;
+    }
   }
 }
 </style>
