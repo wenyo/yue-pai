@@ -14,7 +14,6 @@
         :game-place-change="gamePlaceChange"
         :game-score-change="gameScoreChange"
       />
-      <Test />
     </ul>
   </div>
 </template>
@@ -22,10 +21,9 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 import Match from "./Match";
-import Test from "./Test.vue";
 import { GAME_TYPE } from "../utils/Enum";
 export default {
-  components: { Match, Test },
+  components: { Match },
   computed: {
     ...mapState(["contestInfo", "type"]),
   },

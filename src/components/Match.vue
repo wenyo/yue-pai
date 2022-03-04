@@ -7,30 +7,6 @@
     </div>
     <!-- team name & score -->
     <div v-for="playerKey in Object.keys(PLAYER_KEY)" :key="playerKey">
-      <!-- <draggable
-      tag="div"
-      :list="Object.keys(PLAYER_KEY)"
-      handle=".handle"
-      @change="log"
-    > -->
-      <!-- <template> -->
-      <img src="../assets/icon/grip-vertical-solid.svg" class="handle" />
-      <!-- <input
-          class="w-70"
-          type="text"
-          name=""
-          id=""
-          @change="
-            teamNameChange({
-              idx: match_data.idGet(playerKey),
-              name: $event.target.value,
-            })
-          "
-          :placeholder="match_data.namePlaceholderGet(playerKey)"
-          :value="match_data.nameGet(playerKey)"
-          :disabled="match_data.nameDisabled(playerKey)"
-        /> -->
-
       <input
         class="w-70"
         type="text"
@@ -63,8 +39,6 @@
         :value="match_data.scoreValue(playerKey)"
         :disabled="match_data.scoreDisabled(playerKey)"
       />
-      <!-- </template> -->
-      <!-- </draggable> -->
     </div>
     <!-- date -->
     <div>
@@ -116,7 +90,6 @@
 </template>
 
 <script>
-// import { VueDraggableNext } from "vue-draggable-next";
 import { mapState } from "vuex";
 import { ROUND, PLAYER_KEY, NO_SCORE, GAME_TYPE, NO_ID } from "../utils/Enum";
 import MatchData from "./MatchData.js";
@@ -142,9 +115,6 @@ export default {
       GAME_TYPE,
     };
   },
-  components: {
-    // draggable: VueDraggableNext,
-  },
   computed: {
     ...mapState(["teamInfo"]),
     match_data() {
@@ -155,11 +125,6 @@ export default {
         roundIdx: this.roundIdx,
         teamInfo: this.teamInfo,
       });
-    },
-  },
-  methods: {
-    log(event) {
-      console.log(event);
     },
   },
 };
@@ -175,7 +140,7 @@ li {
   }
 
   .w-70 {
-    width: 68%;
+    width: 70%;
   }
   .w-30 {
     width: 30%;
@@ -192,19 +157,5 @@ li {
   display: flex;
   align-items: center;
   height: 20px;
-}
-
-.handle {
-  width: 2%;
-}
-
-[draggable="true"] {
-  /*
-   To prevent user selecting inside the drag source
-  */
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
 }
 </style>
