@@ -16,13 +16,9 @@
       </router-link>
       <div class="btn-area">
         <router-link to="/print_contest" custom v-slot="{ navigate }">
-          <Button :type="BUTTON_TYPE.FORTH" :click_fun="navigate"
-            >列印賽程表</Button
-          >
+          <Button :type="BUTTON_TYPE.FORTH" :click_fun="navigate">列印</Button>
         </router-link>
-        <Button :type="BUTTON_TYPE.SECOND" @click="downloadJSON"
-          >下載賽程表</Button
-        >
+        <Button :type="BUTTON_TYPE.SECOND" @click="downloadJSON">儲存</Button>
       </div>
     </div>
   </div>
