@@ -44,7 +44,7 @@ input[type="number"].size-l {
 
 @media print {
   @page {
-    size: A3 landscape; /* 紙張大小 */
+    size: A3 portrait; /* 紙張大小 */
     margin: 10px 0;
 
     * {
