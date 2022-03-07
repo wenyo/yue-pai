@@ -2,12 +2,11 @@
   <div class="game-type">勝部</div>
   <Single class="win" />
   <div
-    v-if="contestInfo.WIN[0].length > 4"
+    v-if="page_break"
     class="breakPage"
     style="page-break-after: always"
   ></div>
   <div class="game-type">敗部</div>
-
   <div
     class="contest lose"
     :class="{
@@ -43,8 +42,14 @@
 import { mapState } from "vuex";
 import Single from "./Single.vue";
 import Match from "./Match.vue";
+import { CONTEST_TYPE } from "../../utils/Enum";
 export default {
   components: { Match, Single },
+  data() {
+    return {
+      CONTEST_TYPE,
+    };
+  },
   computed: {
     ...mapState(["contestInfo", "type", "teamCountPowCheck"]),
     cssVars() {
@@ -55,6 +60,12 @@ export default {
         "--defeat-last-line-pos": `${this.lastLinePosition()}px`,
       };
     },
+    page_break() {
+      return (
+        this.type === this.CONTEST_TYPE.DOUBLE.id &&
+        this.contestInfo.WIN[0].length >= 16
+      );
+    },
   },
   methods: {
     lastLineHeight() {
@@ -62,7 +73,8 @@ export default {
       const maxLoseInOneRound = this.contestInfo.LOSE[0].length;
       const winHeight = maxWinInOneRound * 70 + (maxWinInOneRound - 1) * 20;
       const loseHeight = maxLoseInOneRound * 70 + (maxLoseInOneRound - 1) * 90;
-      return (winHeight + loseHeight) / 2 + 70;
+      const addHeight = this.page_break ? 50 : 70;
+      return (winHeight + loseHeight) / 2 + addHeight;
     },
     lastLineHeightInPrint() {
       const pageHeight = 1122;
@@ -75,9 +87,9 @@ export default {
         case 4:
           return this.lastLineHeight();
         case 8:
-          return pageHeight - winHeight / 2 - 146 + loseHeight / 2 + 55;
+          return this.lastLineHeight();
         case 16:
-          return pageHeight * 2 - winHeight / 2 - 146 + loseHeight / 2 + 240;
+          return pageHeight * 2 - winHeight / 2 - 146 + loseHeight / 2 + 150;
         default:
           break;
       }

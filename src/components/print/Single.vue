@@ -144,11 +144,6 @@ export default {
 .single {
   & :last-child > .game:first-child {
     margin-left: 150px;
-
-    .front-line {
-      width: 170px;
-      left: -170px;
-    }
   }
 }
 
