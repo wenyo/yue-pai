@@ -3,7 +3,7 @@
   <div class="outer">
     <StepLine :now-step="1" />
     <div class="contain">
-      <h3 class="step-title">1/選擇賽制與隊伍數</h3>
+      <h3 class="step-title">1.1/選擇賽制與隊伍數</h3>
       <div class="article">
         <div class="setting-item">
           <label for="contest">選擇賽制</label>
@@ -31,6 +31,15 @@
           />
         </div>
       </div>
+      <h3 class="step-title">1.2/上傳圖片(非必填)</h3>
+      <div class="article">
+        <input
+          ref="uploadImage"
+          type="file"
+          accept="image/*"
+          @change="imgChange"
+        />
+      </div>
     </div>
     <div class="step">
       <router-link to="/" custom v-slot="{ navigate }">
@@ -50,6 +59,7 @@
 </template>
 
 <script>
+import { ref } from "vue";
 import { mapMutations, mapState, mapActions } from "vuex";
 import { CONTEST_TYPE, BUTTON_TYPE } from "../utils/Enum.js";
 import Header from "../components/Header.vue";
@@ -63,6 +73,10 @@ export default {
       CONTEST_TYPE,
       BUTTON_TYPE,
     };
+  },
+  setup() {
+    const uploadImage = ref(null);
+    return { uploadImage };
   },
   components: { Header, StepLine, Button, Footer },
   computed: {
@@ -79,6 +93,9 @@ export default {
   methods: {
     ...mapMutations(["typeChange", "teamCountChange", "roundScoreDefault"]),
     ...mapActions(["teamCountDataChange"]),
+    imgChange(e) {
+      console.log(e, this.uploadImage.value);
+    },
   },
 };
 </script>
@@ -92,5 +109,9 @@ export default {
     margin-bottom: 6px;
     font-weight: bolder;
   }
+}
+
+.article {
+  margin-bottom: 40px;
 }
 </style>
