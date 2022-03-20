@@ -58,6 +58,7 @@ import Button from "../components/Button.vue";
 import Footer from "../components/Footer.vue";
 
 export default {
+  props: ["alertOpen"],
   data() {
     return {
       CONTEST_TYPE,
@@ -95,6 +96,7 @@ export default {
       };
       reader.onerror = (error) => {
         console.log("Error: ", error);
+        this.alertOpen({ msg: "出了一些錯誤，請再嘗試一次" });
       };
     },
     resetImg() {
