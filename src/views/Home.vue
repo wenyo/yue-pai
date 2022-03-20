@@ -1,11 +1,7 @@
 <template>
-  <div class="home">
+  <div class="home wrap">
     <img class="rabbit" src="@/assets/img/rabbit.png" alt="rabbit background" />
-    <img
-      class="exclamation"
-      src="@/assets/img/exclamation_mark.svg"
-      alt="exclamation mark"
-    />
+    <img class="exclamation" src="@/assets/img/exclamation_mark.svg" alt="exclamation mark" />
     <div class="home-contain">
       <div class="logo">
         <img src="../assets/img/logo-bg.svg" alt="" />
@@ -17,9 +13,7 @@
       <div class="btn-area">
         <ReadFile />
         <router-link to="/step_one" custom v-slot="{ navigate }">
-          <Button :type="BUTTON_TYPE.SECOND" :click_fun="navigate"
-            >開新賽程</Button
-          >
+          <Button :type="BUTTON_TYPE.SECOND" :click_fun="navigate">開新賽程</Button>
         </router-link>
       </div>
     </div>
