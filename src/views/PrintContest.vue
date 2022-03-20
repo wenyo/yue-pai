@@ -1,10 +1,13 @@
 <template>
   <div class="print">
     <div class="title">
-      <h1>{{ contestName }}賽程表</h1>
+      <h1>
+        <img v-if="imgBase64" :src="imgBase64" class="contest-img" />
+        <p>{{ contestName }}賽程表</p>
+      </h1>
       <div class="type">{{ CONTEST_TYPE[type].ch }}</div>
     </div>
-    <img src="../assets/img/print-line.jpg" alt="" />
+    <img src="../assets/img/print-line.jpg" class="print-line" />
     <Single v-if="type === CONTEST_TYPE.SINGLE.id" class="single" />
     <Double v-if="type === CONTEST_TYPE.DOUBLE.id" />
     <Round v-if="type === CONTEST_TYPE.ROUND.id" />
@@ -25,7 +28,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["type", "contestName"]),
+    ...mapState(["type", "contestName", "imgBase64"]),
   },
   components: { Single, Double, Round },
 };
@@ -44,18 +47,25 @@ export default {
 }
 
 .type {
-  margin: 0 10px;
+  margin-left: 30px;
   color: $dark-200;
 }
 
-img {
+.print-line {
   width: 500px;
   margin: 10px 0 20px 0;
 }
 
 h1 {
   font-weight: bolder;
-  font-size: 22px;
+  font-size: 42px;
+  display: flex;
+  align-items: center;
+}
+
+.contest-img {
+  width: 100px;
+  margin-right: 10px;
 }
 </style>
 
