@@ -6,8 +6,13 @@
       <span class="red-icon" v-if="match_data.game.third_place">季</span>
     </div>
     <!-- team name & score -->
-    <div v-for="playerKey in Object.keys(PLAYER_KEY)" :key="playerKey" :draggable="match_data.round === ROUND.ONE">
-      <div class="drag-icon" v-if="match_data.round === ROUND.ONE">
+    <div
+      v-for="playerKey in Object.keys(PLAYER_KEY)"
+      :key="playerKey"
+      :data-role="match_data.draggableCheck() ? 'drag-drop-container' : ''"
+      :draggable="match_data.draggableCheck()"
+    >
+      <div class="drag-icon" v-if="match_data.draggableCheck()">
         <i class="icon-seedling-solid" v-if="match_data.seedCheck(playerKey)"></i>
         <i class="icon-grip-vertical-solid" v-else></i>
       </div>
@@ -99,6 +104,7 @@ import MatchData from "./MatchData.js";
 export default {
   props: [
     "contestType",
+    "gameType",
     "game",
     "idx",
     "roundIdx",
@@ -122,6 +128,7 @@ export default {
     match_data() {
       return new MatchData({
         contestType: this.contestType,
+        gameType: this.gameType,
         game: this.game,
         idx: this.idx,
         roundIdx: this.roundIdx,
@@ -161,6 +168,10 @@ li {
     border: 1px solid grey;
     padding: 0 4px;
     cursor: move;
+
+    & ~ .w-70 {
+      width: calc(70% - 22px);
+    }
 
     i {
       font-size: 12px;

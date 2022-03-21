@@ -6,6 +6,7 @@
         :key="idx"
         :game="game"
         :contest-type="type"
+        :game-type="GAME_TYPE.WIN"
         :idx="idx"
         :roundIdx="roundIdx"
         :team-name-change="teamNameChange"
@@ -23,6 +24,11 @@ import { mapState, mapMutations } from "vuex";
 import Match from "./Match";
 import { GAME_TYPE } from "../utils/Enum";
 export default {
+  data() {
+    return {
+      GAME_TYPE,
+    };
+  },
   components: { Match },
   computed: {
     ...mapState(["contestInfo", "type"]),

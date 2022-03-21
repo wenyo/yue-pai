@@ -3,6 +3,7 @@ import { ROUND, PLAYER_KEY, NO_SCORE, GAME_TYPE, NO_ID, CONTEST_TYPE } from "../
 export default class MatchData {
   constructor(props) {
     this.contestType = props.contestType;
+    this.gameType = props.gameType;
     this.game = props.game;
     this.idx = props.idx;
     this.roundIdx = props.roundIdx;
@@ -61,5 +62,9 @@ export default class MatchData {
     const id = this.game[PLAYER_KEY[playerKey]].id;
     if (id === NO_ID) return;
     return this.teamInfo[id].is_seed;
+  }
+
+  draggableCheck() {
+    return this.round === ROUND.ONE && this.gameType === GAME_TYPE.WIN;
   }
 }
