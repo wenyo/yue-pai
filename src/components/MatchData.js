@@ -1,11 +1,4 @@
-import {
-  ROUND,
-  PLAYER_KEY,
-  NO_SCORE,
-  GAME_TYPE,
-  NO_ID,
-  CONTEST_TYPE,
-} from "../utils/Enum";
+import { ROUND, PLAYER_KEY, NO_SCORE, GAME_TYPE, NO_ID, CONTEST_TYPE } from "../utils/Enum";
 
 export default class MatchData {
   constructor(props) {
@@ -24,11 +17,7 @@ export default class MatchData {
     const winnerChose = this.game[playerKey].winner_chose;
     const sort = this.game[playerKey].sort;
     const gameTypeText =
-      this.contestType === CONTEST_TYPE.SINGLE.id
-        ? ""
-        : gameType === GAME_TYPE.WIN
-        ? "勝部"
-        : "敗部";
+      this.contestType === CONTEST_TYPE.SINGLE.id ? "" : gameType === GAME_TYPE.WIN ? "勝部" : "敗部";
     const winnerChoseText = winnerChose ? "勝者" : "敗者";
     const prevRound = sort.roundIdx + 1;
     const prevGameSort = sort.game_idx + 1;
@@ -38,8 +27,7 @@ export default class MatchData {
   namePlaceholderGet(playerKey) {
     if (this.game.bye_player.includes(PLAYER_KEY[playerKey])) return "輪空";
 
-    if (this.round === ROUND.ONE && this.contestType === GAME_TYPE.WIN)
-      return "隊伍名稱";
+    if (this.round === ROUND.ONE && this.contestType === GAME_TYPE.WIN) return "隊伍名稱";
     return this.namePlaceholderGetFromPrevGame(PLAYER_KEY[playerKey]);
   }
 
@@ -62,12 +50,16 @@ export default class MatchData {
   }
 
   scoreValue(playerKey) {
-    return this.game[PLAYER_KEY[playerKey]].score === NO_SCORE
-      ? ""
-      : this.game[PLAYER_KEY[playerKey]].score;
+    return this.game[PLAYER_KEY[playerKey]].score === NO_SCORE ? "" : this.game[PLAYER_KEY[playerKey]].score;
   }
 
   scoreDisabled(playerKey) {
     return this.game.bye || this.game[PLAYER_KEY[playerKey]].id === NO_ID;
+  }
+
+  seedCheck(playerKey) {
+    const id = this.game[PLAYER_KEY[playerKey]].id;
+    if (id === NO_ID) return;
+    return this.teamInfo[id].is_seed;
   }
 }

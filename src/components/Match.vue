@@ -6,7 +6,11 @@
       <span class="red-icon" v-if="match_data.game.third_place">季</span>
     </div>
     <!-- team name & score -->
-    <div v-for="playerKey in Object.keys(PLAYER_KEY)" :key="playerKey">
+    <div v-for="playerKey in Object.keys(PLAYER_KEY)" :key="playerKey" :draggable="match_data.round === ROUND.ONE">
+      <div class="drag-icon" v-if="match_data.round === ROUND.ONE">
+        <i class="icon-seedling-solid" v-if="match_data.seedCheck(playerKey)"></i>
+        <i class="icon-grip-vertical-solid" v-else></i>
+      </div>
       <input
         class="w-70"
         type="text"
@@ -134,6 +138,7 @@ li {
   flex-direction: column;
 
   & > div {
+    display: flex;
     width: 100%;
   }
 
@@ -148,6 +153,18 @@ li {
   }
   .w-50 {
     width: 50%;
+  }
+  .drag-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid grey;
+    padding: 0 4px;
+    cursor: move;
+
+    i {
+      font-size: 12px;
+    }
   }
 }
 
