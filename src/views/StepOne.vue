@@ -27,6 +27,19 @@
               :disabled="type === ''"
             />
           </div>
+          <div class="setting-item" v-if="type === CONTEST_TYPE.ROUND.id">
+            <label for="group-count">輸入組數</label>
+            <input
+              class="size-l"
+              type="number"
+              id="group-count"
+              :min="GROUP_DEFAULT"
+              v-model="roundGroupCountNum"
+              :defaultValue="GROUP_DEFAULT"
+              :disabled="type === ''"
+            />
+            <p>{{ teamNumInGroup }}人/組</p>
+          </div>
         </div>
         <h3 class="step-title">1.2/上傳圖片(非必填，圖片長寬比建議為1:1~1:2)</h3>
         <div class="article">
@@ -40,7 +53,10 @@
           <Button :type="BUTTON_TYPE.FIVE" :click_fun="navigate">上一步</Button>
         </router-link>
         <router-link to="/step_two" custom v-slot="{ navigate }">
-          <Button :type="BUTTON_TYPE.SECOND" :click_fun="navigate" :disabled="type === '' || teamCount <= 0"
+          <Button
+            :type="BUTTON_TYPE.SECOND"
+            :click_fun="navigate"
+            :disabled="type === '' || teamCount <= 0 || teamNumInGroup % 1 > 0"
             >下一步</Button
           >
         </router-link>
@@ -53,7 +69,7 @@
 <script>
 import { ref } from "vue";
 import { mapMutations, mapState, mapActions } from "vuex";
-import { CONTEST_TYPE, BUTTON_TYPE } from "../utils/Enum.js";
+import { CONTEST_TYPE, BUTTON_TYPE, GROUP_DEFAULT } from "../utils/Enum.js";
 import Header from "../components/Header.vue";
 import StepLine from "../components/StepLine.vue";
 import Button from "../components/Button.vue";
@@ -65,6 +81,7 @@ export default {
     return {
       CONTEST_TYPE,
       BUTTON_TYPE,
+      GROUP_DEFAULT,
     };
   },
   setup() {
@@ -73,18 +90,33 @@ export default {
   },
   components: { Header, StepLine, Button, Footer },
   computed: {
-    ...mapState(["type", "teamCount", "imgBase64"]),
+    ...mapState(["type", "teamCount", "imgBase64", "roundGroupCount"]),
     teamCountNum: {
       get() {
         return this.teamCount;
       },
       set(value) {
-        this.teamCountChange(value);
+        this.teamCountChange(parseInt(value));
       },
+    },
+    roundGroupCountNum: {
+      get() {
+        return this.roundGroupCount;
+      },
+      set(value) {
+        let insertValue = parseInt(value);
+
+        if (insertValue !== insertValue) insertValue = GROUP_DEFAULT;
+        this.roundGroupCountChange(insertValue);
+      },
+    },
+    teamNumInGroup() {
+      console.log(this.roundGroupCount);
+      return (this.teamCountNum / this.roundGroupCount).toFixed(2);
     },
   },
   methods: {
-    ...mapMutations(["typeChange", "teamCountChange", "roundScoreDefault", "imgBase64Change"]),
+    ...mapMutations(["typeChange", "teamCountChange", "roundScoreDefault", "imgBase64Change", "roundGroupCountChange"]),
     ...mapActions(["teamCountDataChange"]),
     imgChange() {
       const file = this.uploadImage.files[0];

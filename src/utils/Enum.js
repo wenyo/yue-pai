@@ -31,6 +31,7 @@ export const MAX_EXPONENT = 6;
 export const NO_SCORE = -1;
 export const NO_ID = -1;
 export const NO_PLAYER = "none";
+export const GROUP_DEFAULT = 1;
 
 export const ROUND = { ONE: 1 };
 export const ROUND_IDX = { ONE: 0, TWO: 1 };

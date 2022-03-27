@@ -10,6 +10,7 @@ import {
   CONTEST_INFO_DEFAULT,
   ROUND_IDX,
   NO_ID,
+  GROUP_DEFAULT,
 } from "../utils/Enum";
 import {
   gameSizeGet,
@@ -33,6 +34,7 @@ export default createStore({
     contestInfo: JSON.parse(JSON.stringify(CONTEST_INFO_DEFAULT)),
     isContestReset: true,
     roundScore: [],
+    roundGroupCount: GROUP_DEFAULT,
     imgBase64: "",
   },
   mutations: {
@@ -81,6 +83,10 @@ export default createStore({
           }
         )
       );
+    },
+    roundGroupCountChange(state, payload) {
+      state.isContestReset = true;
+      state.roundGroupCount = payload;
     },
     imgBase64Change(state, { img }) {
       state.imgBase64 = img;
