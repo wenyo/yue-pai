@@ -1,0 +1,22 @@
+@media print {
+    @page {
+      size: A3 portrait; /* 紙張大小 */
+      margin: 10px 0;
+  
+      * {
+        -webkit-print-color-adjust: exact !important;
+      }
+  
+      .noBreak {
+        break-inside: avoid;
+      }
+  
+      .breakPage {
+        page-break-before: always;
+      }
+  
+      .noPrint {
+        display: none;
+      }
+    }
+  }

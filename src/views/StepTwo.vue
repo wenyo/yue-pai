@@ -13,6 +13,7 @@
             </li>
             <li v-for="(info, idx) in teamInfo" :key="idx">
               <input
+                class="input-underline"
                 type="text"
                 name=""
                 id=""

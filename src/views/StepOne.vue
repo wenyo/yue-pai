@@ -43,7 +43,7 @@
         </div>
         <h3 class="step-title">1.2/上傳圖片(非必填，圖片長寬比建議為1:1~1:2)</h3>
         <div class="article">
-          <input ref="uploadImage" type="file" accept="image/*" @change="imgChange" />
+          <input class="file-input" ref="uploadImage" type="file" accept="image/*" @change="imgChange" />
           <Button :type="BUTTON_TYPE.FIVE" :click_fun="resetImg" :disabled="!imgBase64">清除圖片</Button>
           <img class="preview-img" :src="imgBase64" v-if="imgBase64" />
         </div>

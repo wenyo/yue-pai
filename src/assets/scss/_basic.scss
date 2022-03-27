@@ -33,36 +33,49 @@
   font-weight: bold;
 }
 
+select,
+input[type="number"],
+input[type="text"] {
+  padding: 4px;
+}
+
 select {
   width: 200px;
-  padding: 2px;
+}
+
+input,
+select {
+  &:focus {
+    outline: unset;
+  }
 }
 
 input[type="number"].size-l {
   width: 200px;
 }
 
-@media print {
-  @page {
-    size: A3 portrait; /* 紙張大小 */
-    margin: 10px 0;
+input[type="text"] {
+  background-color: $dark-500;
+}
 
-    * {
-      -webkit-print-color-adjust: exact !important;
-    }
+.input-border {
+  border: 1px solid $dark-200;
+}
 
-    .noBreak {
-      break-inside: avoid;
-    }
+.input-underline {
+  background-color: unset;
+  border: unset;
+  border-bottom: 1px solid;
+}
 
-    .breakPage {
-      page-break-before: always;
-    }
-
-    .noPrint {
-      display: none;
-    }
-  }
+.file-input{
+  background: unset;
+  border: unset;
+  padding: 5px 20px;
+  border: 1px solid $dark-100;
+  border-radius: 2px;
+  font-weight: bold;
+  height: 30px;
 }
 
 .red-icon {
