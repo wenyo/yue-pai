@@ -36,8 +36,10 @@ export default createStore({
     imgBase64: "",
   },
   mutations: {
+    contestReset(state, payload) {
+      state.isContestReset = payload.is_contest_reset;
+    },
     downloadJSON(state) {
-      state.isContestReset = false;
       const nowTime = new Date();
       const fileName = `${state.contestName}_${nowTime.getFullYear()}-${
         nowTime.getMonth() + 1

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import { CONTEST_TYPE } from "../utils/Enum";
 import Single from "../components/print/Single.vue";
 import Double from "../components/print/Double.vue";
@@ -27,10 +27,16 @@ export default {
       CONTEST_TYPE,
     };
   },
+  created() {
+    this.contestReset(false);
+  },
   computed: {
-    ...mapState(["type", "contestName", "imgBase64"]),
+    ...mapState(["type", "contestName", "imgBase64", "isContestReset"]),
   },
   components: { Single, Double, Round },
+  methods: {
+    ...mapMutations(["contestReset"]),
+  },
 };
 </script>
 
@@ -64,8 +70,9 @@ h1 {
 }
 
 .contest-img {
-  width: 100px;
   margin-right: 10px;
+  height: 40px;
+  width: auto;
 }
 </style>
 
