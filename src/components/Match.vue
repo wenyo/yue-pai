@@ -11,6 +11,9 @@
       :key="playerKey"
       :data-role="match_data.draggableCheck() ? 'drag-drop-container' : ''"
       :draggable="match_data.draggableCheck()"
+      @dragstart="(ev) => onDragging(ev, playerKey)"
+      @drop="(ev) => drop(ev, playerKey)"
+      @dragover="allowDrop"
     >
       <div class="drag-icon" v-if="match_data.draggableCheck()">
         <i class="icon-seedling-solid" v-if="match_data.seedCheck(playerKey)"></i>
@@ -98,7 +101,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { ROUND, PLAYER_KEY, NO_SCORE, GAME_TYPE, NO_ID } from "../utils/Enum";
+import { ROUND, PLAYER_KEY, NO_SCORE, GAME_TYPE, NO_ID, NO_PLAYER } from "../utils/Enum";
 import MatchData from "./MatchData.js";
 
 export default {
@@ -113,6 +116,8 @@ export default {
     "gameTimeChange",
     "gamePlaceChange",
     "gameScoreChange",
+    "dragTargetInfo",
+    "changePlayer",
   ],
   data() {
     return {
@@ -121,6 +126,7 @@ export default {
       NO_SCORE,
       NO_ID,
       GAME_TYPE,
+      dragPlayer: NO_PLAYER,
     };
   },
   computed: {
@@ -134,6 +140,22 @@ export default {
         roundIdx: this.roundIdx,
         teamInfo: this.teamInfo,
       });
+    },
+  },
+  methods: {
+    onDragging(e, playerKey) {
+      const { roundIdx, idx } = this;
+      this.dragTargetInfo({ roundIdx, idx, playerKey });
+    },
+    allowDrop(e) {
+      e.preventDefault();
+    },
+    async drop(e, playerKey) {
+      e.preventDefault();
+      const { roundIdx, idx } = this;
+      // console.log("drop", { roundIdx, idx, playerKey });
+      await this.changePlayer({ roundIdx, idx, playerKey });
+      this.$forceUpdate();
     },
   },
 };

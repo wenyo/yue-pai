@@ -557,6 +557,22 @@ export default createStore({
 
       state.contestInfo.WIN = newGameInfo;
     },
+    playerChangeByDrop(state, payload) {
+      const { contestInfo } = state;
+      const { dropTarget, dragTarget } = payload;
+
+      const dropTargetID = contestInfo.WIN[dropTarget.roundIdx][dropTarget.idx][PLAYER_KEY[dropTarget.playerKey]].id;
+      const dragTargetID = contestInfo.WIN[dragTarget.roundIdx][dragTarget.idx][PLAYER_KEY[dragTarget.playerKey]].id;
+
+      // check both/neither dropPlayer & dragPlayer is seed
+      const dropTargetIsSeed = state.teamInfo[dropTargetID].is_seed;
+      const dragTargetIsSeed = state.teamInfo[dragTargetID].is_seed;
+      if (dropTargetIsSeed !== dragTargetIsSeed) return false;
+
+      contestInfo.WIN[dropTarget.roundIdx][dropTarget.idx][PLAYER_KEY[dropTarget.playerKey]].id = dragTargetID;
+      contestInfo.WIN[dragTarget.roundIdx][dragTarget.idx][PLAYER_KEY[dragTarget.playerKey]].id = dropTargetID;
+      return true;
+    },
   },
   actions: {
     singleInfoSizeChange({ commit }, { base, exponent }) {
