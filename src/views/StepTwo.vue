@@ -20,12 +20,11 @@
                 :value="info.name"
                 @change="teamNameChange({ name: $event.target.value, idx })"
               />
-              <input
-                type="checkbox"
-                name=""
-                id=""
-                :checked="info.is_seed"
-                @change="seedChange({ is_seed: $event.target.checked, idx })"
+              <Checkbox
+                :checkis="info.is_seed"
+                :change-func="
+                  () => seedChange({ is_seed: $event.target.checked, idx })
+                "
               />
             </li>
           </ul>
@@ -36,7 +35,9 @@
           <Button :type="BUTTON_TYPE.FIVE" :click_fun="navigate">上一步</Button>
         </router-link>
         <router-link to="/step_three" custom v-slot="{ navigate }">
-          <Button :type="BUTTON_TYPE.SECOND" :click_fun="navigate">下一步</Button>
+          <Button :type="BUTTON_TYPE.SECOND" :click_fun="navigate"
+            >下一步</Button
+          >
         </router-link>
       </div>
     </div>
@@ -51,6 +52,7 @@ import Header from "../components/Header.vue";
 import StepLine from "../components/StepLine.vue";
 import Button from "../components/Button.vue";
 import Footer from "../components/Footer.vue";
+import Checkbox from "../components/Checkbox.vue";
 
 const maxColumn = 4;
 
@@ -61,11 +63,13 @@ export default {
       BUTTON_TYPE,
     };
   },
-  components: { StepLine, Header, Footer, Button },
+  components: { StepLine, Header, Footer, Button, Checkbox },
   computed: {
     ...mapState(["teamInfo"]),
     column() {
-      return this.teamInfo.length > maxColumn ? maxColumn : this.teamInfo.length;
+      return this.teamInfo.length > maxColumn
+        ? maxColumn
+        : this.teamInfo.length;
     },
   },
   methods: {

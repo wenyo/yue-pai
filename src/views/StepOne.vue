@@ -10,7 +10,11 @@
             <label for="contest">選擇賽制</label>
             <select id="contest" :value="type" @change="typeChange">
               <option value="">請選擇</option>
-              <option v-for="(info, type) in CONTEST_TYPE" :key="type" :value="info.id">
+              <option
+                v-for="(info, type) in CONTEST_TYPE"
+                :key="type"
+                :value="info.id"
+              >
                 {{ info.ch }}
               </option>
             </select>
@@ -41,10 +45,28 @@
             <p>{{ teamNumInGroup }}人/組</p>
           </div>
         </div>
-        <h3 class="step-title">1.2/上傳圖片(非必填，圖片長寬比建議為1:1~1:2)</h3>
+        <h3 class="step-title">
+          1.2/上傳圖片(非必填，圖片長寬比建議為1:1~1:2)
+        </h3>
         <div class="article">
-          <input class="file-input" ref="uploadImage" type="file" accept="image/*" @change="imgChange" />
-          <Button :type="BUTTON_TYPE.FIVE" :click_fun="resetImg" :disabled="!imgBase64">清除圖片</Button>
+          <Button
+            class="file-input"
+            :type="BUTTON_TYPE.FORTH"
+            :click_fun="() => uploadImage.click()"
+            >選擇圖片</Button
+          >
+          <input
+            ref="uploadImage"
+            type="file"
+            accept="image/*"
+            @change="imgChange"
+          />
+          <Button
+            :type="BUTTON_TYPE.FIVE"
+            :click_fun="resetImg"
+            :disabled="!imgBase64"
+            >清除圖片</Button
+          >
           <img class="preview-img" :src="imgBase64" v-if="imgBase64" />
         </div>
       </div>
@@ -116,7 +138,13 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["typeChange", "teamCountChange", "roundScoreDefault", "imgBase64Change", "roundGroupCountChange"]),
+    ...mapMutations([
+      "typeChange",
+      "teamCountChange",
+      "roundScoreDefault",
+      "imgBase64Change",
+      "roundGroupCountChange",
+    ]),
     ...mapActions(["teamCountDataChange"]),
     imgChange() {
       const file = this.uploadImage.files[0];
@@ -135,7 +163,7 @@ export default {
     },
     resetImg() {
       this.imgBase64Change({ img: "" });
-      this.uploadImage = null;
+      this.uploadImage.value = null;
     },
   },
 };
@@ -160,5 +188,9 @@ export default {
   display: block;
   width: 200px;
   margin-top: 20px;
+}
+
+.file-input {
+  margin-right: 20px;
 }
 </style>

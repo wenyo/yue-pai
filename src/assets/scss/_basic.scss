@@ -55,27 +55,23 @@ input[type="number"].size-l {
 }
 
 input[type="text"] {
+  border: 1px solid $dark-200;
   background-color: $dark-500;
 }
 
-.input-border {
-  border: 1px solid $dark-200;
+input[type="file"] {
+  display: none;
 }
 
-.input-underline {
+input.input-border {
+  background-color: unset;
+  border: 0.5px solid $dark-200;
+}
+
+input.input-underline {
   background-color: unset;
   border: unset;
   border-bottom: 1px solid;
-}
-
-.file-input{
-  background: unset;
-  border: unset;
-  padding: 5px 20px;
-  border: 1px solid $dark-100;
-  border-radius: 2px;
-  font-weight: bold;
-  height: 30px;
 }
 
 .red-icon {
