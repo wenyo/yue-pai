@@ -6,12 +6,25 @@
 
 .outer {
   flex: 1;
-  background: url("../img/bg-index.jpg") right;
-  background-size: cover;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: url("../img/bg-index.jpg") right;
+    background-size: cover;
+    opacity: 0.2;
+  }
 }
 .contain {
   padding: 0 20px;
-  min-width: calc(100vw - 40px);
+  width: calc(100vw - 40px);
+  min-width: 1080px;
   height: calc(100vh - 50px - 100px - 70px - 50px);
   overflow: auto;
 }

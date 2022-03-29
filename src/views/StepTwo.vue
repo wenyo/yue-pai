@@ -21,9 +21,10 @@
                 @change="teamNameChange({ name: $event.target.value, idx })"
               />
               <Checkbox
-                :checkis="info.is_seed"
+                :is-check="info.is_seed"
                 :change-func="
-                  () => seedChange({ is_seed: $event.target.checked, idx })
+                  ($event) =>
+                    seedChange({ is_seed: $event.target.checked, idx })
                 "
               />
             </li>
@@ -85,16 +86,19 @@ ul {
   flex-wrap: wrap;
 
   li {
-    width: 25%;
+    width: 24%;
     display: flex;
-    margin: 10px 0;
+    margin: 10px 1% 10px 0;
+    box-sizing: border-box;
 
     & :first-child {
       flex-grow: 1;
     }
     & :nth-child(2) {
-      text-align: center;
-      width: 100px;
+      white-space: nowrap;
+      display: flex;
+      justify-content: center;
+      width: 80px;
     }
   }
 }

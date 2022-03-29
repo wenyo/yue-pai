@@ -1,13 +1,18 @@
 <template>
   <label>
-    <input class="checkbox-seed" type="checkbox" />
+    <input
+      class="checkbox-seed"
+      type="checkbox"
+      @change="changeFunc"
+      :checked="isCheck"
+    />
     <i class="icon-seedling-solid seed"></i>
   </label>
 </template>
 
 <script>
 export default {
-  props: ["changeFunc"],
+  props: ["changeFunc", "isCheck"],
 };
 </script>
 
@@ -18,20 +23,28 @@ label {
 
 .seed {
   position: relative;
-  color: $primary-color-third;
-  opacity: 0.3;
-  transition: all 0.1s;
+  color: $primary-color-third#{40};
+  background-color: $dark-500;
+  border-radius: 50%;
+  padding: 4px 3px 3px 3px;
+  transition: all 0.3s;
+  text-shadow: 0 0 2px $dark-200#{50};
 
   &::after {
     position: absolute;
+  }
+
+  &:hover {
+    text-shadow: 2px 2px 5px $dark-200#{50};
   }
 }
 
 .checkbox-seed {
   display: none;
+}
 
-  &:checked ~ .seed {
-    opacity: 1;
-  }
+.checkbox-seed:checked ~ .seed {
+  text-shadow: 2px 2px 5px $dark-200#{50};
+  color: $primary-color-third;
 }
 </style>
