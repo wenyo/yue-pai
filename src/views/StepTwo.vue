@@ -97,11 +97,13 @@ ul {
     & :nth-child(2) {
       white-space: nowrap;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       width: 80px;
+      padding-left: 10px;
     }
   }
 }
+
 .article {
   div {
     font-weight: bold;
