@@ -9,6 +9,13 @@
     <div
       v-for="playerKey in Object.keys(PLAYER_KEY)"
       :key="playerKey"
+      class="player-info"
+      :class="{
+        'mb-4': PLAYER_KEY[playerKey] === PLAYER_KEY.PLAYER1,
+        'mb-10': PLAYER_KEY[playerKey] === PLAYER_KEY.PLAYER2,
+        winner: this.match_data.winnerGet() === PLAYER_KEY[playerKey],
+        loser: this.match_data.winnerGet() === playerKeyOtherGet(playerKey),
+      }"
       :data-role="match_data.draggableCheck() ? 'drag-drop-container' : ''"
       :draggable="match_data.draggableCheck()"
       @dragstart="(ev) => onDragging(ev, playerKey)"
@@ -16,11 +23,14 @@
       @dragover="allowDrop"
     >
       <div class="drag-icon" v-if="match_data.draggableCheck()">
-        <i class="icon-seedling-solid" v-if="match_data.seedCheck(playerKey)"></i>
+        <i
+          class="icon-seedling-solid"
+          v-if="match_data.seedCheck(playerKey)"
+        ></i>
         <i class="icon-grip-vertical-solid" v-else></i>
       </div>
       <input
-        class="w-70"
+        class="w-70 border-tb-0 border-r-0"
         type="text"
         name=""
         id=""
@@ -35,7 +45,7 @@
         :disabled="match_data.nameDisabled(playerKey)"
       />
       <input
-        class="w-30"
+        class="w-30 border-tb-0 border-r-0"
         type="number"
         name=""
         id=""
@@ -93,7 +103,9 @@
         :value="match_data.game.place"
         :placeholder="match_data.game.bye ? '-' : '場地'"
         :disabled="match_data.game.bye"
-        @change="gamePlaceChange({ roundIdx, idx: idx, place: $event.target.value })"
+        @change="
+          gamePlaceChange({ roundIdx, idx: idx, place: $event.target.value })
+        "
       />
     </div>
   </li>
@@ -101,8 +113,16 @@
 
 <script>
 import { mapState } from "vuex";
-import { ROUND, PLAYER_KEY, NO_SCORE, GAME_TYPE, NO_ID, NO_PLAYER } from "../utils/Enum";
+import {
+  ROUND,
+  PLAYER_KEY,
+  NO_SCORE,
+  GAME_TYPE,
+  NO_ID,
+  NO_PLAYER,
+} from "../utils/Enum";
 import MatchData from "./MatchData.js";
+import { playerKeyOtherGet } from "../utils/ContestFunc";
 
 export default {
   props: [
@@ -127,6 +147,7 @@ export default {
       NO_ID,
       GAME_TYPE,
       dragPlayer: NO_PLAYER,
+      playerKeyOtherGet,
     };
   },
   computed: {
@@ -165,6 +186,7 @@ export default {
 li {
   display: flex;
   flex-direction: column;
+  margin-right: 10px;
 
   & > div {
     display: flex;
@@ -174,36 +196,60 @@ li {
   .w-70 {
     width: 70%;
   }
+
   .w-30 {
     width: 30%;
   }
+
   .w-40 {
     width: 40%;
   }
+
   .w-50 {
     width: 50%;
   }
-  .drag-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid grey;
-    padding: 0 4px;
-    cursor: move;
+}
 
-    & ~ .w-70 {
-      width: calc(70% - 22px);
-    }
+.winner {
+  color: $primary-color-second;
+}
+.loser {
+  color: $dark-200;
+}
 
-    i {
-      font-size: 12px;
-    }
+.drag-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 4px;
+  cursor: move;
+
+  & ~ .w-70 {
+    width: calc(70% - 22px);
   }
+
+  i {
+    font-size: 12px;
+  }
+}
+
+.player-info {
+  border: 1px solid $dark-200;
+  border-left: 4px solid $dark-200;
 }
 
 .title {
   display: flex;
   align-items: center;
   height: 20px;
+}
+
+.border-tb-0 {
+  border-top: unset;
+  border-bottom: unset;
+}
+
+.border-r-0 {
+  border-right: unset;
 }
 </style>

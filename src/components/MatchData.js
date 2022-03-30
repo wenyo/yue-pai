@@ -1,4 +1,4 @@
-import { ROUND, PLAYER_KEY, NO_SCORE, GAME_TYPE, NO_ID, CONTEST_TYPE } from "../utils/Enum";
+import { ROUND, NO_PLAYER, PLAYER_KEY, NO_SCORE, GAME_TYPE, NO_ID, CONTEST_TYPE } from "../utils/Enum";
 
 export default class MatchData {
   constructor(props) {
@@ -66,5 +66,12 @@ export default class MatchData {
 
   draggableCheck() {
     return this.round === ROUND.ONE && this.gameType === GAME_TYPE.WIN;
+  }
+
+  winnerGet() {
+    if (this.game.player1.score === NO_SCORE || this.game.player1.score === NO_SCORE ) return NO_PLAYER;
+    if (this.game.player1.score > this.game.player2.score) return PLAYER_KEY.PLAYER1;
+    if (this.game.player1.score < this.game.player2.score) return PLAYER_KEY.PLAYER2;
+    return NO_PLAYER;
   }
 }

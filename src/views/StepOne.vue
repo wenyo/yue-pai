@@ -22,7 +22,7 @@
           <div class="setting-item">
             <label for="team-count">輸入隊伍數</label>
             <input
-              class="size-l"
+              class="size-l primary"
               type="number"
               id="team-count"
               min="0"
@@ -34,7 +34,7 @@
           <div class="setting-item" v-if="type === CONTEST_TYPE.ROUND.id">
             <label for="group-count">輸入組數</label>
             <input
-              class="size-l"
+              class="size-l primary"
               type="number"
               id="group-count"
               :min="GROUP_DEFAULT"
