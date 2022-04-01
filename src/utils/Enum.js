@@ -36,7 +36,7 @@ export const GROUP_DEFAULT = 1;
 export const ROUND = { ONE: 1 };
 export const ROUND_IDX = { ONE: 0, TWO: 1 };
 
-export const CONTEST_INFO_DEFAULT = { WIN: [], LOSE: [] };
+export const CONTEST_INFO_DEFAULT = { WIN: [], LOSE: [], ROUND: [] };
 
 export const PLAYER_KEY = {
   PLAYER1: "player1",
