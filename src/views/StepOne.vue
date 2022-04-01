@@ -78,7 +78,12 @@
           <Button
             :type="BUTTON_TYPE.SECOND"
             :click_fun="navigate"
-            :disabled="type === '' || teamCount <= 0 || teamNumInGroup % 1 > 0"
+            :disabled="
+              type === '' ||
+              isNaN(teamCount) ||
+              teamCount <= 0 ||
+              teamNumInGroup % 1 > 0
+            "
             >下一步</Button
           >
         </router-link>
@@ -192,5 +197,9 @@ export default {
 
 .file-input {
   margin-right: 20px;
+}
+
+#group-count {
+  margin-bottom: 5px;
 }
 </style>
