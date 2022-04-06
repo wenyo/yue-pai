@@ -140,7 +140,6 @@ export default {
       },
     },
     teamNumInGroup() {
-      console.log(this.roundGroupCount);
       return (this.teamCountNum / this.roundGroupCount).toFixed(2);
     },
   },

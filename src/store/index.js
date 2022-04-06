@@ -589,7 +589,7 @@ export default createStore({
 
       state.contestInfo.WIN = newGameInfo;
     },
-    playerChangeByDrop(state, payload) {
+    playerChange(state, payload) {
       const { contestInfo } = state;
       const { dropTarget, dragTarget } = payload;
 
@@ -602,18 +602,12 @@ export default createStore({
           PLAYER_KEY[dragTarget.playerKey]
         ].id;
 
-      // check both/neither dropPlayer & dragPlayer is seed
-      const dropTargetIsSeed = state.teamInfo[dropTargetID].is_seed;
-      const dragTargetIsSeed = state.teamInfo[dragTargetID].is_seed;
-      if (dropTargetIsSeed !== dragTargetIsSeed) return false;
-
       contestInfo.WIN[dropTarget.roundIdx][dropTarget.idx][
         PLAYER_KEY[dropTarget.playerKey]
       ].id = dragTargetID;
       contestInfo.WIN[dragTarget.roundIdx][dragTarget.idx][
         PLAYER_KEY[dragTarget.playerKey]
       ].id = dropTargetID;
-      return true;
     },
   },
   actions: {
@@ -706,6 +700,40 @@ export default createStore({
     teamCountDataChange({ commit }, { value }) {
       commit("teamCountChange", { value });
       commit("roundScoreDefault");
+    },
+    playerChangeByDrop({ commit, state }, { dropTarget, dragTarget }) {
+      const { contestInfo } = state;
+      const dropTargetID =
+        contestInfo.WIN[dropTarget.roundIdx][dropTarget.idx][
+          PLAYER_KEY[dropTarget.playerKey]
+        ].id;
+      const dragTargetID =
+        contestInfo.WIN[dragTarget.roundIdx][dragTarget.idx][
+          PLAYER_KEY[dragTarget.playerKey]
+        ].id;
+
+      // check both/neither dropPlayer & dragPlayer is seed
+      const dropTargetIsSeed = state.teamInfo[dropTargetID].is_seed;
+      const dragTargetIsSeed = state.teamInfo[dragTargetID].is_seed;
+      if (dropTargetIsSeed !== dragTargetIsSeed) return;
+
+      commit("playerChange", { dropTarget, dragTarget });
+
+      commit("gameScoreChangeByType", {
+        roundIdx: dropTarget.roundIdx,
+        idx: dropTarget.idx,
+        playerKey: dropTarget.playerKey,
+        score: NO_SCORE,
+        type: GAME_TYPE.WIN,
+      });
+
+      commit("gameScoreChangeByType", {
+        roundIdx: dragTarget.roundIdx,
+        idx: dragTarget.idx,
+        playerKey: dragTarget.playerKey,
+        score: NO_SCORE,
+        type: GAME_TYPE.WIN,
+      });
     },
   },
   modules: {},

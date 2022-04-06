@@ -182,7 +182,6 @@ export default {
     async drop(e, playerKey) {
       e.preventDefault();
       const { roundIdx, idx } = this;
-      // console.log("drop", { roundIdx, idx, playerKey });
       await this.changePlayer({ roundIdx, idx, playerKey });
       this.$forceUpdate();
     },

@@ -22,9 +22,9 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import Match from "./Match";
-import { GAME_TYPE, NO_SCORE } from "../utils/Enum";
+import { GAME_TYPE } from "../utils/Enum";
 export default {
   data() {
     return {
@@ -43,30 +43,15 @@ export default {
       "gameTimeChangeByType",
       "gamePlaceChangeByType",
       "gameScoreChangeByType",
-      "playerChangeByDrop",
     ]),
+    ...mapActions(["playerChangeByDrop"]),
     dragTargetInfo({ roundIdx, idx, playerKey }) {
       this.dragTarget = { roundIdx, idx, playerKey };
     },
     changePlayer({ roundIdx, idx, playerKey }) {
       const dropTarget = { roundIdx, idx, playerKey };
       const { dragTarget } = this;
-      const changeResult = this.playerChangeByDrop({ dropTarget, dragTarget });
-
-      if (!changeResult) return;
-      // reset score
-      this.gameScoreChange({
-        roundIdx: dropTarget.roundIdx,
-        idx: dropTarget.idx,
-        playerKey: dropTarget.playerKey,
-        score: NO_SCORE,
-      });
-      this.gameScoreChange({
-        roundIdx: dragTarget.roundIdx,
-        idx: dragTarget.idx,
-        playerKey: dragTarget.playerKey,
-        score: NO_SCORE,
-      });
+      this.playerChangeByDrop({ dropTarget, dragTarget });
     },
   },
 };

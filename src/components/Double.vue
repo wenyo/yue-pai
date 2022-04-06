@@ -14,6 +14,8 @@
         :game-time-change="gameTimeChangeByType"
         :game-place-change="gamePlaceChangeByType"
         :game-score-change="gameScoreChangeByType"
+        :drag-target-info="dragTargetInfo"
+        :change-player="changePlayer"
       />
     </ul>
   </div>
@@ -32,13 +34,15 @@
         :game-time-change="gameTimeChangeByType"
         :game-place-change="gamePlaceChangeByType"
         :game-score-change="gameScoreChangeByType"
+        :drag-target-info="dragTargetInfo"
+        :change-player="changePlayer"
       />
     </ul>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import Match from "./Match";
 import { GAME_TYPE } from "../utils/Enum";
 export default {
@@ -59,7 +63,18 @@ export default {
       "gameTimeChangeByType",
       "gamePlaceChangeByType",
       "gameScoreChangeByType",
+      "playerChangeByDrop",
     ]),
+    ...mapActions(["playerChangeByDrop"]),
+
+    dragTargetInfo({ roundIdx, idx, playerKey }) {
+      this.dragTarget = { roundIdx, idx, playerKey };
+    },
+    changePlayer({ roundIdx, idx, playerKey }) {
+      const dropTarget = { roundIdx, idx, playerKey };
+      const { dragTarget } = this;
+      this.playerChangeByDrop({ dropTarget, dragTarget });
+    },
   },
 };
 </script>
