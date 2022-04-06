@@ -23,19 +23,18 @@ label {
 
 .seed {
   position: relative;
-  color: $primary-color-third#{40};
-  background-color: $dark-500;
+  color: $primary-color-third#{ab};
   border-radius: 50%;
   padding: 4px 3px 3px 3px;
   transition: all 0.3s;
-  text-shadow: 0 0 2px $dark-200#{50};
+  text-shadow: 0 0 5px $primary-color-five;
 
   &::after {
     position: absolute;
   }
 
   &:hover {
-    text-shadow: 2px 2px 5px $dark-200#{50};
+    text-shadow: 2px 2px 5px $primary-color-five;
   }
 }
 
@@ -44,7 +43,7 @@ label {
 }
 
 .checkbox-seed:checked ~ .seed {
-  text-shadow: 2px 2px 5px $dark-200#{50};
+  text-shadow: 2px 2px 5px $primary-color-five;
   color: $primary-color-third;
 }
 </style>
