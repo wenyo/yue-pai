@@ -6,14 +6,14 @@
         :key="idx"
         :game="game"
         :idx="idx"
-        :roundIdx="roundIdx"
+        :round-idx="roundIdx"
         :contest-type="type"
         :game-type="GAME_TYPE.WIN"
         :team-name-change="teamNameChange"
-        :game-date-change="gameDateChangeByWin"
-        :game-time-change="gameTimeChangeByWin"
-        :game-place-change="gamePlaceChangeByWin"
-        :game-score-change="gameScoreChangeByWin"
+        :game-date-change="gameDateChangeByType"
+        :game-time-change="gameTimeChangeByType"
+        :game-place-change="gamePlaceChangeByType"
+        :game-score-change="gameScoreChangeByType"
       />
     </ul>
   </div>
@@ -24,14 +24,14 @@
         :key="idx"
         :game="game"
         :idx="idx"
-        :roundIdx="roundIdx"
+        :round-idx="roundIdx"
         :contest-type="type"
         :game-type="GAME_TYPE.LOSE"
         :team-name-change="teamNameChange"
-        :game-date-change="gameDateChangeByLose"
-        :game-time-change="gameTimeChangeByLose"
-        :game-place-change="gamePlaceChangeByLose"
-        :game-score-change="gameScoreChangeByLose"
+        :game-date-change="gameDateChangeByType"
+        :game-time-change="gameTimeChangeByType"
+        :game-place-change="gamePlaceChangeByType"
+        :game-score-change="gameScoreChangeByType"
       />
     </ul>
   </div>
@@ -45,6 +45,7 @@ export default {
   data() {
     return {
       GAME_TYPE,
+      dragTarget: {},
     };
   },
   components: { Match },
@@ -59,72 +60,6 @@ export default {
       "gamePlaceChangeByType",
       "gameScoreChangeByType",
     ]),
-    gameDateChangeByWin({ roundIdx, idx, date }) {
-      this.gameDateChangeByType({
-        type: GAME_TYPE.WIN,
-        roundIdx,
-        idx,
-        date,
-      });
-    },
-    gameDateChangeByLose({ roundIdx, idx, date }) {
-      this.gameDateChangeByType({
-        type: GAME_TYPE.LOSE,
-        roundIdx,
-        idx,
-        date,
-      });
-    },
-    gameTimeChangeByWin({ roundIdx, idx, time }) {
-      this.gameTimeChangeByType({
-        type: GAME_TYPE.WIN,
-        roundIdx,
-        idx,
-        time,
-      });
-    },
-    gameTimeChangeByLose({ roundIdx, idx, time }) {
-      this.gameTimeChangeByType({
-        type: GAME_TYPE.LOSE,
-        roundIdx,
-        idx,
-        time,
-      });
-    },
-    gamePlaceChangeByWin({ roundIdx, idx, place }) {
-      this.gamePlaceChangeByType({
-        type: GAME_TYPE.WIN,
-        roundIdx,
-        idx,
-        place,
-      });
-    },
-    gamePlaceChangeByLose({ roundIdx, idx, place }) {
-      this.gamePlaceChangeByType({
-        type: GAME_TYPE.LOSE,
-        roundIdx,
-        idx,
-        place,
-      });
-    },
-    gameScoreChangeByWin({ roundIdx, idx, playerKey, score }) {
-      this.gameScoreChangeByType({
-        type: GAME_TYPE.WIN,
-        roundIdx,
-        idx,
-        playerKey,
-        score,
-      });
-    },
-    gameScoreChangeByLose({ roundIdx, idx, playerKey, score }) {
-      this.gameScoreChangeByType({
-        type: GAME_TYPE.LOSE,
-        roundIdx,
-        idx,
-        playerKey,
-        score,
-      });
-    },
   },
 };
 </script>

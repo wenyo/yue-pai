@@ -55,6 +55,7 @@
             idx: match_data.idx,
             playerKey: playerKey,
             score: $event.target.value,
+            type: gameType,
           })
         "
         :placeholder="match_data.game.bye ? '-' : '比分'"
@@ -76,6 +77,7 @@
             roundIdx: match_data.roundIdx,
             idx: match_data.idx,
             date: $event.target.value,
+            type: gameType,
           })
         "
       />
@@ -90,6 +92,7 @@
             roundIdx: match_data.roundIdx,
             idx: match_data.idx,
             time: $event.target.value,
+            type: gameType,
           })
         "
         :disabled="match_data.game.bye"
@@ -104,7 +107,12 @@
         :placeholder="match_data.game.bye ? '-' : '場地'"
         :disabled="match_data.game.bye"
         @change="
-          gamePlaceChange({ roundIdx, idx: idx, place: $event.target.value })
+          gamePlaceChange({
+            roundIdx,
+            idx: idx,
+            place: $event.target.value,
+            type: gameType,
+          })
         "
       />
     </div>

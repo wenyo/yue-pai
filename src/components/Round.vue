@@ -6,14 +6,14 @@
         :key="idx"
         :game="game"
         :idx="idx"
-        :roundIdx="roundIdx"
+        :round-idx="roundIdx"
         :contest-type="type"
         :game-type="GAME_TYPE.WIN"
         :team-name-change="teamNameChange"
-        :game-date-change="gameDateChange"
-        :game-time-change="gameTimeChange"
-        :game-place-change="gamePlaceChange"
-        :game-score-change="gameScoreChange"
+        :game-date-change="gameDateChangeByType"
+        :game-time-change="gameTimeChangeByType"
+        :game-place-change="gamePlaceChangeByType"
+        :game-score-change="gameScoreChangeByType"
       />
     </ul>
   </div>
@@ -31,7 +31,7 @@ export default {
   },
   components: { Match },
   computed: {
-    ...mapState(["contestInfo"]),
+    ...mapState(["contestInfo", "type"]),
   },
   methods: {
     ...mapMutations([
@@ -41,39 +41,6 @@ export default {
       "gamePlaceChangeByType",
       "gameScoreChangeByType",
     ]),
-    gameDateChange({ roundIdx, idx, date }) {
-      this.gameDateChangeByType({
-        type: GAME_TYPE.WIN,
-        roundIdx,
-        idx,
-        date,
-      });
-    },
-    gameTimeChange({ roundIdx, idx, time }) {
-      this.gameTimeChangeByType({
-        type: GAME_TYPE.WIN,
-        roundIdx,
-        idx,
-        time,
-      });
-    },
-    gamePlaceChange({ roundIdx, idx, place }) {
-      this.gamePlaceChangeByType({
-        type: GAME_TYPE.WIN,
-        roundIdx,
-        idx,
-        place,
-      });
-    },
-    gameScoreChange({ roundIdx, idx, playerKey, score }) {
-      this.gameScoreChangeByType({
-        type: GAME_TYPE.WIN,
-        roundIdx,
-        idx,
-        playerKey,
-        score,
-      });
-    },
   },
 };
 </script>
