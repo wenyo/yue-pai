@@ -550,26 +550,33 @@ export default createStore({
       );
       state.contestInfo.LOSE = newGameInfo;
     },
-    roundRobinOne(state, { game_count }) {
-      const teamMaxId = state.teamCount - 1;
+    // build default
+    roundRobinOne(state, { game_count, groupIdx }) {
+      const { roundGroupCount, teamCount } = state;
+      const teamMaxId = teamCount - 1;
       let newGameInfo = Object.assign([], state.contestInfo.WIN);
+      const prevPlayerId = groupIdx * (teamCount / roundGroupCount);
 
-      newGameInfo.push(
+      newGameInfo[groupIdx] = [];
+      console.log(groupIdx);
+
+      newGameInfo[groupIdx].unshift(
         Array.from({ length: game_count }, (v, i) => {
-          const bye = i * 2 + 1 > teamMaxId;
-          const player1_Id = i * 2;
-          const player2_Id = bye ? NO_ID : i * 2 + 1;
+          const player1_Id = prevPlayerId + i * 2;
+          let player2_Id = player1_Id + 1;
+          const bye = player2_Id > teamMaxId;
+          player2_Id = bye ? NO_ID : player2_Id;
           return roundRobinBuild({ player1_Id, player2_Id, bye });
         })
       );
+
       state.contestInfo.WIN = newGameInfo;
     },
-    roundRobinOther(state, { round_count, game_count }) {
+    roundRobinOther(state, { round_count, game_count, groupIdx }) {
       const game_last_idx = game_count - 1;
       let newGameInfo = Object.assign([], state.contestInfo.WIN);
-
       for (let roundIdx = 1; roundIdx < round_count; roundIdx++) {
-        const preRound = newGameInfo[roundIdx - 1];
+        const preRound = newGameInfo[groupIdx][roundIdx - 1];
         const newGameInRound = Array.from({ length: game_count }, (v, i) => {
           const { player1_order, player2_order } = roundRobinIdOrderGet({
             game_idx: i,
@@ -581,10 +588,9 @@ export default createStore({
 
           const player2_Id =
             preRound[player2_order.game_idx][player2_order.player_key].id;
-
           return roundRobinBuild({ player1_Id, player2_Id });
         });
-        newGameInfo.push(newGameInRound);
+        newGameInfo[groupIdx].push(newGameInRound);
       }
 
       state.contestInfo.WIN = newGameInfo;
@@ -671,11 +677,14 @@ export default createStore({
       }
     },
     roundInfoSizeChange({ state, commit }) {
+      const teamCountInRound = state.teamCount / state.roundGroupCount;
       const round_count =
-        state.teamCount % 2 === 0 ? state.teamCount - 1 : state.teamCount;
-      const game_count = Math.ceil(state.teamCount / 2);
-      commit("roundRobinOne", { game_count });
-      commit("roundRobinOther", { round_count, game_count });
+        teamCountInRound % 2 === 0 ? teamCountInRound - 1 : teamCountInRound;
+      const game_count = Math.ceil(teamCountInRound / 2);
+      for (let groupIdx = 0; groupIdx < state.roundGroupCount; groupIdx++) {
+        commit("roundRobinOne", { game_count, groupIdx });
+        commit("roundRobinOther", { round_count, game_count, groupIdx });
+      }
     },
     contestInfoSizeChange({ state, dispatch, commit }) {
       if (!state.isContestReset) return;

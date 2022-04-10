@@ -1,21 +1,24 @@
 <template>
   <div class="contest">
-    <ul v-for="(roundInfo, roundIdx) in contestInfo.WIN" :key="roundIdx">
-      <Match
-        v-for="(game, idx) in roundInfo"
-        :key="idx"
-        :game="game"
-        :idx="idx"
-        :round-idx="roundIdx"
-        :contest-type="type"
-        :game-type="GAME_TYPE.WIN"
-        :team-name-change="teamNameChange"
-        :game-date-change="gameDateChangeByType"
-        :game-time-change="gameTimeChangeByType"
-        :game-place-change="gamePlaceChangeByType"
-        :game-score-change="gameScoreChangeByType"
-      />
-    </ul>
+    <div v-for="(info, idx) in contestInfo.WIN" :key="idx">
+      <ul v-for="(roundInfo, roundIdx) in info" :key="roundIdx">
+        <Match
+          v-for="(game, idx) in roundInfo"
+          :key="idx"
+          :game="game"
+          :idx="idx"
+          :round-idx="roundIdx"
+          :contest-type="type"
+          :game-type="GAME_TYPE.WIN"
+          :team-name-change="teamNameChange"
+          :game-date-change="gameDateChangeByType"
+          :game-time-change="gameTimeChangeByType"
+          :game-place-change="gamePlaceChangeByType"
+          :game-score-change="gameScoreChangeByType"
+        />
+      </ul>
+      <br />
+    </div>
   </div>
 </template>
 
