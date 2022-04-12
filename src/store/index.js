@@ -127,7 +127,6 @@ export default createStore({
       const playerKeyName = PLAYER_KEY[playerKey];
 
       if (state.type === CONTEST_TYPE.ROUND.id) {
-        console.log({ type, roundIdx, idx, groupIdx, playerKey, score });
         const thisGame = state.contestInfo[state.type][groupIdx][roundIdx][idx];
         state.contestInfo[state.type][groupIdx][roundIdx][idx][
           playerKeyName
@@ -231,7 +230,6 @@ export default createStore({
           )
         )
       );
-      console.log(state.roundScore, state.roundGroupCount);
     },
     seedChange(state, { is_seed, idx }) {
       state.teamInfo[idx].is_seed = is_seed;
@@ -584,7 +582,6 @@ export default createStore({
       const prevPlayerId = groupIdx * (teamCount / roundGroupCount);
 
       newGameInfo[groupIdx] = [];
-      console.log(groupIdx);
 
       newGameInfo[groupIdx].unshift(
         Array.from({ length: game_count }, (v, i) => {
@@ -616,7 +613,7 @@ export default createStore({
             preRound[player2_order.game_idx][player2_order.player_key].id;
           return roundRobinBuild({ player1_Id, player2_Id });
         });
-        newGameInfo[groupIdx].push(newGameInRound);
+        newGameInfo[groupIdx][roundIdx] = newGameInRound;
       }
 
       state.contestInfo.ROUND = newGameInfo;
@@ -745,7 +742,7 @@ export default createStore({
       console.log(state.contestInfo);
     },
     playerChangeByDrop({ commit, state }, { dropTarget, dragTarget }) {
-      const { contestInfo, type } = state;
+      const { contestInfo, type, teamCount, roundGroupCount } = state;
       const game_type = type === CONTEST_TYPE.ROUND.id ? type : GAME_TYPE.WIN;
       const dropTargetID = playerIdGet({
         contest_info: contestInfo,
@@ -760,8 +757,6 @@ export default createStore({
       });
 
       if (game_type === CONTEST_TYPE.ROUND.id) {
-        console.log({ dropTargetID, dragTargetID });
-
         // check groupIdx
         const dropGroupIdx = dropTarget.groupIdx;
         const dragGroupIdx = dragTarget.groupIdx;
@@ -777,6 +772,24 @@ export default createStore({
         dragTarget,
         gameType: game_type,
       });
+
+      if (game_type === CONTEST_TYPE.ROUND.id) {
+        const teamCountInRound = teamCount / roundGroupCount;
+        const game_count = Math.ceil(teamCountInRound / 2);
+        const round_count =
+          teamCountInRound % 2 === 0 ? teamCountInRound - 1 : teamCountInRound;
+        commit("roundRobinOther", {
+          round_count,
+          game_count,
+          groupIdx: dropTarget.groupIdx,
+        });
+
+        commit("roundRobinOther", {
+          round_count,
+          game_count,
+          groupIdx: dragTarget.groupIdx,
+        });
+      }
 
       commit("gameScoreChangeByType", {
         roundIdx: dropTarget.roundIdx,
