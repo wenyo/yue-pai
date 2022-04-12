@@ -22,6 +22,8 @@ import {
   roundRobinIdOrderGet,
   newGameForm,
   playerKeyOtherGet,
+  playerIdGet,
+  playerIdSet,
 } from "../utils/ContestFunc";
 
 export default createStore({
@@ -96,23 +98,39 @@ export default createStore({
     teamNameChange(state, { idx, name }) {
       state.teamInfo[idx].name = name;
     },
-    gameDateChangeByType(state, { type, roundIdx, idx, date }) {
-      state.contestInfo[type][roundIdx][idx].date = date;
+    gameDateChangeByType(state, { type, roundIdx, idx, groupIdx, date }) {
+      if (state.type === CONTEST_TYPE.ROUND.id) {
+        state.contestInfo[state.type][groupIdx][roundIdx][idx].date = date;
+      } else {
+        state.contestInfo[type][roundIdx][idx].date = date;
+      }
     },
-    gameTimeChangeByType(state, { type, roundIdx, idx, time }) {
-      state.contestInfo[type][roundIdx][idx].time = time;
+    gameTimeChangeByType(state, { type, roundIdx, idx, groupIdx, time }) {
+      if (state.type === CONTEST_TYPE.ROUND.id) {
+        state.contestInfo[state.type][groupIdx][roundIdx][idx].time = time;
+      } else {
+        state.contestInfo[type][roundIdx][idx].time = time;
+      }
     },
-    gamePlaceChangeByType(state, { type, roundIdx, idx, place }) {
-      state.contestInfo[type][roundIdx][idx].place = place;
+    gamePlaceChangeByType(state, { type, roundIdx, idx, groupIdx, place }) {
+      if (state.type === CONTEST_TYPE.ROUND.id) {
+        state.contestInfo[state.type][groupIdx][roundIdx][idx].place = place;
+      } else {
+        state.contestInfo[type][roundIdx][idx].place = place;
+      }
     },
-    gameScoreChangeByType(state, { type, roundIdx, idx, playerKey, score }) {
+    gameScoreChangeByType(
+      state,
+      { type, roundIdx, idx, groupIdx, playerKey, score }
+    ) {
       // add score
       const playerKeyName = PLAYER_KEY[playerKey];
-      state.contestInfo[type][roundIdx][idx][playerKeyName].score =
-        score === "" ? NO_SCORE : score;
-      const thisGame = state.contestInfo[type][roundIdx][idx];
 
       if (state.type === CONTEST_TYPE.ROUND.id) {
+        const thisGame = state.contestInfo[state.type][groupIdx][roundIdx][idx];
+        state.contestInfo[state.type][groupIdx][roundIdx][idx][
+          playerKeyName
+        ].score = score === "" ? NO_SCORE : score;
         const playerNowInfo = thisGame[playerKeyName];
         const playerOtherInfo = thisGame[playerKeyOtherGet(playerKeyName)];
         const isNowIdSmall = playerNowInfo.id < playerOtherInfo.id;
@@ -126,7 +144,12 @@ export default createStore({
         return;
       }
 
+      //reset
+      state.contestInfo[type][roundIdx][idx][playerKeyName].score =
+        score === "" ? NO_SCORE : score;
+
       // check winner for next round
+      const thisGame = state.contestInfo[type][roundIdx][idx];
       const player1Info = thisGame[PLAYER_KEY.PLAYER1];
       const player2Info = thisGame[PLAYER_KEY.PLAYER2];
       const has_result =
@@ -597,23 +620,35 @@ export default createStore({
     },
     playerChange(state, payload) {
       const { contestInfo } = state;
-      const { dropTarget, dragTarget } = payload;
+      const { dropTarget, dragTarget, gameType } = payload;
 
-      const dropTargetID =
-        contestInfo.WIN[dropTarget.roundIdx][dropTarget.idx][
-          PLAYER_KEY[dropTarget.playerKey]
-        ].id;
-      const dragTargetID =
-        contestInfo.WIN[dragTarget.roundIdx][dragTarget.idx][
-          PLAYER_KEY[dragTarget.playerKey]
-        ].id;
+      const dropTargetID = playerIdGet({
+        contest_info: contestInfo,
+        game_type: gameType,
+        player_info: dropTarget,
+      });
 
-      contestInfo.WIN[dropTarget.roundIdx][dropTarget.idx][
-        PLAYER_KEY[dropTarget.playerKey]
-      ].id = dragTargetID;
-      contestInfo.WIN[dragTarget.roundIdx][dragTarget.idx][
-        PLAYER_KEY[dragTarget.playerKey]
-      ].id = dropTargetID;
+      const dragTargetID = playerIdGet({
+        contest_info: contestInfo,
+        game_type: gameType,
+        player_info: dragTarget,
+      });
+
+      let contest_info = {};
+      contest_info = playerIdSet({
+        contest_info: contestInfo,
+        game_type: gameType,
+        player_info: dropTarget,
+        id: dragTargetID,
+      });
+      contest_info = playerIdSet({
+        contest_info: contestInfo,
+        game_type: gameType,
+        player_info: dragTarget,
+        id: dropTargetID,
+      });
+
+      state.contestInfo = contest_info;
     },
   },
   actions: {
@@ -711,37 +746,55 @@ export default createStore({
       commit("roundScoreDefault");
     },
     playerChangeByDrop({ commit, state }, { dropTarget, dragTarget }) {
-      const { contestInfo } = state;
-      const dropTargetID =
-        contestInfo.WIN[dropTarget.roundIdx][dropTarget.idx][
-          PLAYER_KEY[dropTarget.playerKey]
-        ].id;
-      const dragTargetID =
-        contestInfo.WIN[dragTarget.roundIdx][dragTarget.idx][
-          PLAYER_KEY[dragTarget.playerKey]
-        ].id;
+      const { contestInfo, type } = state;
+      const game_type = type === CONTEST_TYPE.ROUND.id ? type : GAME_TYPE.WIN;
+      const dropTargetID = playerIdGet({
+        contest_info: contestInfo,
+        game_type,
+        player_info: dropTarget,
+      });
 
-      // check both/neither dropPlayer & dragPlayer is seed
-      const dropTargetIsSeed = state.teamInfo[dropTargetID].is_seed;
-      const dragTargetIsSeed = state.teamInfo[dragTargetID].is_seed;
-      if (dropTargetIsSeed !== dragTargetIsSeed) return;
+      const dragTargetID = playerIdGet({
+        contest_info: contestInfo,
+        game_type,
+        player_info: dragTarget,
+      });
 
-      commit("playerChange", { dropTarget, dragTarget });
+      if (game_type === CONTEST_TYPE.ROUND.id) {
+        console.log({ dropTargetID, dragTargetID });
+
+        // check groupIdx
+        const dropGroupIdx = dropTarget.groupIdx;
+        const dragGroupIdx = dragTarget.groupIdx;
+        if (dropGroupIdx === dragGroupIdx) return;
+      } else {
+        // check both/neither dropPlayer & dragPlayer is seed
+        const dropTargetIsSeed = state.teamInfo[dropTargetID].is_seed;
+        const dragTargetIsSeed = state.teamInfo[dragTargetID].is_seed;
+        if (dropTargetIsSeed !== dragTargetIsSeed) return;
+      }
+      commit("playerChange", {
+        dropTarget,
+        dragTarget,
+        gameType: game_type,
+      });
 
       commit("gameScoreChangeByType", {
         roundIdx: dropTarget.roundIdx,
         idx: dropTarget.idx,
+        groupIdx: dropTarget.groupIdx,
         playerKey: dropTarget.playerKey,
         score: NO_SCORE,
-        type: GAME_TYPE.WIN,
+        type: game_type,
       });
 
       commit("gameScoreChangeByType", {
         roundIdx: dragTarget.roundIdx,
         idx: dragTarget.idx,
+        groupIdx: dragTarget.groupIdx,
         playerKey: dragTarget.playerKey,
         score: NO_SCORE,
-        type: GAME_TYPE.WIN,
+        type: game_type,
       });
     },
   },

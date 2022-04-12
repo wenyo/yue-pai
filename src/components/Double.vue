@@ -66,7 +66,6 @@ export default {
       "playerChangeByDrop",
     ]),
     ...mapActions(["playerChangeByDrop"]),
-
     dragTargetInfo({ roundIdx, idx, playerKey }) {
       this.dragTarget = { roundIdx, idx, playerKey };
     },

@@ -1,7 +1,7 @@
 <template>
   <div class="contest">
-    <div v-for="(info, idx) in contestInfo.ROUND" :key="idx">
-      <h4>第{{ idx + 1 }}組</h4>
+    <div v-for="(info, groupIdx) in contestInfo.ROUND" :key="groupIdx">
+      <h4>第{{ groupIdx + 1 }}組</h4>
       <div class="group">
         <ul v-for="(roundInfo, roundIdx) in info" :key="roundIdx">
           <Match
@@ -10,6 +10,7 @@
             :game="game"
             :idx="idx"
             :round-idx="roundIdx"
+            :group-idx="groupIdx"
             :contest-type="type"
             :game-type="GAME_TYPE.WIN"
             :team-name-change="teamNameChange"
@@ -17,6 +18,8 @@
             :game-time-change="gameTimeChangeByType"
             :game-place-change="gamePlaceChangeByType"
             :game-score-change="gameScoreChangeByType"
+            :drag-target-info="dragTargetInfo"
+            :change-player="changePlayer"
           />
         </ul>
       </div>
@@ -25,13 +28,14 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import Match from "./Match";
 import { GAME_TYPE } from "../utils/Enum";
 export default {
   data() {
     return {
       GAME_TYPE,
+      dragTarget: {},
     };
   },
   components: { Match },
@@ -46,6 +50,15 @@ export default {
       "gamePlaceChangeByType",
       "gameScoreChangeByType",
     ]),
+    ...mapActions(["playerChangeByDrop"]),
+    dragTargetInfo({ roundIdx, idx, playerKey, groupIdx }) {
+      this.dragTarget = { roundIdx, idx, playerKey, groupIdx };
+    },
+    changePlayer({ roundIdx, idx, playerKey, groupIdx }) {
+      const dropTarget = { roundIdx, idx, playerKey, groupIdx };
+      const { dragTarget } = this;
+      this.playerChangeByDrop({ dropTarget, dragTarget });
+    },
   },
 };
 </script>

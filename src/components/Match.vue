@@ -56,6 +56,7 @@
           gameScoreChange({
             roundIdx: match_data.roundIdx,
             idx: match_data.idx,
+            groupIdx,
             playerKey: playerKey,
             score: $event.target.value,
             type: gameType,
@@ -79,6 +80,7 @@
           gameDateChange({
             roundIdx: match_data.roundIdx,
             idx: match_data.idx,
+            groupIdx,
             date: $event.target.value,
             type: gameType,
           })
@@ -94,6 +96,7 @@
           gameTimeChange({
             roundIdx: match_data.roundIdx,
             idx: match_data.idx,
+            groupIdx,
             time: $event.target.value,
             type: gameType,
           })
@@ -113,6 +116,7 @@
           gamePlaceChange({
             roundIdx,
             idx: idx,
+            groupIdx,
             place: $event.target.value,
             type: gameType,
           })
@@ -142,6 +146,7 @@ export default {
     "game",
     "idx",
     "roundIdx",
+    "groupIdx",
     "teamNameChange",
     "gameDateChange",
     "gameTimeChange",
@@ -176,16 +181,16 @@ export default {
   },
   methods: {
     onDragging(e, playerKey) {
-      const { roundIdx, idx } = this;
-      this.dragTargetInfo({ roundIdx, idx, playerKey });
+      const { roundIdx, idx, groupIdx } = this;
+      this.dragTargetInfo({ roundIdx, idx, playerKey, groupIdx });
     },
     allowDrop(e) {
       e.preventDefault();
     },
     async drop(e, playerKey) {
       e.preventDefault();
-      const { roundIdx, idx } = this;
-      await this.changePlayer({ roundIdx, idx, playerKey });
+      const { roundIdx, idx, groupIdx } = this;
+      await this.changePlayer({ roundIdx, idx, playerKey, groupIdx });
       this.$forceUpdate();
     },
   },

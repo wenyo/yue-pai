@@ -6,6 +6,7 @@ import {
   NO_ID,
   ROUND_IDX,
   GAME_FORM,
+  CONTEST_TYPE,
 } from "../utils/Enum";
 
 export function newGameForm() {
@@ -339,4 +340,33 @@ export function roundRobinBuild({ player1_Id, player2_Id }) {
       },
     }
   );
+}
+
+export function playerIdGet({ contest_info, game_type, player_info }) {
+  const { groupIdx, roundIdx, idx, playerKey } = player_info;
+  switch (game_type) {
+    case CONTEST_TYPE.ROUND.id:
+      return contest_info[game_type][groupIdx][roundIdx][idx][
+        PLAYER_KEY[playerKey]
+      ].id;
+
+    default:
+      return contest_info[game_type][roundIdx][idx][PLAYER_KEY[playerKey]].id;
+  }
+}
+
+export function playerIdSet({ contest_info, game_type, player_info, id }) {
+  const { groupIdx, roundIdx, idx, playerKey } = player_info;
+  switch (game_type) {
+    case CONTEST_TYPE.ROUND.id:
+      contest_info[game_type][groupIdx][roundIdx][idx][
+        PLAYER_KEY[playerKey]
+      ].id = id;
+      break;
+
+    default:
+      contest_info[game_type][roundIdx][idx][PLAYER_KEY[playerKey]].id = id;
+      break;
+  }
+  return contest_info;
 }
