@@ -58,7 +58,7 @@
             idx: match_data.idx,
             groupIdx,
             playerKey: playerKey,
-            score: $event.target.value,
+            score: parseInt($event.target.value),
             type: gameType,
           })
         "

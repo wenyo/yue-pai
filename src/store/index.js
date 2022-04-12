@@ -127,6 +127,7 @@ export default createStore({
       const playerKeyName = PLAYER_KEY[playerKey];
 
       if (state.type === CONTEST_TYPE.ROUND.id) {
+        console.log({ type, roundIdx, idx, groupIdx, playerKey, score });
         const thisGame = state.contestInfo[state.type][groupIdx][roundIdx][idx];
         state.contestInfo[state.type][groupIdx][roundIdx][idx][
           playerKeyName
@@ -138,9 +139,8 @@ export default createStore({
         const scoreY = !isNowIdSmall ? playerNowInfo.id : playerOtherInfo.id;
         const scoreSort = isNowIdSmall ? 0 : 1;
         const scoreSort1 = !isNowIdSmall ? 0 : 1;
-
-        state.roundScore[scoreX][scoreY][scoreSort] = score;
-        state.roundScore[scoreY][scoreX][scoreSort1] = score;
+        state.roundScore[groupIdx][scoreX][scoreY][scoreSort] = score;
+        state.roundScore[groupIdx][scoreY][scoreX][scoreSort1] = score;
         return;
       }
 
@@ -224,11 +224,14 @@ export default createStore({
     },
     roundScoreDefault(state) {
       if (state.type !== CONTEST_TYPE.ROUND.id) return;
-      state.roundScore = Array.from({ length: state.teamCount }, (v1, i) =>
-        Array.from({ length: state.teamCount }, (v2, j) =>
-          i === j ? null : [NO_SCORE, NO_SCORE]
+      state.roundScore = Array.from({ length: state.roundGroupCount }, () =>
+        Array.from({ length: state.teamCount }, (v1, i) =>
+          Array.from({ length: state.teamCount }, (v2, j) =>
+            i === j ? null : [NO_SCORE, NO_SCORE]
+          )
         )
       );
+      console.log(state.roundScore, state.roundGroupCount);
     },
     seedChange(state, { is_seed, idx }) {
       state.teamInfo[idx].is_seed = is_seed;
@@ -740,10 +743,6 @@ export default createStore({
           break;
       }
       console.log(state.contestInfo);
-    },
-    teamCountDataChange({ commit }, { value }) {
-      commit("teamCountChange", { value });
-      commit("roundScoreDefault");
     },
     playerChangeByDrop({ commit, state }, { dropTarget, dragTarget }) {
       const { contestInfo, type } = state;

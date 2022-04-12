@@ -1,20 +1,49 @@
 <template>
   <div class="contest">
-    <ul
-      class="round no-line"
-      v-for="(roundInfo, roundIdx) in contestInfo.WIN"
-      :key="roundIdx"
-    >
-      <Match
-        v-for="(game, idx) in roundInfo"
-        :key="idx"
-        :game="game"
-        :idx="idx"
-        :roundIdx="roundIdx"
-      />
-    </ul>
+    <div v-for="(info, groupIdx) in contestInfo.ROUND" :key="groupIdx">
+      <h4>第{{ groupIdx + 1 }}組</h4>
+      <div class="group">
+        <ul
+          class="round no-line"
+          v-for="(roundInfo, roundIdx) in info"
+          :key="roundIdx"
+        >
+          <Match
+            v-for="(game, idx) in roundInfo"
+            :key="idx"
+            :game="game"
+            :idx="idx"
+            :roundIdx="roundIdx"
+          />
+        </ul>
+        <table class="score-table">
+          <tr>
+            <th :colspan="teamInfo.length + 1" class="th-bg">計分板</th>
+          </tr>
+          <tr>
+            <th></th>
+            <th v-for="(team, idx) in teamInfo" :key="idx">{{ team.name }}</th>
+          </tr>
+          <tr v-for="(team, team_idx) in teamInfo" :key="team_idx">
+            <td>{{ team.name }}</td>
+            <template
+              v-for="(score, score_idx) in roundScore[groupIdx][team_idx]"
+              :key="score_idx"
+            >
+              <td
+                v-if="score && (score[0] > NO_SCORE || score[1] > NO_SCORE)"
+                :class="{ win: score[0] > score[1] }"
+              >
+                {{ `${scoreShow(score[0])} : ${scoreShow(score[1])}` }}
+              </td>
+              <td :class="{ 'gray-bg': !score }" v-else></td>
+            </template>
+          </tr>
+        </table>
+      </div>
+    </div>
   </div>
-  <table class="score-table">
+  <!-- <table class="score-table">
     <tr>
       <th :colspan="teamInfo.length + 1" class="th-bg">計分板</th>
     </tr>
@@ -37,7 +66,7 @@
         <td :class="{ 'gray-bg': !score }" v-else></td>
       </template>
     </tr>
-  </table>
+  </table> -->
 </template>
 
 <script>
@@ -65,6 +94,13 @@ export default {
 <style lang="scss" scoped>
 .contest {
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.group {
+  display: flex;
+  margin-bottom: 20px;
 }
 
 .round {

@@ -40,6 +40,7 @@
                 id="group-count"
                 :min="GROUP_DEFAULT"
                 v-model="roundGroupCountNum"
+                @change="roundScoreDefault"
                 :defaultValue="GROUP_DEFAULT"
                 :disabled="type === ''"
               />
@@ -97,7 +98,7 @@
 
 <script>
 import { ref } from "vue";
-import { mapMutations, mapState, mapActions } from "vuex";
+import { mapMutations, mapState } from "vuex";
 import { CONTEST_TYPE, BUTTON_TYPE, GROUP_DEFAULT } from "../utils/Enum.js";
 import Header from "../components/Header.vue";
 import StepLine from "../components/StepLine.vue";
@@ -151,7 +152,6 @@ export default {
       "imgBase64Change",
       "roundGroupCountChange",
     ]),
-    ...mapActions(["teamCountDataChange"]),
     imgChange() {
       const file = this.uploadImage.files[0];
       this.imgToBase64(file);
