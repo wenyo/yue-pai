@@ -554,7 +554,7 @@ export default createStore({
     roundRobinOne(state, { game_count, groupIdx }) {
       const { roundGroupCount, teamCount } = state;
       const teamMaxId = teamCount - 1;
-      let newGameInfo = Object.assign([], state.contestInfo.WIN);
+      let newGameInfo = Object.assign([], state.contestInfo.ROUND);
       const prevPlayerId = groupIdx * (teamCount / roundGroupCount);
 
       newGameInfo[groupIdx] = [];
@@ -570,11 +570,11 @@ export default createStore({
         })
       );
 
-      state.contestInfo.WIN = newGameInfo;
+      state.contestInfo.ROUND = newGameInfo;
     },
     roundRobinOther(state, { round_count, game_count, groupIdx }) {
       const game_last_idx = game_count - 1;
-      let newGameInfo = Object.assign([], state.contestInfo.WIN);
+      let newGameInfo = Object.assign([], state.contestInfo.ROUND);
       for (let roundIdx = 1; roundIdx < round_count; roundIdx++) {
         const preRound = newGameInfo[groupIdx][roundIdx - 1];
         const newGameInRound = Array.from({ length: game_count }, (v, i) => {
@@ -593,7 +593,7 @@ export default createStore({
         newGameInfo[groupIdx].push(newGameInRound);
       }
 
-      state.contestInfo.WIN = newGameInfo;
+      state.contestInfo.ROUND = newGameInfo;
     },
     playerChange(state, payload) {
       const { contestInfo } = state;

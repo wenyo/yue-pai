@@ -68,6 +68,7 @@ export default {
   display: flex;
   flex-direction: row;
 }
+
 ul {
   width: 100%;
   display: flex;
