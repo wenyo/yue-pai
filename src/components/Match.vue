@@ -22,7 +22,10 @@
       @drop="(ev) => drop(ev, playerKey)"
       @dragover="allowDrop"
     >
-      <div class="drag-icon" v-if="match_data.draggableCheck()">
+      <div
+        class="drag-icon border-0 border-r-1 border-l-4"
+        v-if="match_data.draggableCheck()"
+      >
         <i
           class="icon-seedling-solid"
           v-if="match_data.seedCheck(playerKey)"
@@ -30,7 +33,7 @@
         <i class="icon-grip-vertical-solid" v-else></i>
       </div>
       <input
-        class="w-70 border-tb-0 border-r-0"
+        class="w-70 border-0 border-r-1"
         type="text"
         name=""
         id=""
@@ -45,7 +48,7 @@
         :disabled="match_data.nameDisabled(playerKey)"
       />
       <input
-        class="w-30 border-tb-0 border-r-0"
+        class="w-30 border-0"
         type="number"
         name=""
         id=""
@@ -242,7 +245,6 @@ li {
 
 .player-info {
   border: 1px solid $dark-200;
-  border-left: 4px solid $dark-200;
 }
 
 .title {
@@ -251,12 +253,24 @@ li {
   height: 20px;
 }
 
-.border-tb-0 {
-  border-top: unset;
-  border-bottom: unset;
+.border-0 {
+  border: unset;
+}
+
+.border-r-1 {
+  border: unset;
+  border-right: 1px solid $dark-200;
+}
+
+.border-l-4 {
+  border-left: 4px solid $dark-200;
 }
 
 .border-r-0 {
   border-right: unset;
+}
+
+.border-l-0 {
+  border-left: unset;
 }
 </style>
