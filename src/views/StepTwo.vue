@@ -6,11 +6,12 @@
       <div class="contain-box">
         <div class="contain">
           <h3 class="step-title">2/填寫隊伍名稱並選擇種子選手</h3>
+          {{ type }}
           <div class="article">
             <ul>
               <li v-for="idx in column" :key="idx">
                 <div>隊伍名稱</div>
-                <div>種子</div>
+                <div v-if="type !== CONTEST_TYPE.ROUND.id">種子</div>
               </li>
               <li v-for="(info, idx) in teamInfo" :key="idx">
                 <input
@@ -27,6 +28,7 @@
                     ($event) =>
                       seedChange({ is_seed: $event.target.checked, idx })
                   "
+                  v-if="type !== CONTEST_TYPE.ROUND.id"
                 />
               </li>
             </ul>
@@ -50,7 +52,7 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { STEP_IDX, BUTTON_TYPE } from "../utils/Enum";
+import { STEP_IDX, BUTTON_TYPE, CONTEST_TYPE } from "../utils/Enum";
 import Header from "../components/Header.vue";
 import StepLine from "../components/StepLine.vue";
 import Button from "../components/Button.vue";
@@ -64,11 +66,12 @@ export default {
     return {
       STEP_IDX,
       BUTTON_TYPE,
+      CONTEST_TYPE,
     };
   },
   components: { StepLine, Header, Footer, Button, Checkbox },
   computed: {
-    ...mapState(["teamInfo"]),
+    ...mapState(["teamInfo", "type"]),
     column() {
       return this.teamInfo.length > maxColumn
         ? maxColumn
