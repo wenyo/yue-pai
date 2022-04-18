@@ -24,6 +24,7 @@ import {
   playerKeyOtherGet,
   playerIdGet,
   playerIdSet,
+  roundScoreSortBuild,
 } from "../utils/ContestFunc";
 
 export default createStore({
@@ -36,6 +37,7 @@ export default createStore({
     contestInfo: JSON.parse(JSON.stringify(CONTEST_INFO_DEFAULT)),
     isContestReset: true,
     roundScore: [],
+    roundScoreSort: [],
     roundGroupCount: GROUP_DEFAULT,
     imgBase64: "",
   },
@@ -119,18 +121,13 @@ export default createStore({
         state.contestInfo[type][roundIdx][idx].place = place;
       }
     },
-    gameScoreChangeByType(
-      state,
-      { type, roundIdx, idx, groupIdx, playerKey, score }
-    ) {
+    gameScoreChangeByType(state, { type, roundIdx, idx, groupIdx, playerKey, score }) {
       // add score
       const playerKeyName = PLAYER_KEY[playerKey];
 
       if (state.type === CONTEST_TYPE.ROUND.id) {
         const thisGame = state.contestInfo[state.type][groupIdx][roundIdx][idx];
-        state.contestInfo[state.type][groupIdx][roundIdx][idx][
-          playerKeyName
-        ].score = score === "" ? NO_SCORE : score;
+        state.contestInfo[state.type][groupIdx][roundIdx][idx][playerKeyName].score = score === "" ? NO_SCORE : score;
         const playerNowInfo = thisGame[playerKeyName];
         const playerOtherInfo = thisGame[playerKeyOtherGet(playerKeyName)];
         const isNowIdSmall = playerNowInfo.id < playerOtherInfo.id;
@@ -144,17 +141,14 @@ export default createStore({
       }
 
       //reset
-      state.contestInfo[type][roundIdx][idx][playerKeyName].score =
-        score === "" ? NO_SCORE : score;
+      state.contestInfo[type][roundIdx][idx][playerKeyName].score = score === "" ? NO_SCORE : score;
 
       // check winner for next round
       const thisGame = state.contestInfo[type][roundIdx][idx];
       const player1Info = thisGame[PLAYER_KEY.PLAYER1];
       const player2Info = thisGame[PLAYER_KEY.PLAYER2];
       const has_result =
-        player1Info.score !== NO_SCORE &&
-        player2Info.score !== NO_SCORE &&
-        player1Info.score !== player2Info.score;
+        player1Info.score !== NO_SCORE && player2Info.score !== NO_SCORE && player1Info.score !== player2Info.score;
       let scoreResult = {
         has_result,
         winner: NO_ID,
@@ -217,17 +211,14 @@ export default createStore({
       const championshipAddGameIdx = 0;
 
       // eslint-disable-next-line prettier/prettier
-      state.contestInfo[GAME_TYPE.WIN][championshipAddRound][
-        championshipAddGameIdx
-      ].show = player1Info.score < player2Info.score;
+      state.contestInfo[GAME_TYPE.WIN][championshipAddRound][championshipAddGameIdx].show =
+        player1Info.score < player2Info.score;
     },
     roundScoreDefault(state) {
       if (state.type !== CONTEST_TYPE.ROUND.id) return;
       state.roundScore = Array.from({ length: state.roundGroupCount }, () =>
         Array.from({ length: state.teamCount }, (v1, i) =>
-          Array.from({ length: state.teamCount }, (v2, j) =>
-            i === j ? null : [NO_SCORE, NO_SCORE]
-          )
+          Array.from({ length: state.teamCount }, (v2, j) => (i === j ? null : [NO_SCORE, NO_SCORE]))
         )
       );
     },
@@ -241,23 +232,16 @@ export default createStore({
       newGameInfo.unshift(Array.from({ length: gameLen }, () => newGameForm()));
 
       // seed player
-      const seedPlayer = state.teamInfo
-        .filter((team) => team.is_seed)
-        .map((v) => v.id);
+      const seedPlayer = state.teamInfo.filter((team) => team.is_seed).map((v) => v.id);
 
       // not seed player
-      const notSeedPlayer = state.teamInfo
-        .filter((team) => !team.is_seed)
-        .map((v) => v.id);
+      const notSeedPlayer = state.teamInfo.filter((team) => !team.is_seed).map((v) => v.id);
 
       // bye counter
       let byeCount = gameLen * 2 - state.teamCount;
 
       // sort order array
-      const sortOrder = roundOneSortGet(
-        gameLen * playerCountInGame,
-        GAME_TYPE.WIN
-      );
+      const sortOrder = roundOneSortGet(gameLen * playerCountInGame, GAME_TYPE.WIN);
 
       state.contestInfo.WIN = roundOneInfoBuild({
         sortOrder,
@@ -378,9 +362,7 @@ export default createStore({
     },
     roundOneAllByeCheck(state) {
       const loseContest = state.contestInfo[GAME_TYPE.LOSE];
-      state.teamCountPowCheck = loseContest[0]
-        .map((round) => round.bye)
-        .includes(false);
+      state.teamCountPowCheck = loseContest[0].map((round) => round.bye).includes(false);
       if (state.teamCountPowCheck) return;
 
       loseContest.shift();
@@ -390,11 +372,9 @@ export default createStore({
           const player1Info = game.player1;
           const player2Info = game.player2;
           // eslint-disable-next-line prettier/prettier
-          const player1LoseAdd =
-            player1Info.game_type === GAME_TYPE.LOSE ? -1 : 0;
+          const player1LoseAdd = player1Info.game_type === GAME_TYPE.LOSE ? -1 : 0;
           // eslint-disable-next-line prettier/prettier
-          const player2LoseAdd =
-            player2Info.game_type === GAME_TYPE.LOSE ? -1 : 0;
+          const player2LoseAdd = player2Info.game_type === GAME_TYPE.LOSE ? -1 : 0;
           return {
             ...game,
             player1: {
@@ -468,12 +448,10 @@ export default createStore({
     },
     roundLoseFromLose(state, { roundIdx, gameLenInLose }) {
       // eslint-disable-next-line prettier/prettier
-      const gameType =
-        roundIdx === ROUND_IDX.ONE ? GAME_TYPE.WIN : GAME_TYPE.LOSE;
+      const gameType = roundIdx === ROUND_IDX.ONE ? GAME_TYPE.WIN : GAME_TYPE.LOSE;
       const contest = state.contestInfo[gameType];
       // eslint-disable-next-line prettier/prettier
-      const prevRoundIdx =
-        roundIdx === ROUND_IDX.ONE ? ROUND_IDX.ONE : contest.length - 1;
+      const prevRoundIdx = roundIdx === ROUND_IDX.ONE ? ROUND_IDX.ONE : contest.length - 1;
       const winnerChose = roundIdx === ROUND_IDX.ONE ? false : true;
 
       let newGameInfo = Object.assign([], state.contestInfo.LOSE);
@@ -528,10 +506,7 @@ export default createStore({
       const prevRoundIdxLose = state.contestInfo.LOSE.length - 1;
       const prevRoundIdxWin = roundIdx;
       // eslint-disable-next-line prettier/prettier
-      const player2Sort = roundOneSortGet(
-        gameLenInLose,
-        GAME_TYPE.LOSE
-      ).reverse();
+      const player2Sort = roundOneSortGet(gameLenInLose, GAME_TYPE.LOSE).reverse();
       let newGameInfo = Object.assign([], state.contestInfo.LOSE);
 
       newGameInfo.push(
@@ -606,11 +581,9 @@ export default createStore({
             game_last_idx,
           });
 
-          const player1_Id =
-            preRound[player1_order.game_idx][player1_order.player_key].id;
+          const player1_Id = preRound[player1_order.game_idx][player1_order.player_key].id;
 
-          const player2_Id =
-            preRound[player2_order.game_idx][player2_order.player_key].id;
+          const player2_Id = preRound[player2_order.game_idx][player2_order.player_key].id;
           return roundRobinBuild({ player1_Id, player2_Id });
         });
         newGameInfo[groupIdx][roundIdx] = newGameInRound;
@@ -619,7 +592,7 @@ export default createStore({
       state.contestInfo.ROUND = newGameInfo;
     },
     playerChange(state, payload) {
-      const { contestInfo } = state;
+      const { contestInfo, type } = state;
       const { dropTarget, dragTarget, gameType } = payload;
 
       const dropTargetID = playerIdGet({
@@ -649,6 +622,12 @@ export default createStore({
       });
 
       state.contestInfo = contest_info;
+      if (type === CONTEST_TYPE.ROUND.id) {
+        state.roundScoreSort = roundScoreSortBuild(state.contestInfo.ROUND);
+      }
+    },
+    roundScoreSortBuild(state) {
+      state.roundScoreSort = roundScoreSortBuild(state.contestInfo.ROUND);
     },
   },
   actions: {
@@ -713,13 +692,13 @@ export default createStore({
     },
     roundInfoSizeChange({ state, commit }) {
       const teamCountInRound = state.teamCount / state.roundGroupCount;
-      const round_count =
-        teamCountInRound % 2 === 0 ? teamCountInRound - 1 : teamCountInRound;
+      const round_count = teamCountInRound % 2 === 0 ? teamCountInRound - 1 : teamCountInRound;
       const game_count = Math.ceil(teamCountInRound / 2);
       for (let groupIdx = 0; groupIdx < state.roundGroupCount; groupIdx++) {
         commit("roundRobinOne", { game_count, groupIdx });
         commit("roundRobinOther", { round_count, game_count, groupIdx });
       }
+      commit("roundScoreSortBuild");
     },
     contestInfoSizeChange({ state, dispatch, commit }) {
       if (!state.isContestReset) return;
@@ -776,8 +755,7 @@ export default createStore({
       if (game_type === CONTEST_TYPE.ROUND.id) {
         const teamCountInRound = teamCount / roundGroupCount;
         const game_count = Math.ceil(teamCountInRound / 2);
-        const round_count =
-          teamCountInRound % 2 === 0 ? teamCountInRound - 1 : teamCountInRound;
+        const round_count = teamCountInRound % 2 === 0 ? teamCountInRound - 1 : teamCountInRound;
         commit("roundRobinOther", {
           round_count,
           game_count,
