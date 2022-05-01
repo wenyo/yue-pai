@@ -1,7 +1,7 @@
 <template>
   <div id="alert">
     <i class="icon icon-xmark-solid"></i>
-    <p>{{ msg }}</p>
+    <p>{{ alert.msg }}</p>
   </div>
   <div class="bg-gray"></div>
 </template>
@@ -9,9 +9,18 @@
 
 <script>
 export default {
-  props: ["alertClose"],
+  props: {
+    alertClose: Function,
+    alert: Object,
+    autoClose: {
+      type: Boolean,
+      default: true,
+    },
+  },
   mounted() {
-    // window.setTimeout(this.alertClose, 5000);
+    if (this.autoClose) {
+      window.setTimeout(this.alertClose, 3000);
+    }
   },
 };
 </script>
