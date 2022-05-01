@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>yue-pai setting</title>
+    <style>
+      h1 {
+        font-size: 25px;
+      }
+      .title {
+        font-size: 20px;
+        font-weight: bold;
+      }
+      #download {
+        margin-left: 20px;
+        background: unset;
+        border: unset;
+        padding: 5px 20px;
+        border: 1px solid #231815;
+        border-radius: 2px;
+        font-weight: bold;
+        height: 30px;
+        background-color: #006cb8;
+        color: #fff;
+      }
+      .example {
+        margin-top: 50px;
+        display: block;
+      }
+      .example img {
+        min-width: 700px;
+        width: 50%;
+      }
+      .explain {
+        margin-top: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>設定悅排賽允許使用時間</h1>
+      <p class="title">設定時間/</p>
+      <label for="start">開始日期</label>
+      <input id="start" type="date" name="" id="" />
+      <label for="end">結束日期</label>
+      <input id="end" type="date" name="" id="" />
+      <button id="download">下載檔案</button>
+      <div class="example">
+        <p class="title">檔案位置/</p>
+        <img src="./img/file.png" alt="" />
+        <div>*請注意下載後檔名為 limit.json</div>
+      </div>
+      <div class="explain">
+        <p class="title">檔案說明/</p>
+        <p>origin 原始檔案; setting: 設定時間檔案; use: 排賽檔案</p>
+      </div>
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      const startEl = document.querySelector("#start");
+      const endEl = document.querySelector("#end");
+
+      const now = new Date();
+      const day = ("0" + now.getDate()).slice(-2);
+      const month = ("0" + (now.getMonth() + 1)).slice(-2);
+      const today = now.getFullYear() + "-" + month + "-" + day;
+      startEl.value = today;
+
+      const download = document.querySelector("#download");
+      download.addEventListener("click", () => {
+        if (!startEl.value || !endEl.value) return alert("請先設定日期");
+        const start = new Date(startEl.value).getTime();
+        const end = new Date(endEl.value).getTime();
+
+        const limit = {
+          start,
+          end,
+        };
+        const jsonse = JSON.stringify(limit);
+        const blob = new Blob([jsonse], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "limit.json";
+        a.click();
+      });
+    };
+  </script>
+</html>
