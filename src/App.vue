@@ -11,7 +11,6 @@
 <script>
 import Alert from "./components/Alert.vue";
 import limit from "../public/limit.json";
-console.log(limit);
 
 export default {
   data() {
@@ -40,7 +39,6 @@ export default {
       this.alertCall({ msg: "", show: false });
     },
     checkTime() {
-      console.log(new Date().getTime(), limit.start, limit.end);
       const now = new Date().getTime();
       const start = limit.start;
       const end = limit.end;
