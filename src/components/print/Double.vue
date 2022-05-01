@@ -1,11 +1,7 @@
 <template>
   <div class="game-type">勝部</div>
   <Single class="win" />
-  <div
-    v-if="page_break"
-    class="breakPage"
-    style="page-break-after: always"
-  ></div>
+  <div v-if="page_break" style="page-break-after: always">1</div>
   <div class="game-type">敗部</div>
   <div
     class="contest lose"
