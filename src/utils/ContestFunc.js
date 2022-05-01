@@ -373,34 +373,29 @@ export function playerIdSet({ contest_info, game_type, player_info, id }) {
 
 export function roundScoreSortBuild(roundContestInfo) {
   let roundScoreSort = [];
-  console.log(roundContestInfo);
   for (const groupIdx in roundContestInfo) {
     roundScoreSort[groupIdx] = [];
     for (const game of roundContestInfo[groupIdx][0]) {
-      // roundScoreSort[groupIdx].push({ row_player_id: game.player1.id, game_sort: {} });
-      // roundScoreSort[groupIdx].push({ row_player_id: game.player2.id, game_sort: {} });
-      roundScoreSort[groupIdx][game.player1.id] = { game_sort: [] };
-      roundScoreSort[groupIdx][game.player2.id] = { game_sort: [] };
+      roundScoreSort[groupIdx][game.player1.id] = {};
+      roundScoreSort[groupIdx][game.player1.id][game.player1.id] = NO_SCORE;
+      roundScoreSort[groupIdx][game.player2.id] = {};
+      roundScoreSort[groupIdx][game.player2.id][game.player2.id] = NO_SCORE;
     }
   }
 
   for (const groupIdx in roundScoreSort) {
-    console.log(roundContestInfo[groupIdx], groupIdx);
     for (const roundIdx in roundContestInfo[groupIdx]) {
-      console.log(roundContestInfo[groupIdx][roundIdx]);
       for (const gameIdx in roundContestInfo[groupIdx][roundIdx]) {
         const thisGame = roundContestInfo[groupIdx][roundIdx][gameIdx];
         const player1Id = thisGame.player1.id;
         const player2Id = thisGame.player2.id;
-        console.log(roundScoreSort);
-        console.log(player1Id, player2Id);
 
-        roundScoreSort[groupIdx][player1Id].game_sort[player2Id] = {
+        roundScoreSort[groupIdx][player1Id][player2Id] = {
           game_idx: gameIdx,
           round_idx: roundIdx,
           player_sort: [PLAYER_KEY.PLAYER1, PLAYER_KEY.PLAYER2],
         };
-        roundScoreSort[groupIdx][player2Id].game_sort[player1Id] = {
+        roundScoreSort[groupIdx][player2Id][player1Id] = {
           game_idx: gameIdx,
           round_idx: roundIdx,
           player_sort: [PLAYER_KEY.PLAYER2, PLAYER_KEY.PLAYER1],
@@ -409,6 +404,5 @@ export function roundScoreSortBuild(roundContestInfo) {
     }
   }
 
-  console.log(roundScoreSort);
   return roundScoreSort;
 }

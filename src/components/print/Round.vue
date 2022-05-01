@@ -1,11 +1,11 @@
 <template>
   <div class="contest">
-    <div v-for="(info, groupIdx) in contestInfo.ROUND" :key="groupIdx">
+    <div v-for="(groupInfo, groupIdx) in contestInfo.ROUND" :key="groupIdx">
       <h4>第{{ groupIdx + 1 }}組</h4>
       <div class="group">
         <ul
           class="round no-line"
-          v-for="(roundInfo, roundIdx) in info"
+          v-for="(roundInfo, roundIdx) in groupInfo"
           :key="roundIdx"
         >
           <Match
@@ -16,57 +16,40 @@
             :roundIdx="roundIdx"
           />
         </ul>
-        <table class="score-table">
+        <div class="score-table">
           <tr>
             <th :colspan="teamInfo.length + 1" class="th-bg">計分板</th>
           </tr>
           <tr>
             <th></th>
-            <th v-for="(team, idx) in teamInfo" :key="idx">{{ team.name }}</th>
-          </tr>
-          <tr v-for="(team, team_idx) in teamInfo" :key="team_idx">
-            <td>{{ team.name }}</td>
-            <template
-              v-for="(score, score_idx) in roundScore[groupIdx][team_idx]"
-              :key="score_idx"
+            <th
+              v-for="playerId in scoreSort(roundScoreSort[groupIdx])"
+              :key="playerId"
             >
-              <td
-                v-if="score && (score[0] > NO_SCORE || score[1] > NO_SCORE)"
-                :class="{ win: score[0] > score[1] }"
-              >
-                {{ `${scoreShow(score[0])} : ${scoreShow(score[1])}` }}
-              </td>
-              <td :class="{ 'gray-bg': !score }" v-else></td>
-            </template>
+              {{ playerId }}
+            </th>
           </tr>
-        </table>
+          <template
+            v-for="(roundScoreInfo, playerId) in roundScoreSort[groupIdx]"
+            :key="playerId"
+          >
+            <tr v-if="roundScoreInfo">
+              <td>{{ playerId }}</td>
+              <template v-for="(scoreInfo, key) in roundScoreInfo" :key="key">
+                <td
+                  v-if="scoreInfo && scoreInfo !== NO_SCORE"
+                  :class="{ win: prevPlayerWin(groupInfo, scoreInfo) }"
+                >
+                  {{ scoreText(groupInfo, scoreInfo) }}
+                </td>
+                <td v-if="scoreInfo === NO_SCORE" class="gray-bg"></td>
+              </template>
+            </tr>
+          </template>
+        </div>
       </div>
     </div>
   </div>
-  <!-- <table class="score-table">
-    <tr>
-      <th :colspan="teamInfo.length + 1" class="th-bg">計分板</th>
-    </tr>
-    <tr>
-      <th></th>
-      <th v-for="(team, idx) in teamInfo" :key="idx">{{ team.name }}</th>
-    </tr>
-    <tr v-for="(team, team_idx) in teamInfo" :key="team_idx">
-      <td>{{ team.name }}</td>
-      <template
-        v-for="(score, score_idx) in roundScore[team_idx]"
-        :key="score_idx"
-      >
-        <td
-          v-if="score && (score[0] > NO_SCORE || score[1] > NO_SCORE)"
-          :class="{ win: score[0] > score[1] }"
-        >
-          {{ `${scoreShow(score[0])} : ${scoreShow(score[1])}` }}
-        </td>
-        <td :class="{ 'gray-bg': !score }" v-else></td>
-      </template>
-    </tr>
-  </table> -->
 </template>
 
 <script>
@@ -75,17 +58,37 @@ import Match from "./Match.vue";
 import { NO_SCORE } from "../../utils/Enum";
 export default {
   components: { Match },
+  created() {
+    console.log(this.roundScoreSort);
+  },
   data() {
     return {
       NO_SCORE,
     };
   },
   computed: {
-    ...mapState(["contestInfo", "teamInfo", "roundScore"]),
+    ...mapState(["contestInfo", "teamInfo", "roundScore", "roundScoreSort"]),
   },
   methods: {
     scoreShow(score) {
       return score === NO_SCORE ? "" : score;
+    },
+    scoreSort(score) {
+      return Object.keys(score);
+    },
+    prevPlayerWin(groupInfo, scoreInfo) {
+      const thisGame = groupInfo[scoreInfo.round_idx][scoreInfo.game_idx];
+      let playerPreScore = thisGame[scoreInfo.player_sort[0]].score;
+      let playerNextScore = thisGame[scoreInfo.player_sort[1]].score;
+      return playerPreScore > playerNextScore;
+    },
+    scoreText(groupInfo, scoreInfo) {
+      const thisGame = groupInfo[scoreInfo.round_idx][scoreInfo.game_idx];
+      let playerPreScore = thisGame[scoreInfo.player_sort[0]].score;
+      let playerNextScore = thisGame[scoreInfo.player_sort[1]].score;
+      playerPreScore = playerPreScore === NO_SCORE ? "" : playerPreScore;
+      playerNextScore = playerNextScore === NO_SCORE ? "" : playerNextScore;
+      return `${playerPreScore}:${playerNextScore}`;
     },
   },
 };
@@ -100,7 +103,8 @@ export default {
 
 .group {
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 100px;
+  margin-top: 20px;
 }
 
 .round {
@@ -108,6 +112,9 @@ export default {
 
   li {
     margin-bottom: 20px;
+  }
+  .game:not(:last-child) {
+    margin-bottom: 50px;
   }
 }
 
