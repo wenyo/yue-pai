@@ -6,7 +6,6 @@
       <div class="contain-box">
         <div class="contain">
           <h3 class="step-title">2/填寫隊伍名稱並選擇種子選手</h3>
-          {{ type }}
           <div class="article">
             <ul>
               <li v-for="idx in column" :key="idx">
