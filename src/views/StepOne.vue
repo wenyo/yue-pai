@@ -163,7 +163,7 @@ export default {
         this.imgBase64Change({ img: reader.result });
       };
       reader.onerror = (error) => {
-        console.log("Error: ", error);
+        console.error("Error: ", error);
         this.alertOpen({ msg: "出了一些錯誤，請再嘗試一次" });
       };
     },

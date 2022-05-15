@@ -60,9 +60,6 @@ import Match from "./Match.vue";
 import { NO_SCORE } from "../../utils/Enum";
 export default {
   components: { Match },
-  created() {
-    console.log(this.roundScoreSort);
-  },
   data() {
     return {
       NO_SCORE,
