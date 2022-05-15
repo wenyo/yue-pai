@@ -579,17 +579,19 @@ export default createStore({
     // build default
     roundRobinOne(state, { game_count, groupIdx }) {
       const { roundGroupCount, teamCount } = state;
-      const teamMaxId = teamCount - 1;
+      const playerCountInPerRound = teamCount / roundGroupCount;
+      const prevPlayerId = groupIdx * playerCountInPerRound;
       let newGameInfo = Object.assign([], state.contestInfo.ROUND);
-      const prevPlayerId = groupIdx * (teamCount / roundGroupCount);
+      let countPlayer = 0;
 
       newGameInfo[groupIdx] = [];
 
       newGameInfo[groupIdx].unshift(
         Array.from({ length: game_count }, (v, i) => {
+          countPlayer += 2;
           const player1_Id = prevPlayerId + i * 2;
           let player2_Id = player1_Id + 1;
-          const bye = player2_Id > teamMaxId;
+          const bye = countPlayer > playerCountInPerRound;
           player2_Id = bye ? NO_ID : player2_Id;
           return roundRobinBuild({ player1_Id, player2_Id, bye });
         })
