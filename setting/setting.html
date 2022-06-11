@@ -79,13 +79,13 @@
           start,
           end,
         };
-        const jsonse = JSON.stringify(limit);
-        const blob = new Blob([jsonse], { type: "application/json" });
+        const jsonse = `const limit = ${JSON.stringify(limit)}`;
+        const blob = new Blob([jsonse], { type: "application/javascript" });
         const url = URL.createObjectURL(blob);
 
         const a = document.createElement("a");
         a.href = url;
-        a.download = "limit.json";
+        a.download = "limit.js";
         a.click();
       });
     };

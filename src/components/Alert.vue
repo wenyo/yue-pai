@@ -1,9 +1,8 @@
 <template>
-  <div id="alert">
+  <div id="alert-other" class="alert">
     <i class="icon icon-xmark-solid"></i>
     <p>{{ alert.msg }}</p>
   </div>
-  <div class="bg-gray"></div>
 </template>
 <style lang="scss" scoped></style>
 
@@ -59,7 +58,7 @@ export default {
   bottom: 0;
   right: 0;
   left: 0;
-  background-color: $dark-100#{25};
+  background-color: $dark-100;
   z-index: 9;
 }
 </style>
