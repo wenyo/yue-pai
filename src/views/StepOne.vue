@@ -9,13 +9,9 @@
           <div class="article">
             <div class="setting-item">
               <label for="contest">選擇賽制</label>
-              <select id="contest" :value="type" @change="typeChange">
+              <select id="contest" :value="type" @change="typeChangeByInput">
                 <option value="">請選擇</option>
-                <option
-                  v-for="(info, type) in CONTEST_TYPE"
-                  :key="type"
-                  :value="info.id"
-                >
+                <option v-for="(info, type) in CONTEST_TYPE" :key="type" :value="info.id">
                   {{ info.ch }}
                 </option>
               </select>
@@ -47,28 +43,13 @@
               <p>{{ teamNumInGroup }}人/組</p>
             </div>
           </div>
-          <h3 class="step-title">
-            1.2/上傳圖片(非必填，圖片長寬比建議為1:1~1:2)
-          </h3>
+          <h3 class="step-title">1.2/上傳圖片(非必填，圖片長寬比建議為1:1~1:2)</h3>
           <div class="article">
-            <Button
-              class="file-input"
-              :type="BUTTON_TYPE.FORTH"
-              :click_fun="() => uploadImage.click()"
+            <Button class="file-input" :type="BUTTON_TYPE.FORTH" :click_fun="() => uploadImage.click()"
               >選擇圖片</Button
             >
-            <input
-              ref="uploadImage"
-              type="file"
-              accept="image/*"
-              @change="imgChange"
-            />
-            <Button
-              :type="BUTTON_TYPE.FIVE"
-              :click_fun="resetImg"
-              :disabled="!imgBase64"
-              >清除圖片</Button
-            >
+            <input ref="uploadImage" type="file" accept="image/*" @change="imgChange" />
+            <Button :type="BUTTON_TYPE.FIVE" :click_fun="resetImg" :disabled="!imgBase64">清除圖片</Button>
             <img class="preview-img" :src="imgBase64" v-if="imgBase64" />
           </div>
         </div>
@@ -81,12 +62,7 @@
           <Button
             :type="BUTTON_TYPE.SECOND"
             :click_fun="navigate"
-            :disabled="
-              type === '' ||
-              isNaN(teamCount) ||
-              teamCount <= 0 ||
-              teamNumInGroup % 1 > 0
-            "
+            :disabled="type === '' || isNaN(teamCount) || teamCount <= 0 || teamNumInGroup % 1 > 0"
             >下一步</Button
           >
         </router-link>
@@ -145,13 +121,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations([
-      "typeChange",
-      "teamCountChange",
-      "roundScoreDefault",
-      "imgBase64Change",
-      "roundGroupCountChange",
-    ]),
+    ...mapMutations(["typeChange", "teamCountChange", "roundScoreDefault", "imgBase64Change", "roundGroupCountChange"]),
     imgChange() {
       const file = this.uploadImage.files[0];
       this.imgToBase64(file);
@@ -170,6 +140,11 @@ export default {
     resetImg() {
       this.imgBase64Change({ img: "" });
       this.uploadImage.value = null;
+    },
+    typeChangeByInput(e) {
+      this.typeChange(e);
+      this.teamCountChange(0);
+      this.roundGroupCountChange(GROUP_DEFAULT);
     },
   },
 };
