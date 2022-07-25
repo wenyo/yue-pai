@@ -76,7 +76,12 @@ export default createStore({
     },
     teamCountChange(state, payload) {
       const newTeamCount = payload;
-      if (isNaN(newTeamCount)) return;
+
+      // reset
+      if (isNaN(newTeamCount)) {
+        state.teamCount = 0;
+        return;
+      }
 
       state.isContestReset = true;
       state.teamCount = newTeamCount;
