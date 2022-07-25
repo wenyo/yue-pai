@@ -40,10 +40,12 @@ button {
   border-radius: 2px;
   font-weight: bold;
   height: 30px;
+  cursor: pointer;
 
   &:disabled,
   &[disabled] {
     opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 

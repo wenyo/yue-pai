@@ -14,14 +14,15 @@
         </div>
       </div>
       <div class="step">
-        <router-link to="/step_two" custom v-slot="{ navigate }">
-          <Button :type="BUTTON_TYPE.FIVE" :click_fun="navigate">上一步</Button>
-        </router-link>
+        <div class="btn-area">
+          <router-link to="/step_two" custom v-slot="{ navigate }">
+            <Button :type="BUTTON_TYPE.FIVE" :click_fun="navigate">上一步</Button>
+          </router-link>
+          <Button :type="BUTTON_TYPE.FIVE" @click="contestInfoSizeChange">重新分配隊伍</Button>
+        </div>
         <div class="btn-area">
           <router-link to="/print_contest" custom v-slot="{ navigate }">
-            <Button :type="BUTTON_TYPE.FORTH" :click_fun="navigate"
-              >列印</Button
-            >
+            <Button :type="BUTTON_TYPE.FORTH" :click_fun="navigate">列印</Button>
           </router-link>
           <Button :type="BUTTON_TYPE.SECOND" @click="downloadJSON">儲存</Button>
         </div>
@@ -78,7 +79,8 @@ ul {
     width: 25%;
   }
 }
-.btn-area button {
-  margin-left: 15px;
+.btn-area {
+  display: flex;
+  gap: 10px;
 }
 </style>
