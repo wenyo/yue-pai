@@ -55,8 +55,7 @@ export function roundOneSortGet(gameLen, type) {
       const middleNumber = gameTemp.length / halfCount;
       const firstCutGame = gameTemp.slice(0, middleNumber);
       let secondCutGame = gameTemp.slice(middleNumber, gameTemp.length);
-      secondCutGame =
-        type === GAME_TYPE.WIN ? secondCutGame.reverse() : secondCutGame;
+      secondCutGame = type === GAME_TYPE.WIN ? secondCutGame.reverse() : secondCutGame;
 
       newGameIdx[0].push(firstCutGame);
       newGameIdx[1].push(secondCutGame);
@@ -89,14 +88,7 @@ export function roundOneSortGet(gameLen, type) {
   return result;
 }
 
-export function roundOneInfoBuild({
-  sortOrder,
-  newGameInfo,
-  playerCountInGame,
-  seedPlayer,
-  notSeedPlayer,
-  byeCount,
-}) {
+export function roundOneInfoBuild({ sortOrder, newGameInfo, playerCountInGame, seedPlayer, notSeedPlayer, byeCount }) {
   let roundOne = newGameInfo[0];
   let roundTwo = newGameInfo[1];
   let seedCount = seedPlayer.length;
@@ -104,8 +96,7 @@ export function roundOneInfoBuild({
 
   for (const order of sortOrder) {
     const gameIdx = Math.floor(order / playerCountInGame);
-    const playerKey =
-      order % playerCountInGame === 0 ? PLAYER_KEY.PLAYER1 : PLAYER_KEY.PLAYER2;
+    const playerKey = order % playerCountInGame === 0 ? PLAYER_KEY.PLAYER1 : PLAYER_KEY.PLAYER2;
     const otherPlayerKey = playerKeyOtherGet(playerKey);
     let gameInfo = roundOne[gameIdx];
 
@@ -116,8 +107,7 @@ export function roundOneInfoBuild({
       gameInfo[playerKey].id = seedPlayer[seedPlayer.length - seedCount];
       seedCount--;
     } else {
-      gameInfo[playerKey].id =
-        notSeedPlayer[notSeedPlayer.length - notSeedCount];
+      gameInfo[playerKey].id = notSeedPlayer[notSeedPlayer.length - notSeedCount];
       notSeedCount--;
     }
 
@@ -129,12 +119,8 @@ export function roundOneInfoBuild({
 
       // add next round player id
       const gameIdxInRoundTwo = Math.floor(gameIdx / playerCountInGame);
-      const playerKeyInRoundTwo =
-        gameIdx % playerCountInGame === 0
-          ? PLAYER_KEY.PLAYER1
-          : PLAYER_KEY.PLAYER2;
-      roundTwo[gameIdxInRoundTwo][playerKeyInRoundTwo].id =
-        gameInfo[playerKey].id;
+      const playerKeyInRoundTwo = gameIdx % playerCountInGame === 0 ? PLAYER_KEY.PLAYER1 : PLAYER_KEY.PLAYER2;
+      roundTwo[gameIdxInRoundTwo][playerKeyInRoundTwo].id = gameInfo[playerKey].id;
     }
 
     roundOne[gameIdx] = gameInfo;
@@ -162,12 +148,7 @@ export function checkPlayerIDInContest({
     const roundInfoTemp = contestInfo[roundIdxTemp];
     for (const gameIdxTemp in roundInfoTemp) {
       // 同場比賽跳過
-      if (
-        this_game_type === game_type &&
-        roundIdxTemp === roundIdx &&
-        idx === parseInt(gameIdxTemp)
-      )
-        continue;
+      if (this_game_type === game_type && roundIdxTemp === roundIdx && idx === parseInt(gameIdxTemp)) continue;
 
       const gameInfoTemp = roundInfoTemp[gameIdxTemp];
       for (const playerIdx of Object.keys(PLAYER_KEY)) {
@@ -177,19 +158,14 @@ export function checkPlayerIDInContest({
         if (gameInfoTemp[playerKey].game_type !== this_game_type) continue;
 
         // clear all origin winner id
-        if (
-          gameInfoTemp[playerKey].id === player1Id ||
-          gameInfoTemp[playerKey].id === player2Id
-        ) {
+        if (gameInfoTemp[playerKey].id === player1Id || gameInfoTemp[playerKey].id === player2Id) {
           gameInfoTemp[playerKey].id = NO_ID;
           gameInfoTemp[playerKey].score = NO_SCORE;
         }
 
         // add new winner id
         if (playerSort.roundIdx === roundIdx && playerSort.game_idx === idx) {
-          gameInfoTemp[playerKey].id = gameInfoTemp[playerKey].winner_chose
-            ? scoreResult.winner
-            : scoreResult.loser;
+          gameInfoTemp[playerKey].id = gameInfoTemp[playerKey].winner_chose ? scoreResult.winner : scoreResult.loser;
         }
       }
     }
@@ -346,9 +322,7 @@ export function playerIdGet({ contest_info, game_type, player_info }) {
   const { groupIdx, roundIdx, idx, playerKey } = player_info;
   switch (game_type) {
     case CONTEST_TYPE.ROUND.id:
-      return contest_info[game_type][groupIdx][roundIdx][idx][
-        PLAYER_KEY[playerKey]
-      ].id;
+      return contest_info[game_type][groupIdx][roundIdx][idx][PLAYER_KEY[playerKey]].id;
 
     default:
       return contest_info[game_type][roundIdx][idx][PLAYER_KEY[playerKey]].id;
@@ -359,9 +333,7 @@ export function playerIdSet({ contest_info, game_type, player_info, id }) {
   const { groupIdx, roundIdx, idx, playerKey } = player_info;
   switch (game_type) {
     case CONTEST_TYPE.ROUND.id:
-      contest_info[game_type][groupIdx][roundIdx][idx][
-        PLAYER_KEY[playerKey]
-      ].id = id;
+      contest_info[game_type][groupIdx][roundIdx][idx][PLAYER_KEY[playerKey]].id = id;
       break;
 
     default:
@@ -405,4 +377,39 @@ export function roundScoreSortBuild(roundContestInfo) {
   }
 
   return roundScoreSort;
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
+export function randomTeamGet({ team, group_count = 1 }) {
+  const teamPlayerCount = team.length / group_count;
+  let allTeamKeys = Object.keys(team);
+  let count = teamPlayerCount;
+  let tempTeam = [];
+  let result = Array.from({ length: group_count }, () => []);
+  let groupIdx = 0;
+
+  if (team.length === 0) {
+    return result;
+  }
+
+  for (let group_idx = 0; group_idx < team.length; group_idx++) {
+    // random keys
+    count--;
+    const playerIdx = getRandomInt(allTeamKeys.length);
+    tempTeam.push(team[allTeamKeys[playerIdx]]);
+    allTeamKeys.splice(playerIdx, 1);
+
+    // reset count
+    if (count === 0) {
+      count = teamPlayerCount;
+      result[groupIdx] = tempTeam;
+      tempTeam = [];
+      groupIdx++;
+    }
+  }
+
+  return result;
 }
