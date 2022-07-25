@@ -551,10 +551,9 @@ export default createStore({
       state.contestInfo.LOSE = newGameInfo;
     },
     // build default
-    roundRobinOne(state, { game_count, groupIdx }) {
+    roundRobinOne(state, { game_count, groupIdx, team }) {
       const { roundGroupCount, teamCount } = state;
       const playerCountInPerRound = teamCount / roundGroupCount;
-      const prevPlayerId = groupIdx * playerCountInPerRound;
       let newGameInfo = Object.assign([], state.contestInfo.ROUND);
       let countPlayer = 0;
 
@@ -563,10 +562,9 @@ export default createStore({
       newGameInfo[groupIdx].unshift(
         Array.from({ length: game_count }, (v, i) => {
           countPlayer += 2;
-          const player1_Id = prevPlayerId + i * 2;
-          let player2_Id = player1_Id + 1;
           const bye = countPlayer > playerCountInPerRound;
-          player2_Id = bye ? NO_ID : player2_Id;
+          const player1_Id = team[i * 2];
+          const player2_Id = bye ? NO_ID : team[i * 2 + 1];
           return roundRobinBuild({ player1_Id, player2_Id, bye });
         })
       );
@@ -694,8 +692,13 @@ export default createStore({
       const teamCountInRound = state.teamCount / state.roundGroupCount;
       const round_count = teamCountInRound % 2 === 0 ? teamCountInRound - 1 : teamCountInRound;
       const game_count = Math.ceil(teamCountInRound / 2);
+      const teamID = state.teamInfo.map((x) => x.id);
+      const playerIDRandom = randomTeamGet({
+        team: teamID,
+        group_count: state.roundGroupCount,
+      });
       for (let groupIdx = 0; groupIdx < state.roundGroupCount; groupIdx++) {
-        commit("roundRobinOne", { game_count, groupIdx });
+        commit("roundRobinOne", { game_count, groupIdx, team: playerIDRandom[groupIdx] });
         commit("roundRobinOther", { round_count, game_count, groupIdx });
       }
       commit("roundScoreSortBuild");
