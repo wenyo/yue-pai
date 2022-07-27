@@ -24,7 +24,7 @@
           <router-link to="/print_contest" custom v-slot="{ navigate }">
             <Button :type="BUTTON_TYPE.FORTH" :click_fun="navigate">列印</Button>
           </router-link>
-          <Button :type="BUTTON_TYPE.SECOND" @click="downloadJSON">儲存</Button>
+          <Button :type="BUTTON_TYPE.SECOND" @click="downloadInput">儲存</Button>
         </div>
       </div>
     </div>
@@ -58,8 +58,12 @@ export default {
     ...mapState(["teamCount", "type"]),
   },
   methods: {
-    ...mapMutations(["downloadJSON"]),
+    ...mapMutations(["downloadJSON", "contestReset"]),
     ...mapActions(["contestInfoSizeChange"]),
+    downloadInput() {
+      this.contestReset(false);
+      this.downloadJSON();
+    },
   },
 };
 </script>
