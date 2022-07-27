@@ -16,9 +16,7 @@ export const CONTEST_TYPE = {
   },
 };
 
-export const CONTEST_VALUE = Object.keys(CONTEST_TYPE).map(
-  (key) => CONTEST_TYPE[key].id
-);
+export const CONTEST_VALUE = Object.keys(CONTEST_TYPE).map((key) => CONTEST_TYPE[key].id);
 
 export const GAME_TYPE = {
   NONE: "NONE",

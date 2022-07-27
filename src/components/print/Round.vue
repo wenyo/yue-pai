@@ -1,54 +1,42 @@
 <template>
-  <div v-for="(groupInfo, groupIdx) in contestInfo.ROUND" :key="groupIdx">
-    <div
-      style="page-break-after: always"
-      v-if="groupIdx > 0 && groupInfo[0].length > 3"
-    ></div>
-    <h4>第{{ groupIdx + 1 }}組</h4>
-    <div class="group">
-      <ul
-        class="round no-line"
-        v-for="(roundInfo, roundIdx) in groupInfo"
-        :key="roundIdx"
-      >
-        <Match
-          v-for="(game, idx) in roundInfo"
-          :key="idx"
-          :game="game"
-          :idx="idx"
-          :roundIdx="roundIdx"
-        />
-      </ul>
-      <div class="score-table">
-        <tr>
-          <th :colspan="teamInfo.length + 1" class="th-bg">計分板</th>
-        </tr>
-        <tr>
-          <th></th>
-          <th
-            v-for="playerId in scoreSort(roundScoreSort[groupIdx])"
-            :key="playerId"
-          >
-            {{ playerId }}
-          </th>
-        </tr>
-        <template
-          v-for="(roundScoreInfo, playerId) in roundScoreSort[groupIdx]"
-          :key="playerId"
-        >
-          <tr v-if="roundScoreInfo">
-            <td>{{ playerId }}</td>
-            <template v-for="(scoreInfo, key) in roundScoreInfo" :key="key">
-              <td
-                v-if="scoreInfo && scoreInfo !== NO_SCORE"
-                :class="{ win: prevPlayerWin(groupInfo, scoreInfo) }"
-              >
-                {{ scoreText(groupInfo, scoreInfo) }}
-              </td>
-              <td v-if="scoreInfo === NO_SCORE" class="gray-bg"></td>
+  <div>
+    <div v-for="(groupInfo, groupIdx) in contestInfo.ROUND" :key="groupIdx">
+      <div style="page-break-after: always" v-if="groupIdx > 0 && groupInfo[0].length > 3"></div>
+      <h4>第{{ groupIdx + 1 }}組</h4>
+      <div class="group">
+        <ul class="round no-line" v-for="(roundInfo, roundIdx) in groupInfo" :key="roundIdx">
+          <Match v-for="(game, idx) in roundInfo" :key="idx" :game="game" :idx="idx" :roundIdx="roundIdx" />
+        </ul>
+        <div class="score-table">
+          <tr>
+            <th :colspan="teamInfo.length" class="th-bg">計分板</th>
+          </tr>
+          <tr>
+            <th></th>
+            <template v-for="playerId in scoreSort(roundScoreSort[groupIdx])">
+              <th v-if="playerId !== NO_ID.toString()" :key="playerId">
+                {{ teamInfo[playerId].name }}
+              </th>
             </template>
           </tr>
-        </template>
+          <template v-for="(roundScoreInfo, playerId) in roundScoreSort[groupIdx]">
+            <tr v-if="roundScoreInfo" :key="playerId">
+              <td v-if="playerId !== NO_ID.toString()">{{ teamInfo[playerId].name }}</td>
+              <template v-for="(scoreInfo, player2Id) in roundScoreInfo">
+                <template v-if="player2Id !== NO_ID.toString()">
+                  <td
+                    v-if="scoreInfo && scoreInfo !== NO_SCORE"
+                    :class="{ win: prevPlayerWin(groupInfo, scoreInfo) }"
+                    :key="player2Id"
+                  >
+                    {{ scoreText(groupInfo, scoreInfo) }}
+                  </td>
+                  <td v-if="scoreInfo === NO_SCORE" class="gray-bg" :key="player2Id"></td>
+                </template>
+              </template>
+            </tr>
+          </template>
+        </div>
       </div>
     </div>
   </div>
@@ -57,13 +45,17 @@
 <script>
 import { mapState } from "vuex";
 import Match from "./Match.vue";
-import { NO_SCORE } from "../../utils/Enum";
+import { NO_SCORE, NO_ID } from "../../utils/Enum";
 export default {
   components: { Match },
   data() {
     return {
       NO_SCORE,
+      NO_ID,
     };
+  },
+  created() {
+    console.log(this.roundScoreSort);
   },
   computed: {
     ...mapState(["contestInfo", "teamInfo", "roundScore", "roundScoreSort"]),
