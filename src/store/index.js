@@ -727,7 +727,7 @@ export default createStore({
         default:
           break;
       }
-      console.log(state.contestInfo);
+      // console.log(state.contestInfo);
     },
     playerChangeByDrop({ commit, state }, { dropTarget, dragTarget }) {
       const { contestInfo, type, teamCount, roundGroupCount } = state;

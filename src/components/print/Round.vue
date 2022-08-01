@@ -54,9 +54,6 @@ export default {
       NO_ID,
     };
   },
-  created() {
-    console.log(this.roundScoreSort);
-  },
   computed: {
     ...mapState(["contestInfo", "teamInfo", "roundScore", "roundScoreSort"]),
   },
