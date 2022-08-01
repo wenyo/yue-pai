@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang=""><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>yue-pai</title><script src="./limit.js"></script><link href="/yue-pai/css/app.5aac918f.css" rel="preload" as="style"><link href="/yue-pai/js/app.72386344.js" rel="preload" as="script"><link href="/yue-pai/js/chunk-vendors.b4fd4dd7.js" rel="preload" as="script"><link href="/yue-pai/css/app.5aac918f.css" rel="stylesheet"></head><body><div id="app"></div><div id="alert-time-bg" class="bg-gray"><div id="alert-time" class="alert"><i class="icon icon-xmark-solid"></i><p id="alert-text"></p></div></div><script src="/yue-pai/js/chunk-vendors.b4fd4dd7.js"></script><script src="/yue-pai/js/app.72386344.js"></script></body><script>const WARNING = {
+      NOT_START: "尚未開放使用",
+      IS_ENDED: "已過期，請重新取得許可",
+      NO_FILE: "請確認檔案是否齊全",
+    };
+
+    // window.onload = checkTime;
+
+    function checkTime() {
+      if (typeof limit === "undefined") {
+        showTimeAlert(WARNING.NO_FILE);
+      }
+      const now = new Date().getTime();
+      const start = limit.start;
+      const end = limit.end;
+
+      if (now < start) {
+        showTimeAlert(WARNING.NOT_START);
+      }
+      if (now > end) {
+        showTimeAlert(WARNING.IS_ENDED);
+      }
+    }
+
+    function showTimeAlert(text) {
+      const app = document.querySelector("#app");
+      const alertBG = document.querySelector("#alert-time-bg");
+      const alertText = document.querySelector("#alert-text");
+      app.style.display = "none";
+      alertBG.style.display = "block";
+      alertText.textContent = text;
+    }</script></html>
