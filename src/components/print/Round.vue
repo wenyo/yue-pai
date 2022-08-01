@@ -14,7 +14,7 @@
           <tr>
             <th></th>
             <template v-for="playerId in scoreSort(roundScoreSort[groupIdx])">
-              <th v-if="playerId !== NO_ID.toString()" :key="playerId">
+              <th v-if="roundScoreSort[groupIdx][playerId] && playerId !== NO_ID.toString()" :key="playerId">
                 {{ teamInfo[playerId].name }}
               </th>
             </template>
