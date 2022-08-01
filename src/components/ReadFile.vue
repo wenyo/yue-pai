@@ -34,7 +34,7 @@ export default {
 
       reader.addEventListener("load", async () => {
         const fileContent = JSON.parse(reader.result);
-        await this.contestReset(false);
+        await this.contestReset({ is_contest_reset: false });
         await this.filesContentGet(fileContent);
         await router.push({ name: "StepThree" });
       });

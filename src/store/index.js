@@ -59,6 +59,7 @@ export default createStore({
       const payloadKeys = Object.keys(payload);
       for (const key of stateKeys) {
         if (!payloadKeys.includes(key)) continue;
+        if (key === "isContestReset") continue;
         state[key] = payload[key];
       }
     },
@@ -727,7 +728,6 @@ export default createStore({
         default:
           break;
       }
-      // console.log(state.contestInfo);
     },
     playerChangeByDrop({ commit, state }, { dropTarget, dragTarget }) {
       const { contestInfo, type, teamCount, roundGroupCount } = state;
