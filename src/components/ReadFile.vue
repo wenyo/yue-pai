@@ -1,8 +1,6 @@
 <template>
   <span>
-    <Button :type="BUTTON_TYPE.FIVE" :click_fun="triggerUpload"
-      >讀取舊檔</Button
-    >
+    <Button :type="BUTTON_TYPE.FIVE" :click_fun="triggerUpload">讀取舊檔</Button>
     <input v-show="false" type="file" ref="readFile" @change="fileChoose" />
   </span>
 </template>
@@ -28,7 +26,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["filesContentGet"]),
+    ...mapMutations(["filesContentGet", "contestReset"]),
     fileChoose($event) {
       const file = $event.target.files[0];
       const blob = new Blob([file], { type: "application/json" });
@@ -36,6 +34,7 @@ export default {
 
       reader.addEventListener("load", async () => {
         const fileContent = JSON.parse(reader.result);
+        await this.contestReset(false);
         await this.filesContentGet(fileContent);
         await router.push({ name: "StepThree" });
       });

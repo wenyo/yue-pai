@@ -36,13 +36,14 @@ export default createStore({
     teamCountPowCheck: false,
     teamInfo: [],
     contestInfo: JSON.parse(JSON.stringify(CONTEST_INFO_DEFAULT)),
-    isContestReset: true,
+    isContestReset: true, // reset contest when user go step three : Boolean
     roundScore: [],
     roundScoreSort: [],
     roundGroupCount: GROUP_DEFAULT,
     imgBase64: "",
   },
   mutations: {
+    // do not reset contest when user read file and go step three
     contestReset(state, payload) {
       state.isContestReset = payload.is_contest_reset;
     },

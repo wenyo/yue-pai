@@ -58,10 +58,9 @@ export default {
     ...mapState(["teamCount", "type"]),
   },
   methods: {
-    ...mapMutations(["downloadJSON", "contestReset"]),
+    ...mapMutations(["downloadJSON"]),
     ...mapActions(["contestInfoSizeChange"]),
     downloadInput() {
-      this.contestReset(false);
       this.downloadJSON();
     },
   },
