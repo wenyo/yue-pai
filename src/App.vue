@@ -1,12 +1,7 @@
 <template>
   <div>
-    <router-view :alert-open="alertOpen" v-if="true" />
-    <Alert
-      v-if="false"
-      :alert-close="alertClose"
-      :alert="alert"
-      :auto-close="autoClose"
-    />
+    <router-view :alert-open="alertOpen" />
+    <Alert v-if="alertShow" :alert-close="alertClose" :alert="alert" :auto-close="autoClose" />
   </div>
 </template>
 
@@ -16,7 +11,6 @@ import Alert from "./components/Alert.vue";
 export default {
   data() {
     return {
-      allowUse: true,
       alertShow: false,
       autoClose: true,
       alert: {
@@ -38,20 +32,6 @@ export default {
     },
     alertClose() {
       this.alertCall({ msg: "", show: false });
-    },
-    checkTime() {
-      // const now = new Date().getTime();
-      // const start = limit.start;
-      // const end = limit.end;
-      // if (now < start) {
-      //   this.autoClose = false;
-      //   return this.alertOpen({ msg: "尚未開放使用" });
-      // }
-      // if (now > end) {
-      //   this.autoClose = false;
-      //   return this.alertOpen({ msg: "已過期，請重新取得許可" });
-      // }
-      // this.allowUse = true;
     },
   },
 };
