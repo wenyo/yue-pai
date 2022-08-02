@@ -1,4 +1,8 @@
-import { createRouter, createWebHistory } from "vue-router";
+// for develop on github
+// import { createRouter, createWebHistory } from "vue-router";
+
+// use file on desktop
+import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import StepOne from "../views/StepOne.vue";
 import StepTwo from "../views/StepTwo.vue";
@@ -34,7 +38,8 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(),
+  // history: createWebHistory(process.env.BASE_URL),
   routes,
 });
 
